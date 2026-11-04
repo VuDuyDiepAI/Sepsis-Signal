@@ -1,5 +1,5 @@
 from alembic import context
-from backend.db import engine, Base
+from backend.core.database import engine, Base
 from backend import models
 
 with engine.connect() as connection:
