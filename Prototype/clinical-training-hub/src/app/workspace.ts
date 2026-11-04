@@ -12,6 +12,7 @@ export function workspaceFor(user: User): Workspace {
 const screens: Record<Workspace, string[]> = {
   management: [
     "dashboard",
+    "research",
     "manage-documents",
     "builder",
     "courses",
@@ -20,9 +21,10 @@ const screens: Record<Workspace, string[]> = {
     "feedback",
     "admin",
   ],
-  review: ["dashboard", "reviews"],
+  review: ["dashboard", "research", "reviews"],
   staff: [
     "dashboard",
+    "research",
     "chat",
     "documents",
     "my-training",
@@ -32,6 +34,7 @@ const screens: Record<Workspace, string[]> = {
 };
 
 const required: Record<string, string[]> = {
+  research: ["STAFF", "ADMIN", "REVIEWER"],
   "manage-documents": ["ADMIN"],
   builder: ["ADMIN"],
   courses: ["ADMIN"],

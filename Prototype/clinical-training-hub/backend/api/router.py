@@ -13,6 +13,7 @@ from backend.modules.jobs.api import router as jobs_router
 from backend.modules.notifications.api import router as notifications_router
 from backend.modules.organization.api import router as organization_router
 from backend.modules.reports.api import router as reports_router
+from backend.modules.research.api import router as research_router
 from backend.modules.training.api import router as training_router
 
 router = APIRouter()
@@ -26,6 +27,7 @@ router.include_router(jobs_router)
 router.include_router(courses_router)
 router.include_router(training_router)
 router.include_router(reports_router)
+router.include_router(research_router)
 router.include_router(calendar_router)
 router.include_router(credentials_router)
 router.include_router(notifications_router)

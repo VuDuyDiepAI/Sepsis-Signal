@@ -13,6 +13,7 @@ import { SourceViewer } from "@/features/documents/SourceViewer";
 import { FeedbackCenter } from "@/features/feedback/FeedbackCenter";
 import { FeedbackForm } from "@/features/feedback/FeedbackForm";
 import Jobs from "@/features/jobs/Jobs";
+import { ResearchAssistant } from "@/features/research/index";
 import { Reports } from "@/features/reports/Reports";
 import { Learning } from "@/features/training/Learning";
 import { MyTraining } from "@/features/training/MyTraining";
@@ -38,12 +39,20 @@ import {
   MessageSquarePlus,
   MessagesSquare,
   Settings,
+  Search,
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
 import { FormEvent, useEffect, useRef, useState } from "react";
 
 const navItems = [
+  {
+    path: "research",
+    label: "Trợ lý nghiên cứu AI",
+    icon: Search,
+    roles: ["STAFF", "ADMIN", "REVIEWER"],
+    group: "standalone",
+  },
   {
     path: "dashboard",
     label: "Tổng quan",
@@ -340,7 +349,13 @@ export default function App() {
         source: (id, chunk) => setSource({ id, chunk }),
       }}
     >
-      <div className={"app " + (collapsed ? "sidebar-collapsed" : "")}>
+      <div
+        className={
+          "app " +
+          (page === "research" ? "research-workspace " : "") +
+          (collapsed ? "sidebar-collapsed" : "")
+        }
+      >
         <AppHeader
           onMenu={() => {
             if (window.innerWidth <= 1000) setMobile(!mobile);
@@ -378,12 +393,6 @@ export default function App() {
             <h1 className="sr-only">{active?.label || "Chi tiết khóa học"}</h1>
             <AuthorizedPage page={page} />
           </main>
-          <footer className="footer">
-            <span>Nền tảng tri thức & đào tạo lâm sàng · Nội bộ</span>
-            <span>
-              Chỉ dùng cho đào tạo. Không thay thế quy trình đã phê duyệt.
-            </span>
-          </footer>
         </div>
         {workspaceFor(user) === "staff" && (
           <button className="feedback-float" onClick={() => setFeedback(true)}>
@@ -431,6 +440,8 @@ function renderPage(page: string) {
     return <CourseBuilderPage id={page.split("/")[1]} />;
   if (page.startsWith("learn/")) return <Learning parts={page.split("/")} />;
   switch (page) {
+    case "research":
+      return <ResearchAssistant />;
     case "jobs":
       return <Jobs />;
     case "feedback":

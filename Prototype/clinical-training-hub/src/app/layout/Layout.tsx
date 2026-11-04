@@ -394,7 +394,9 @@ export function AppSidebar({
   const mapped = items
     .map((n) => ({
       ...n,
-      group: ["dashboard", "calendar", "credentials"].includes(n.path)
+      group: ["dashboard", "calendar", "credentials", "research"].includes(
+        n.path,
+      )
         ? "standalone"
         : ["documents", "manage-documents", "chat"].includes(n.path)
           ? "knowledge"
@@ -450,7 +452,13 @@ export function AppSidebar({
           </button>
         </div>
         <nav aria-label="Điều hướng chính">
-          {mapped.filter((n) => n.path === "dashboard").map(link)}
+          {mapped
+            .filter((n) => n.path === "dashboard" || n.path === "research")
+            .sort(
+              (a, b) =>
+                Number(b.path === "dashboard") - Number(a.path === "dashboard"),
+            )
+            .map(link)}
           {groups.map(([id, label, Icon]) => {
             const rows = mapped.filter((n) => n.group === id);
             return rows.length ? (
@@ -481,7 +489,12 @@ export function AppSidebar({
             ) : null;
           })}
           {mapped
-            .filter((n) => n.group === "standalone" && n.path !== "dashboard")
+            .filter(
+              (n) =>
+                n.group === "standalone" &&
+                n.path !== "dashboard" &&
+                n.path !== "research",
+            )
             .map(link)}
         </nav>
         <div className="sidebar-bottom">
