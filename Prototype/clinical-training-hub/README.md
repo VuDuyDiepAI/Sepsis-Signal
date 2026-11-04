@@ -1,140 +1,95 @@
 # Vinmec AI Clinical Training Hub
 
-Ứng dụng đào tạo nội bộ bằng tiếng Việt: tài liệu → kiểm duyệt → tra cứu có nguồn → tạo học liệu → phê duyệt → xuất bản → phân công → học và kiểm tra → báo cáo và góp ý.
+Ứng dụng nội bộ hỗ trợ quản lý tri thức và đào tạo nhân viên y tế bằng tiếng Việt.
+
+Luồng nghiệp vụ: tài liệu → kiểm duyệt → tra cứu có nguồn → học liệu → phê duyệt → xuất bản → phân công → học và quiz → báo cáo.
+
+## Chức năng và vai trò
+
+| Vai trò | Phạm vi sử dụng |
+|---|---|
+| Admin | Quản lý tài liệu, biên soạn/xuất bản học liệu, phân công, báo cáo, góp ý, tài khoản và tổ chức. |
+| Reviewer | Kiểm duyệt tài liệu và học liệu trong phạm vi khoa/phòng, chuyên môn được cấp. |
+| Staff | Tra cứu tài liệu/AI, học khóa được giao, làm quiz, xem lịch và chứng chỉ cá nhân, gửi góp ý. |
+
+Mỗi tài khoản có một vai trò. Backend kiểm tra vai trò và phạm vi truy cập; phê duyệt chuyên môn yêu cầu người độc lập với người tạo, sửa hoặc gửi duyệt nội dung.
+
+## Kiến trúc
+
+React/TypeScript/Vite phục vụ giao diện; FastAPI cung cấp REST API. SQLAlchemy và Alembic quản lý dữ liệu/migration. SQLite dùng cho local, PostgreSQL/pgvector dùng trong Docker. Worker xử lý tác vụ qua hàng đợi lưu trong database.
+
+```text
+src/
+  app/              App, layout và điều hướng
+  features/         Giao diện theo phân hệ
+  shared/           API client, quyền, context, hook, UI và CSS dùng chung
+backend/
+  main.py           Entry point backend.main:app
+  api/              Router tổng, health và middleware
+  bootstrap/        Khởi tạo và dữ liệu demo
+  core/             Database, xác thực và phân quyền
+  infrastructure/   AI provider, vector, storage và worker
+  models/           ORM theo miền dữ liệu
+  modules/          Endpoint, schema và xử lý theo phân hệ
+migrations/         Revision và snapshot database
+scripts/            Tạo tài liệu mẫu và đóng gói source
+tests/             Kiểm thử cấu trúc và workflow
+demo/              Tài liệu giả lập
+```
 
 ## Chạy ứng dụng
 
-Yêu cầu Python 3.12+, Node.js 22.12+ và npm. Trong thư mục dự án:
+Yêu cầu Python 3.12+, Node.js 22.12+ và npm. Chạy từ thư mục `Prototype/clinical-training-hub`:
 
 ```powershell
-Copy-Item .env.example .env
+if (-not (Test-Path .env)) { Copy-Item .env.example .env }
 .\start.ps1
 ```
 
-Script cài thư viện, build giao diện, chạy migration và mở máy chủ tại [http://127.0.0.1:8000](http://127.0.0.1:8000). Nếu đã có `.env`, giữ file hiện tại. Lần đầu cần Internet để cài thư viện; chế độ demo chạy cục bộ, không cần API key trả phí.
+Script cài thư viện, build giao diện, chạy migration và mở máy chủ. Ứng dụng tại [http://127.0.0.1:8000](http://127.0.0.1:8000); tài liệu API tại [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs).
 
-Chạy để phát triển: backend dùng `python -m uvicorn backend.main:app --reload --port 8000` sau khi cài requirements và chạy `python -m alembic upgrade head`; frontend dùng `npm ci` rồi `npm run dev` tại cổng 5173. Kiểm tra bản build bằng `npm run build`.
-
-Docker Compose:
+Chạy bằng Docker:
 
 ```powershell
 docker compose up --build -d
 ```
 
-Ứng dụng Docker dùng cổng 8088 và PostgreSQL/pgvector. Cấu hình này chưa được xác nhận runtime trên máy hiện tại do lỗi lưu trữ Docker Desktop. Bản local dùng SQLite.
+Ứng dụng Docker tại [http://127.0.0.1:8088](http://127.0.0.1:8088). Database và file upload được lưu trong volume.
 
-## Tài khoản demo
+Dữ liệu demo được tạo trên database rỗng khi `DEMO_MODE=true`. Tài khoản mẫu: `admin@demo.local`, `reviewer@demo.local`, `staff@demo.local`. Mật khẩu mặc định `Demo@2026!`, cấu hình bằng `DEMO_PASSWORD` trước lần khởi tạo.
 
-Mật khẩu mặc định: **`Demo@2026!`**. Mỗi dòng là một nhân viên giả lập khác nhau, mỗi nhân viên chỉ có một tài khoản.
+## Phát triển và kiểm thử
 
-| Email | Chức danh và quyền trong khoa Cấp cứu |
-|---|---|
-| `admin@demo.local` | Trưởng khoa — Admin |
-| `manager@demo.local` | Điều dưỡng trưởng — Admin |
-| `reviewer@demo.local` | Bác sĩ — Reviewer chuyên môn Cấp cứu |
-| `staff@demo.local` | Điều dưỡng — Staff |
-| `staff2@demo.local` | Bác sĩ — Staff |
+Backend phát triển:
 
-Giao diện chia theo công việc: Admin chỉ thấy các phân hệ quản lý; Reviewer chỉ thấy tổng quan và kiểm duyệt; nhân viên giữ các chức năng học tập, tra cứu, lịch và chứng chỉ. Mỗi tài khoản có đúng một vai trò: Admin, Reviewer hoặc Staff; phạm vi khoa/phòng và chuyên môn được kiểm tra ở backend. Admin không có quyền Staff và không phê duyệt chuyên môn; Reviewer không tạo/sửa/xuất bản học liệu hoặc học như Staff. Vai trò Manager cũ được chuyển thành Admin qua migration 008. Vào **Quản trị hệ thống → Nhân viên → Chỉnh sửa** để chọn một vai trò và cấp/thu hồi phạm vi khoa, chuyên môn Reviewer. Người tạo, sửa hoặc gửi duyệt không được tự phê duyệt nội dung của mình.
-
-Seed chỉ tạo tài khoản demo trên database mới khi `DEMO_MODE=true`. Đổi `DEMO_PASSWORD` trước lần seed đầu để dùng mật khẩu khác. Khi dùng database mới không có dữ liệu demo, đặt `DEMO_MODE=false`, `BOOTSTRAP_ADMIN_EMAIL` và `BOOTSTRAP_ADMIN_PASSWORD` tối thiểu 12 ký tự. Đổi cấu hình không xóa tài khoản cũ.
-
-## Dữ liệu và các thư mục cần giữ
-
-- `src/app/`: ghép ứng dụng, layout, điều hướng theo vai trò và thứ tự nạp CSS.
-- `src/features/`: từng phân hệ — quản trị, tài liệu, trợ lý AI, học liệu, học tập, lịch, chứng chỉ, dashboard, báo cáo, góp ý và tác vụ xử lý. Component và CSS riêng nằm cùng phân hệ.
-- `src/shared/`: API client, kiểu dữ liệu/quyền tài khoản, context, hook, hàm xử lý và UI/CSS dùng chung.
-- `src/main.tsx`: điểm khởi chạy frontend; `backend/`: API và nghiệp vụ.
-- `backend/modules/`: router, schema và xử lý theo phân hệ; `backend/models/`: ORM theo miền dữ liệu.
-- `backend/core/`, `infrastructure/`, `bootstrap/`: database/quyền, storage/AI/worker và khởi tạo ứng dụng.
-- `tests/`: kiểm thử hồi quy và ranh giới cấu trúc; `requirements-dev.txt`, `pyproject.toml`: thư viện và quy ước phát triển.
-- `migrations/`: schema, phiên bản và snapshot bắt buộc để khởi tạo/nâng database.
-- `data/`: database đang dùng, file upload, backup và log vận hành. Không xóa nếu muốn giữ dữ liệu.
-- `demo/` và `scripts/create_samples.py`: tài liệu giả lập phục vụ seed; backend có sử dụng script này.
-- `dist/`: giao diện đã build đang được máy chủ phục vụ; `node_modules/`: thư viện frontend đã cài.
-- `scripts/package_source.py`: đóng gói source, loại trừ dữ liệu riêng và thư viện đã cài.
-- [Hướng dẫn sử dụng](docs/PILOT_GUIDE.md).
-
-API được sinh trực tiếp tại [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs). Không cần lưu bản báo cáo hoặc snapshot OpenAPI riêng.
-
-## Quy ước frontend
-
-```text
-src/
-├── main.tsx
-├── app/                 # App, layout, workspace, styles.css
-├── features/
-│   ├── administration/  # Quản trị tài khoản, khoa/phòng, nhóm
-│   ├── assistant/       # Chatbot và hội thoại
-│   ├── calendar/        # Lịch đào tạo và nhắc hạn
-│   ├── courses/         # Tạo, biên tập, kiểm duyệt, phân công học liệu
-│   ├── credentials/     # Chứng chỉ
-│   ├── dashboard/       # Tổng quan theo vai trò
-│   ├── documents/       # Tài liệu, phiên bản, nguồn và kiểm duyệt
-│   ├── feedback/        # Gửi và xử lý góp ý
-│   ├── jobs/            # Tác vụ xử lý
-│   ├── reports/         # Báo cáo đào tạo
-│   └── training/        # Khóa học của tôi, học/quiz, hộp phân công
-└── shared/
-    ├── api/             # HTTP client
-    ├── auth/            # Kiểu User và hàm kiểm tra quyền
-    ├── context/         # Trạng thái dùng chung của ứng dụng
-    ├── hooks/           # Hook tải dữ liệu
-    ├── lib/             # Ngày, nhãn trạng thái, thống kê dùng chung
-    ├── styles/          # CSS nền và quy tắc dùng nhiều phân hệ
-    └── ui/              # Modal, bảng, bộ lọc, toast, trình soạn thảo
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
+.\.venv\Scripts\python.exe -m alembic upgrade head
+.\.venv\Scripts\python.exe -m uvicorn backend.main:app --reload --port 8000
 ```
 
-Dùng alias `@/` để import từ gốc `src`, ví dụ `@/shared/api/client`. Khi thêm trang, đặt trong phân hệ tương ứng và nối vào `app/App.tsx`; tránh gom các trang khác nghiệp vụ vào một file. `shared/` không import từ `features/` hoặc `app/`. Chỉ đưa phần được nhiều phân hệ sử dụng vào `shared/`.
+Frontend chạy ở terminal riêng bằng `npm ci` và `npm run dev`. Vite dùng cổng 5173, chuyển `/api` tới backend cổng 8000. Terminal phát triển trực tiếp nhận cấu hình từ biến môi trường của shell; `start.ps1` nạp cấu hình từ `.env`.
 
-CSS được nạp tập trung qua `app/styles.css` để giữ thứ tự ưu tiên. Khi thêm CSS của phân hệ, đăng ký tại đây; tránh import lại cùng stylesheet ở nhiều component. Sau khi đổi cấu trúc hoặc import, chạy `npm run build` và kiểm tra các trang bị ảnh hưởng.
+Các lệnh kiểm tra:
 
-## Quy ước backend
-
-```text
-backend/
-├── main.py              # Ghép app, middleware, router, frontend tĩnh
-├── api/                 # Router tổng, health, HTTP middleware
-├── bootstrap/           # Lifespan và seed demo
-├── core/                # Database, thời gian, xác thực/phân quyền
-├── infrastructure/      # Storage riêng, AI provider, vector, worker
-├── models/              # ORM chia theo miền; __init__ đăng ký toàn bộ model
-└── modules/
-    ├── identity/        # Đăng nhập, đăng xuất, tài khoản hiện tại
-    ├── organization/    # Khoa/phòng, nhóm và phạm vi tổ chức
-    ├── administration/  # Tài khoản, phân quyền, nhật ký, cấu hình
-    ├── documents/       # Upload, trích xuất, nguồn, kiểm duyệt tài liệu
-    ├── assistant/       # Truy xuất có nguồn, hội thoại, đánh giá
-    ├── courses/         # Nội dung, phiên bản, kiểm duyệt, xuất bản
-    ├── training/        # Phân công, tiến độ học, quiz
-    ├── reports/         # Báo cáo đào tạo theo phạm vi
-    ├── calendar/        # Lịch đào tạo hiện có
-    ├── credentials/     # Chứng chỉ và mốc nhắc
-    ├── notifications/   # API nhắc hạn hiện có
-    ├── feedback/        # Gửi, tổng hợp, xử lý góp ý
-    └── jobs/            # Theo dõi, kiểm tra quyền, thử lại tác vụ
+```powershell
+npm run build
+.\.venv\Scripts\python.exe -m ruff check backend scripts tests
+.\.venv\Scripts\python.exe -m ruff format --check backend scripts tests
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
 
-Mỗi phân hệ chỉ có các file cần dùng: `api.py` cho endpoint, `schemas.py` cho input, `services.py` cho xử lý dùng lại. Tài liệu và học liệu tách thêm `access.py`, `serializers.py`, `ingestion.py` hoặc `generation.py` khi có xử lý riêng. Không tạo các lớp hoặc file rỗng chỉ để đủ mẫu.
+Test dùng SQLite và upload trong thư mục tạm riêng. Kiểm thử PostgreSQL dùng `TEST_DATABASE_URL` trỏ tới database rỗng, tên kết thúc `_test`, có pgvector khả dụng. CI kiểm tra build frontend, cấu trúc/import, định dạng và workflow trên SQLite/PostgreSQL.
 
-Dùng import tường minh `backend...`, tránh `import *`. Router tổng nằm trong `backend/api/router.py`; không import router từ service. Model chỉ phụ thuộc database nền/vector, không import HTTP hoặc nghiệp vụ. Quyền và phạm vi phải được kiểm tra ở backend, kể cả khi frontend đã ẩn thao tác.
+Nhóm làm việc trên nhánh riêng và gửi Pull Request vào `main`. Frontend dùng alias `@/`; backend dùng import tường minh `backend...`. Model thay đổi đi kèm revision Alembic; các revision/snapshot đã phát hành được giữ nguyên.
 
-Worker dùng bảng tác vụ hiện tại; handler được đăng ký tường minh khi startup trong `infrastructure/handlers.py`. Giữ entry point `backend.main:app`, đường dẫn API, thư mục dữ liệu và cấu hình Docker/local hiện có. Migration chỉ đổi nơi import database; các revision và snapshot cũ được giữ nguyên.
+## Cấu hình và dữ liệu
 
-Xem [CONTRIBUTING.md](../../CONTRIBUTING.md) để chạy frontend/backend riêng, format/lint và kiểm thử hồi quy trên database cô lập.
+- `.env.example` liệt kê cấu hình mẫu; `.env` chứa cấu hình riêng từng môi trường.
+- `DATA_DIR` và `DATABASE_URL` xác định nơi lưu upload và database; local mặc định dùng `data/hub.db`.
+- `DEMO_MODE=false` cùng `BOOTSTRAP_ADMIN_EMAIL` và `BOOTSTRAP_ADMIN_PASSWORD` tối thiểu 12 ký tự khởi tạo Admin cho database rỗng.
+- `AI_PROVIDER=demo` dùng truy xuất từ khóa/vector hash và template có nguồn. Provider khác cấu hình qua `AI_BASE_URL`, `AI_MODEL`, `AI_EMBEDDING_MODEL`, `AI_API_KEY`; `ALLOW_EXTERNAL_AI` kiểm soát gửi dữ liệu ra ngoài local.
+- Database, upload, `.env`, thư viện và bản build thuộc môi trường chạy; Git lưu source và cấu hình mẫu.
 
-## Giao diện và thao tác
-
-Giao diện dùng header xanh, menu phân cấp theo quyền, các panel nghiệp vụ và bảng có sắp xếp/phân trang. Thư viện có bộ lọc nâng cao theo ngày và xuất danh sách đang lọc ra CSV. Trợ lý AI hiển thị lịch sử, nội dung trả lời và nguồn thực tế trong ba vùng riêng. Trang tạo khóa học bắt đầu bằng thông tin chung và chọn tài liệu nguồn được duyệt, sau đó tạo bản nháp có lưu tên, đối tượng và thời lượng. Trình biên tập gồm bốn bước; chuyển bước giữ nguyên bản nháp, có cảnh báo chưa lưu và xác nhận trước khi duyệt/xuất bản. Trên điện thoại, menu chuyển thành drawer và bảng hỗ trợ cuộn ngang.
-
-Các chức năng chưa có API như đăng ký/điểm danh buổi học, tải tệp chứng chỉ, phân công người xử lý và trao đổi phản hồi được ghi rõ là chưa khả dụng. Không giả lập kết quả thành công. Kiểm tra giao diện và luồng nghiệp vụ dùng dữ liệu thử riêng trong `data/runtime/`; source đóng gói không chứa dữ liệu này.
-
-## Cấu hình AI và giới hạn
-
-Mặc định `AI_PROVIDER=demo`: truy xuất từ khóa/vector hash và tạo học liệu bằng template có trích dẫn; không gọi LLM. Tài liệu mẫu là tình huống giả lập, không phải quy trình y khoa chính thức.
-
-Có thể cấu hình Ollama hoặc endpoint tương thích OpenAI qua `.env`: `AI_PROVIDER=ollama` hoặc `openai-compatible`, `AI_BASE_URL`, `AI_MODEL`, `AI_EMBEDDING_MODEL`, `AI_API_KEY`. Provider cần hỗ trợ `/embeddings`, `/chat/completions` và JSON response. Đổi mô hình embedding cần tạo lại index. Gửi tài liệu tới endpoint ngoài local bị chặn mặc định; chỉ bật `ALLOW_EXTERNAL_AI=true` sau khi tổ chức phê duyệt. Provider thực chưa được kiểm chứng với mô hình của tổ chức.
-
-PDF cần có text layer; chưa có OCR. Nhắc hạn chỉ hiển thị trong ứng dụng. Chuyên môn Reviewer do Admin phân công, chưa đối chiếu tự động với hồ sơ năng lực. Kết quả học tập không tự gia hạn chứng chỉ hoặc công nhận CME.
-
-File upload được bảo vệ bởi API; session dùng cookie HttpOnly, mật khẩu được hash. Khi triển khai thật cần HTTPS, `COOKIE_SECURE=true`, mật khẩu riêng, backup và đánh giá bảo mật/chuyên môn. Không dùng dữ liệu người bệnh thật trong prototype.
+Tài liệu demo là tình huống giả lập. PDF cần có lớp văn bản. Nhắc hạn hiển thị trong ứng dụng; kết quả học tập và thời hạn chứng chỉ được quản lý riêng.
