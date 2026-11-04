@@ -1,0 +1,36 @@
+# Dependencies and generated output
+node_modules/
+.venv/
+venv/
+dist/
+__pycache__/
+*.py[cod]
+*.tsbuildinfo
+.ruff_cache/
+.pytest_cache/
+.vite/
+coverage/
+playwright-report/
+test-results/
+
+# Local settings, credentials, runtime data and archives
+.env
+.env.*
+!.env.example
+data/
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.log
+*.pid
+*.pem
+*.key
+*.zip
+*.tmp
+
+# Machine/editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

@@ -1,0 +1,50 @@
+{
+  "tables": [
+    "courses",
+    "course_versions",
+    "course_sources",
+    "lessons",
+    "checklists",
+    "checklist_items",
+    "quizzes",
+    "quiz_questions",
+    "answer_options",
+    "content_approvals"
+  ],
+  "sqlite": [
+    "\nCREATE TABLE courses (\n\tcreator_id VARCHAR(36) NOT NULL, \n\tneeds_review BOOLEAN NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at DATETIME NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(creator_id) REFERENCES users (id)\n)\n\n",
+    "\nCREATE TABLE course_versions (\n\tcourse_id VARCHAR(36) NOT NULL, \n\tnumber INTEGER NOT NULL, \n\ttitle VARCHAR(240) NOT NULL, \n\tdescription TEXT NOT NULL, \n\taudience VARCHAR(240) NOT NULL, \n\tobjectives JSON NOT NULL, \n\tduration INTEGER NOT NULL, \n\tpass_score INTEGER NOT NULL, \n\tstatus VARCHAR(30) NOT NULL, \n\tauthor_id VARCHAR(36) NOT NULL, \n\tmode VARCHAR(40) NOT NULL, \n\tstoryboard JSON NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at DATETIME NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (course_id, number), \n\tCHECK (status IN ('DRAFT','PENDING_REVIEW','APPROVED','PUBLISHED','REJECTED')), \n\tFOREIGN KEY(course_id) REFERENCES courses (id), \n\tFOREIGN KEY(author_id) REFERENCES users (id)\n)\n\n",
+    "CREATE INDEX ix_course_versions_course_id ON course_versions (course_id)",
+    "CREATE INDEX ix_course_versions_status ON course_versions (status)",
+    "\nCREATE TABLE course_sources (\n\tcourse_version_id VARCHAR(36) NOT NULL, \n\tdocument_version_id VARCHAR(36) NOT NULL, \n\tPRIMARY KEY (course_version_id, document_version_id), \n\tFOREIGN KEY(course_version_id) REFERENCES course_versions (id), \n\tFOREIGN KEY(document_version_id) REFERENCES document_versions (id)\n)\n\n",
+    "\nCREATE TABLE lessons (\n\tcourse_version_id VARCHAR(36) NOT NULL, \n\tposition INTEGER NOT NULL, \n\ttitle VARCHAR(240) NOT NULL, \n\tobjective TEXT NOT NULL, \n\tcontent TEXT NOT NULL, \n\tkey_points JSON NOT NULL, \n\tcitation_ids JSON NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at DATETIME NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(course_version_id) REFERENCES course_versions (id)\n)\n\n",
+    "CREATE INDEX ix_lessons_course_version_id ON lessons (course_version_id)",
+    "\nCREATE TABLE checklists (\n\tcourse_version_id VARCHAR(36) NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at DATETIME NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (course_version_id), \n\tFOREIGN KEY(course_version_id) REFERENCES course_versions (id)\n)\n\n",
+    "\nCREATE TABLE checklist_items (\n\tchecklist_id VARCHAR(36) NOT NULL, \n\tposition INTEGER NOT NULL, \n\ttitle VARCHAR(240) NOT NULL, \n\tdescription TEXT NOT NULL, \n\tcritical BOOLEAN NOT NULL, \n\tcitation_ids JSON NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at DATETIME NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(checklist_id) REFERENCES checklists (id)\n)\n\n",
+    "CREATE INDEX ix_checklist_items_checklist_id ON checklist_items (checklist_id)",
+    "\nCREATE TABLE quizzes (\n\tcourse_version_id VARCHAR(36) NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at DATETIME NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (course_version_id), \n\tFOREIGN KEY(course_version_id) REFERENCES course_versions (id)\n)\n\n",
+    "\nCREATE TABLE quiz_questions (\n\tquiz_id VARCHAR(36) NOT NULL, \n\tposition INTEGER NOT NULL, \n\tquestion TEXT NOT NULL, \n\tcorrect INTEGER NOT NULL, \n\texplanation TEXT NOT NULL, \n\tdifficulty VARCHAR(40) NOT NULL, \n\tcitation_ids JSON NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at DATETIME NOT NULL, \n\tPRIMARY KEY (id), \n\tCHECK (correct >= 0 AND correct <= 3), \n\tFOREIGN KEY(quiz_id) REFERENCES quizzes (id)\n)\n\n",
+    "CREATE INDEX ix_quiz_questions_quiz_id ON quiz_questions (quiz_id)",
+    "\nCREATE TABLE answer_options (\n\tquestion_id VARCHAR(36) NOT NULL, \n\tposition INTEGER NOT NULL, \n\ttext TEXT NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at DATETIME NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(question_id) REFERENCES quiz_questions (id)\n)\n\n",
+    "CREATE INDEX ix_answer_options_question_id ON answer_options (question_id)",
+    "\nCREATE TABLE content_approvals (\n\tcourse_version_id VARCHAR(36) NOT NULL, \n\treviewer_id VARCHAR(36) NOT NULL, \n\tdecision VARCHAR(30) NOT NULL, \n\tcomment TEXT NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at DATETIME NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(course_version_id) REFERENCES course_versions (id), \n\tFOREIGN KEY(reviewer_id) REFERENCES users (id)\n)\n\n"
+  ],
+  "postgresql": [
+    "\nCREATE TABLE courses (\n\tcreator_id VARCHAR(36) NOT NULL, \n\tneeds_review BOOLEAN NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(creator_id) REFERENCES users (id)\n)\n\n",
+    "\nCREATE TABLE course_versions (\n\tcourse_id VARCHAR(36) NOT NULL, \n\tnumber INTEGER NOT NULL, \n\ttitle VARCHAR(240) NOT NULL, \n\tdescription TEXT NOT NULL, \n\taudience VARCHAR(240) NOT NULL, \n\tobjectives JSON NOT NULL, \n\tduration INTEGER NOT NULL, \n\tpass_score INTEGER NOT NULL, \n\tstatus VARCHAR(30) NOT NULL, \n\tauthor_id VARCHAR(36) NOT NULL, \n\tmode VARCHAR(40) NOT NULL, \n\tstoryboard JSON NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (course_id, number), \n\tCHECK (status IN ('DRAFT','PENDING_REVIEW','APPROVED','PUBLISHED','REJECTED')), \n\tFOREIGN KEY(course_id) REFERENCES courses (id), \n\tFOREIGN KEY(author_id) REFERENCES users (id)\n)\n\n",
+    "CREATE INDEX ix_course_versions_course_id ON course_versions (course_id)",
+    "CREATE INDEX ix_course_versions_status ON course_versions (status)",
+    "\nCREATE TABLE course_sources (\n\tcourse_version_id VARCHAR(36) NOT NULL, \n\tdocument_version_id VARCHAR(36) NOT NULL, \n\tPRIMARY KEY (course_version_id, document_version_id), \n\tFOREIGN KEY(course_version_id) REFERENCES course_versions (id), \n\tFOREIGN KEY(document_version_id) REFERENCES document_versions (id)\n)\n\n",
+    "\nCREATE TABLE lessons (\n\tcourse_version_id VARCHAR(36) NOT NULL, \n\tposition INTEGER NOT NULL, \n\ttitle VARCHAR(240) NOT NULL, \n\tobjective TEXT NOT NULL, \n\tcontent TEXT NOT NULL, \n\tkey_points JSON NOT NULL, \n\tcitation_ids JSON NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(course_version_id) REFERENCES course_versions (id)\n)\n\n",
+    "CREATE INDEX ix_lessons_course_version_id ON lessons (course_version_id)",
+    "\nCREATE TABLE checklists (\n\tcourse_version_id VARCHAR(36) NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (course_version_id), \n\tFOREIGN KEY(course_version_id) REFERENCES course_versions (id)\n)\n\n",
+    "\nCREATE TABLE checklist_items (\n\tchecklist_id VARCHAR(36) NOT NULL, \n\tposition INTEGER NOT NULL, \n\ttitle VARCHAR(240) NOT NULL, \n\tdescription TEXT NOT NULL, \n\tcritical BOOLEAN NOT NULL, \n\tcitation_ids JSON NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(checklist_id) REFERENCES checklists (id)\n)\n\n",
+    "CREATE INDEX ix_checklist_items_checklist_id ON checklist_items (checklist_id)",
+    "\nCREATE TABLE quizzes (\n\tcourse_version_id VARCHAR(36) NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (course_version_id), \n\tFOREIGN KEY(course_version_id) REFERENCES course_versions (id)\n)\n\n",
+    "\nCREATE TABLE quiz_questions (\n\tquiz_id VARCHAR(36) NOT NULL, \n\tposition INTEGER NOT NULL, \n\tquestion TEXT NOT NULL, \n\tcorrect INTEGER NOT NULL, \n\texplanation TEXT NOT NULL, \n\tdifficulty VARCHAR(40) NOT NULL, \n\tcitation_ids JSON NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tCHECK (correct >= 0 AND correct <= 3), \n\tFOREIGN KEY(quiz_id) REFERENCES quizzes (id)\n)\n\n",
+    "CREATE INDEX ix_quiz_questions_quiz_id ON quiz_questions (quiz_id)",
+    "\nCREATE TABLE answer_options (\n\tquestion_id VARCHAR(36) NOT NULL, \n\tposition INTEGER NOT NULL, \n\ttext TEXT NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(question_id) REFERENCES quiz_questions (id)\n)\n\n",
+    "CREATE INDEX ix_answer_options_question_id ON answer_options (question_id)",
+    "\nCREATE TABLE content_approvals (\n\tcourse_version_id VARCHAR(36) NOT NULL, \n\treviewer_id VARCHAR(36) NOT NULL, \n\tdecision VARCHAR(30) NOT NULL, \n\tcomment TEXT NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(course_version_id) REFERENCES course_versions (id), \n\tFOREIGN KEY(reviewer_id) REFERENCES users (id)\n)\n\n"
+  ]
+}

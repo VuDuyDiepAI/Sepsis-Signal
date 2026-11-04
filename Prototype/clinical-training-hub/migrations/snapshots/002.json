@@ -1,0 +1,51 @@
+{
+  "tables": [
+    "documents",
+    "document_permissions",
+    "document_versions",
+    "document_chunks",
+    "source_citations",
+    "document_reviews",
+    "chat_conversations",
+    "chat_messages",
+    "background_jobs"
+  ],
+  "sqlite": [
+    "\nCREATE TABLE documents (\n\ttitle VARCHAR(240) NOT NULL, \n\tdescription TEXT NOT NULL, \n\tdepartment_id VARCHAR(36) NOT NULL, \n\tspecialty VARCHAR(120) NOT NULL, \n\tkind VARCHAR(80) NOT NULL, \n\tlanguage VARCHAR(10) NOT NULL, \n\tscope VARCHAR(20) NOT NULL, \n\tcreator_id VARCHAR(36) NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at DATETIME NOT NULL, \n\tPRIMARY KEY (id), \n\tCHECK (scope IN ('ALL','DEPARTMENT','RESTRICTED')), \n\tFOREIGN KEY(department_id) REFERENCES departments (id), \n\tFOREIGN KEY(creator_id) REFERENCES users (id)\n)\n\n",
+    "CREATE INDEX ix_documents_department_id ON documents (department_id)",
+    "\nCREATE TABLE document_permissions (\n\tdocument_id VARCHAR(36) NOT NULL, \n\tuser_id VARCHAR(36) NOT NULL, \n\tPRIMARY KEY (document_id, user_id), \n\tFOREIGN KEY(document_id) REFERENCES documents (id), \n\tFOREIGN KEY(user_id) REFERENCES users (id)\n)\n\n",
+    "\nCREATE TABLE document_versions (\n\tdocument_id VARCHAR(36) NOT NULL, \n\tnumber INTEGER NOT NULL, \n\tstatus VARCHAR(30) NOT NULL, \n\tprocessing VARCHAR(30) NOT NULL, \n\tfile_key VARCHAR(150) NOT NULL, \n\tfilename VARCHAR(240) NOT NULL, \n\tsha256 VARCHAR(64) NOT NULL, \n\tuploader_id VARCHAR(36) NOT NULL, \n\teffective_date VARCHAR(10), \n\treview_date VARCHAR(10), \n\terror VARCHAR(300) NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at DATETIME NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (document_id, number), \n\tCHECK (status IN ('DRAFT','PENDING_REVIEW','APPROVED','ARCHIVED','REJECTED')), \n\tFOREIGN KEY(document_id) REFERENCES documents (id), \n\tFOREIGN KEY(uploader_id) REFERENCES users (id)\n)\n\n",
+    "CREATE INDEX ix_document_versions_document_id ON document_versions (document_id)",
+    "CREATE INDEX ix_document_versions_status ON document_versions (status)",
+    "\nCREATE TABLE document_chunks (\n\tdocument_id VARCHAR(36) NOT NULL, \n\tversion_id VARCHAR(36) NOT NULL, \n\tpage INTEGER, \n\tsection VARCHAR(240) NOT NULL, \n\ttext TEXT NOT NULL, \n\tembedding JSON NOT NULL, \n\tembedding_model VARCHAR(150) NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at DATETIME NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(document_id) REFERENCES documents (id), \n\tFOREIGN KEY(version_id) REFERENCES document_versions (id)\n)\n\n",
+    "CREATE INDEX ix_document_chunks_document_id ON document_chunks (document_id)",
+    "CREATE INDEX ix_document_chunks_version_id ON document_chunks (version_id)",
+    "\nCREATE TABLE source_citations (\n\tchunk_id VARCHAR(36) NOT NULL, \n\tuser_id VARCHAR(36) NOT NULL, \n\tpurpose VARCHAR(40) NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at DATETIME NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(chunk_id) REFERENCES document_chunks (id), \n\tFOREIGN KEY(user_id) REFERENCES users (id)\n)\n\n",
+    "\nCREATE TABLE document_reviews (\n\tversion_id VARCHAR(36) NOT NULL, \n\treviewer_id VARCHAR(36) NOT NULL, \n\tdecision VARCHAR(30) NOT NULL, \n\tcomment TEXT NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at DATETIME NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(version_id) REFERENCES document_versions (id), \n\tFOREIGN KEY(reviewer_id) REFERENCES users (id)\n)\n\n",
+    "\nCREATE TABLE chat_conversations (\n\tuser_id VARCHAR(36) NOT NULL, \n\ttitle VARCHAR(150) NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at DATETIME NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(user_id) REFERENCES users (id)\n)\n\n",
+    "CREATE INDEX ix_chat_conversations_user_id ON chat_conversations (user_id)",
+    "\nCREATE TABLE chat_messages (\n\tconversation_id VARCHAR(36) NOT NULL, \n\trole VARCHAR(20) NOT NULL, \n\tcontent TEXT NOT NULL, \n\tcitation_ids JSON NOT NULL, \n\thelpful BOOLEAN, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at DATETIME NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(conversation_id) REFERENCES chat_conversations (id)\n)\n\n",
+    "CREATE INDEX ix_chat_messages_conversation_id ON chat_messages (conversation_id)",
+    "\nCREATE TABLE background_jobs (\n\tuser_id VARCHAR(36) NOT NULL, \n\tkind VARCHAR(40) NOT NULL, \n\ttarget_id VARCHAR(36) NOT NULL, \n\tstatus VARCHAR(30) NOT NULL, \n\terror VARCHAR(300) NOT NULL, \n\tattempts INTEGER NOT NULL, \n\tupdated_at DATETIME NOT NULL, \n\tresult JSON NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at DATETIME NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(user_id) REFERENCES users (id)\n)\n\n",
+    "CREATE INDEX ix_background_jobs_status ON background_jobs (status)"
+  ],
+  "postgresql": [
+    "\nCREATE TABLE documents (\n\ttitle VARCHAR(240) NOT NULL, \n\tdescription TEXT NOT NULL, \n\tdepartment_id VARCHAR(36) NOT NULL, \n\tspecialty VARCHAR(120) NOT NULL, \n\tkind VARCHAR(80) NOT NULL, \n\tlanguage VARCHAR(10) NOT NULL, \n\tscope VARCHAR(20) NOT NULL, \n\tcreator_id VARCHAR(36) NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tCHECK (scope IN ('ALL','DEPARTMENT','RESTRICTED')), \n\tFOREIGN KEY(department_id) REFERENCES departments (id), \n\tFOREIGN KEY(creator_id) REFERENCES users (id)\n)\n\n",
+    "CREATE INDEX ix_documents_department_id ON documents (department_id)",
+    "\nCREATE TABLE document_permissions (\n\tdocument_id VARCHAR(36) NOT NULL, \n\tuser_id VARCHAR(36) NOT NULL, \n\tPRIMARY KEY (document_id, user_id), \n\tFOREIGN KEY(document_id) REFERENCES documents (id), \n\tFOREIGN KEY(user_id) REFERENCES users (id)\n)\n\n",
+    "\nCREATE TABLE document_versions (\n\tdocument_id VARCHAR(36) NOT NULL, \n\tnumber INTEGER NOT NULL, \n\tstatus VARCHAR(30) NOT NULL, \n\tprocessing VARCHAR(30) NOT NULL, \n\tfile_key VARCHAR(150) NOT NULL, \n\tfilename VARCHAR(240) NOT NULL, \n\tsha256 VARCHAR(64) NOT NULL, \n\tuploader_id VARCHAR(36) NOT NULL, \n\teffective_date VARCHAR(10), \n\treview_date VARCHAR(10), \n\terror VARCHAR(300) NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (document_id, number), \n\tCHECK (status IN ('DRAFT','PENDING_REVIEW','APPROVED','ARCHIVED','REJECTED')), \n\tFOREIGN KEY(document_id) REFERENCES documents (id), \n\tFOREIGN KEY(uploader_id) REFERENCES users (id)\n)\n\n",
+    "CREATE INDEX ix_document_versions_document_id ON document_versions (document_id)",
+    "CREATE INDEX ix_document_versions_status ON document_versions (status)",
+    "\nCREATE TABLE document_chunks (\n\tdocument_id VARCHAR(36) NOT NULL, \n\tversion_id VARCHAR(36) NOT NULL, \n\tpage INTEGER, \n\tsection VARCHAR(240) NOT NULL, \n\ttext TEXT NOT NULL, \n\tembedding VECTOR NOT NULL, \n\tembedding_model VARCHAR(150) NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(document_id) REFERENCES documents (id), \n\tFOREIGN KEY(version_id) REFERENCES document_versions (id)\n)\n\n",
+    "CREATE INDEX ix_document_chunks_document_id ON document_chunks (document_id)",
+    "CREATE INDEX ix_document_chunks_version_id ON document_chunks (version_id)",
+    "\nCREATE TABLE source_citations (\n\tchunk_id VARCHAR(36) NOT NULL, \n\tuser_id VARCHAR(36) NOT NULL, \n\tpurpose VARCHAR(40) NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(chunk_id) REFERENCES document_chunks (id), \n\tFOREIGN KEY(user_id) REFERENCES users (id)\n)\n\n",
+    "\nCREATE TABLE document_reviews (\n\tversion_id VARCHAR(36) NOT NULL, \n\treviewer_id VARCHAR(36) NOT NULL, \n\tdecision VARCHAR(30) NOT NULL, \n\tcomment TEXT NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(version_id) REFERENCES document_versions (id), \n\tFOREIGN KEY(reviewer_id) REFERENCES users (id)\n)\n\n",
+    "\nCREATE TABLE chat_conversations (\n\tuser_id VARCHAR(36) NOT NULL, \n\ttitle VARCHAR(150) NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(user_id) REFERENCES users (id)\n)\n\n",
+    "CREATE INDEX ix_chat_conversations_user_id ON chat_conversations (user_id)",
+    "\nCREATE TABLE chat_messages (\n\tconversation_id VARCHAR(36) NOT NULL, \n\trole VARCHAR(20) NOT NULL, \n\tcontent TEXT NOT NULL, \n\tcitation_ids JSON NOT NULL, \n\thelpful BOOLEAN, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(conversation_id) REFERENCES chat_conversations (id)\n)\n\n",
+    "CREATE INDEX ix_chat_messages_conversation_id ON chat_messages (conversation_id)",
+    "\nCREATE TABLE background_jobs (\n\tuser_id VARCHAR(36) NOT NULL, \n\tkind VARCHAR(40) NOT NULL, \n\ttarget_id VARCHAR(36) NOT NULL, \n\tstatus VARCHAR(30) NOT NULL, \n\terror VARCHAR(300) NOT NULL, \n\tattempts INTEGER NOT NULL, \n\tupdated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL, \n\tresult JSON NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(user_id) REFERENCES users (id)\n)\n\n",
+    "CREATE INDEX ix_background_jobs_status ON background_jobs (status)"
+  ]
+}

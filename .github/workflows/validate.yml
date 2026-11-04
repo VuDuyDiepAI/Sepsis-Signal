@@ -1,0 +1,70 @@
+name: Validate prototype
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: Prototype/clinical-training-hub
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      DEMO_MODE: 'true'
+      AI_PROVIDER: demo
+      ALLOW_EXTERNAL_AI: 'false'
+      DATA_DIR: ${{ runner.temp }}/vinmec-ci-data
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: Prototype/clinical-training-hub/package-lock.json
+      - name: Install frontend dependencies
+        run: npm ci
+      - name: Build frontend
+        run: npm run build
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: Prototype/clinical-training-hub/requirements.txt
+      - name: Install backend dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Check Python syntax
+        run: python -m compileall -q backend migrations scripts
+      - name: Migrate a fresh database
+        run: python -m alembic upgrade head
+      - name: Verify startup, demo accounts and role boundaries
+        run: |
+          python - <<'PY'
+          import os
+          from fastapi.testclient import TestClient
+          from backend.main import app
+
+          with TestClient(app) as client:
+              assert client.get('/api/health').json()['status'] == 'ok'
+              for account, role in [('admin', 'ADMIN'), ('reviewer', 'REVIEWER'), ('staff', 'STAFF')]:
+                  client.cookies.clear()
+                  response = client.post('/api/auth/login', json={
+                      'email': f'{account}@demo.local',
+                      'password': os.getenv('DEMO_PASSWORD', 'Demo@2026!'),
+                  })
+                  assert response.status_code == 200, (account, response.status_code)
+                  assert response.json()['roles'] == [role]
+                  assert client.get('/api/auth/me').status_code == 200
+                  learning = client.get('/api/training/my-courses')
+                  assert learning.status_code == (200 if role == 'STAFF' else 403)
+                  report = client.get('/api/training/dashboard')
+                  assert report.status_code == (200 if role == 'ADMIN' else 403)
+          print('Startup, account and role checks passed.')
+          PY

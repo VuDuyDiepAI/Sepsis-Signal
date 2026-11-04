@@ -1,0 +1,212 @@
+.course-workflow-page {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+.course-page-back {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  gap: 10px;
+}
+.course-page-back > .text-button {
+  font-size: 12px;
+  padding-left: 0;
+}
+.course-page-surface {
+  padding: 18px;
+  border: 1px solid #c5d7e5;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 1px 3px #17324d05;
+}
+.course-page-surface > .builder-stepper {
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+.course-page-surface .detail-top {
+  padding: 0 0 8px;
+  margin: 0;
+  font-size: 12px;
+  color: #64748b;
+}
+.course-page-surface .builder-info-layout {
+  grid-template-columns: 1fr;
+}
+.course-page-surface .builder-info-layout > .builder-sources {
+  display: none;
+}
+.course-info-rows {
+  max-width: 900px;
+  padding: 0;
+  border: 0;
+  margin: 0;
+}
+.course-info-rows > label {
+  display: grid;
+  grid-template-columns: 175px minmax(0, 1fr);
+  align-items: start;
+  gap: 14px;
+  margin: 0 0 12px;
+}
+.course-info-rows > label:last-child {
+  margin-bottom: 0;
+}
+.course-info-rows > label > span {
+  padding-top: 8px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.course-info-rows input,
+.course-info-rows select,
+.course-info-rows textarea {
+  margin: 0;
+  font-size: 13px;
+}
+.course-info-rows em {
+  color: #b42318;
+  font-style: normal;
+}
+.course-info-rows input[readonly] {
+  background: #f5f8fb;
+  color: #435f76;
+}
+.course-info-rows .duration-field {
+  max-width: 165px;
+}
+.course-info-rows > label > span > small {
+  font-size: 11px;
+  margin-top: 4px;
+}
+.builder-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 9px;
+  border-top: 1px solid var(--border);
+  padding: 14px 0 0;
+  margin-top: 18px;
+}
+.builder-footer-spacer {
+  flex: 1;
+}
+.builder-footer > .fine {
+  flex: 1;
+  min-width: 190px;
+  font-size: 12px;
+}
+.course-page-surface .builder-footer {
+  position: sticky;
+  bottom: 0;
+  background: #fff;
+  padding: 14px 0 2px;
+  z-index: 5;
+  box-shadow: 0 -7px 8px #ffffffd9;
+}
+.course-page-surface .builder-sources {
+  top: 74px;
+}
+.course-page-surface .builder-layout {
+  gap: 16px;
+}
+.course-page-surface .editor-statusbar {
+  padding-top: 10px;
+}
+.source-pick-hint {
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+.source-pick-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.source-pick-list .check-row {
+  margin: 0;
+  border-radius: 4px;
+  background: #f8fbfe;
+  padding: 12px;
+  gap: 9px;
+  font-size: 13px;
+}
+.source-pick-list .check-row > svg {
+  color: #0875b5;
+  margin-top: 3px;
+}
+.source-pick-list .check-row b {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+}
+.source-pick-list .check-row small {
+  font-size: 12px;
+  margin-top: 4px;
+}
+.source-pick-list input {
+  flex-shrink: 0;
+}
+.course-page-surface .enterprise-panel > .panel-content {
+  padding: 16px;
+}
+.course-page-surface .enterprise-panel {
+  box-shadow: none;
+}
+.course-page-surface .editor-statusbar > span {
+  font-size: 12px;
+}
+.course-page-surface .tabs {
+  margin-top: 8px;
+}
+@media (max-width: 760px) {
+  .course-page-surface {
+    padding: 13px;
+  }
+  .course-page-back > span {
+    display: none;
+  }
+  .course-info-rows > label {
+    grid-template-columns: 1fr;
+    gap: 5px;
+    margin-bottom: 14px;
+  }
+  .course-info-rows > label > span {
+    padding-top: 0;
+  }
+  .course-page-surface .enterprise-panel > .panel-content {
+    padding: 13px;
+  }
+  .course-page-surface > .builder-stepper {
+    margin-bottom: 16px;
+  }
+  .source-pick-list {
+    grid-template-columns: 1fr;
+  }
+  .builder-footer {
+    gap: 8px;
+  }
+  .builder-footer > .fine {
+    width: 100%;
+    flex-basis: 100%;
+  }
+  .builder-footer .actions {
+    justify-content: flex-end;
+    width: 100%;
+  }
+  .builder-footer > button {
+    font-size: 12px;
+    padding: 7px 9px;
+  }
+  .course-page-surface .editor-statusbar .actions {
+    width: 100%;
+  }
+  .course-page-surface .builder-layout {
+    grid-template-columns: 1fr;
+  }
+  .course-page-surface .builder-sources {
+    position: static;
+  }
+  .course-info-rows .duration-field {
+    max-width: 100%;
+  }
+}
