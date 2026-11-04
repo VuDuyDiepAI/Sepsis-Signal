@@ -1,0 +1,52 @@
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 35px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+}
+.setting-row > span {
+  color: #64748b;
+  min-width: 170px;
+}
+.setting-row > b {
+  text-align: right;
+  color: #53717c;
+  font-weight: 500;
+}
+.setting-row:last-child {
+  border: 0;
+}
+@media (max-width: 760px) {
+  .setting-row {
+    align-items: flex-start;
+    gap: 15px;
+    font-size: 12px;
+  }
+  .setting-row > span {
+    min-width: 115px;
+  }
+}
+.permission-fieldset {
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 14px;
+  margin: 20px 0;
+}
+.permission-fieldset legend {
+  font-size: 12px;
+  color: var(--teal);
+  padding: 0 7px;
+}
+.permission-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.permission-grid .check-row {
+  margin: 0;
+  font-size: 12px;
+  padding: 10px;
+}

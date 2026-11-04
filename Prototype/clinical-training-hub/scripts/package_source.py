@@ -1,8 +1,8 @@
 """Package application source without local data or installed dependencies."""
 
-from pathlib import Path
-from zipfile import ZipFile, ZIP_DEFLATED
 import os
+from pathlib import Path
+from zipfile import ZIP_DEFLATED, ZipFile
 
 root = Path(__file__).resolve().parents[1]
 destination = root.parent / "clinical-training-hub-source.zip"
@@ -19,8 +19,6 @@ excluded = {
     "dist",
     ".ruff_cache",
     "artifacts",
-    "tests",
-    "e2e",
 }
 with ZipFile(temporary, "w", ZIP_DEFLATED) as archive:
     for path in sorted(root.rglob("*")):
@@ -30,11 +28,21 @@ with ZipFile(temporary, "w", ZIP_DEFLATED) as archive:
         ):
             continue
         if (
-            path.name.startswith(".env") and path.name != ".env.example"
-        ) or path.suffix.lower() in (
-            ".log", ".tsbuildinfo", ".db", ".sqlite", ".sqlite3",
-            ".zip", ".tmp", ".pem", ".key",
-        ) or path.name.endswith((".db-wal", ".db-shm")):
+            (path.name.startswith(".env") and path.name != ".env.example")
+            or path.suffix.lower()
+            in (
+                ".log",
+                ".tsbuildinfo",
+                ".db",
+                ".sqlite",
+                ".sqlite3",
+                ".zip",
+                ".tmp",
+                ".pem",
+                ".key",
+            )
+            or path.name.endswith((".db-wal", ".db-shm"))
+        ):
             continue
         archive.write(path, Path(root.name) / relative)
 os.replace(temporary, destination)

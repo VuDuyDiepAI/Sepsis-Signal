@@ -41,7 +41,13 @@ Seed chỉ tạo tài khoản demo trên database mới khi `DEMO_MODE=true`. Đ
 
 ## Dữ liệu và các thư mục cần giữ
 
-- `src/`: giao diện; `backend/`: API và nghiệp vụ.
+- `src/app/`: ghép ứng dụng, layout, điều hướng theo vai trò và thứ tự nạp CSS.
+- `src/features/`: từng phân hệ — quản trị, tài liệu, trợ lý AI, học liệu, học tập, lịch, chứng chỉ, dashboard, báo cáo, góp ý và tác vụ xử lý. Component và CSS riêng nằm cùng phân hệ.
+- `src/shared/`: API client, kiểu dữ liệu/quyền tài khoản, context, hook, hàm xử lý và UI/CSS dùng chung.
+- `src/main.tsx`: điểm khởi chạy frontend; `backend/`: API và nghiệp vụ.
+- `backend/modules/`: router, schema và xử lý theo phân hệ; `backend/models/`: ORM theo miền dữ liệu.
+- `backend/core/`, `infrastructure/`, `bootstrap/`: database/quyền, storage/AI/worker và khởi tạo ứng dụng.
+- `tests/`: kiểm thử hồi quy và ranh giới cấu trúc; `requirements-dev.txt`, `pyproject.toml`: thư viện và quy ước phát triển.
 - `migrations/`: schema, phiên bản và snapshot bắt buộc để khởi tạo/nâng database.
 - `data/`: database đang dùng, file upload, backup và log vận hành. Không xóa nếu muốn giữ dữ liệu.
 - `demo/` và `scripts/create_samples.py`: tài liệu giả lập phục vụ seed; backend có sử dụng script này.
@@ -50,6 +56,72 @@ Seed chỉ tạo tài khoản demo trên database mới khi `DEMO_MODE=true`. Đ
 - [Hướng dẫn sử dụng](docs/PILOT_GUIDE.md).
 
 API được sinh trực tiếp tại [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs). Không cần lưu bản báo cáo hoặc snapshot OpenAPI riêng.
+
+## Quy ước frontend
+
+```text
+src/
+├── main.tsx
+├── app/                 # App, layout, workspace, styles.css
+├── features/
+│   ├── administration/  # Quản trị tài khoản, khoa/phòng, nhóm
+│   ├── assistant/       # Chatbot và hội thoại
+│   ├── calendar/        # Lịch đào tạo và nhắc hạn
+│   ├── courses/         # Tạo, biên tập, kiểm duyệt, phân công học liệu
+│   ├── credentials/     # Chứng chỉ
+│   ├── dashboard/       # Tổng quan theo vai trò
+│   ├── documents/       # Tài liệu, phiên bản, nguồn và kiểm duyệt
+│   ├── feedback/        # Gửi và xử lý góp ý
+│   ├── jobs/            # Tác vụ xử lý
+│   ├── reports/         # Báo cáo đào tạo
+│   └── training/        # Khóa học của tôi, học/quiz, hộp phân công
+└── shared/
+    ├── api/             # HTTP client
+    ├── auth/            # Kiểu User và hàm kiểm tra quyền
+    ├── context/         # Trạng thái dùng chung của ứng dụng
+    ├── hooks/           # Hook tải dữ liệu
+    ├── lib/             # Ngày, nhãn trạng thái, thống kê dùng chung
+    ├── styles/          # CSS nền và quy tắc dùng nhiều phân hệ
+    └── ui/              # Modal, bảng, bộ lọc, toast, trình soạn thảo
+```
+
+Dùng alias `@/` để import từ gốc `src`, ví dụ `@/shared/api/client`. Khi thêm trang, đặt trong phân hệ tương ứng và nối vào `app/App.tsx`; tránh gom các trang khác nghiệp vụ vào một file. `shared/` không import từ `features/` hoặc `app/`. Chỉ đưa phần được nhiều phân hệ sử dụng vào `shared/`.
+
+CSS được nạp tập trung qua `app/styles.css` để giữ thứ tự ưu tiên. Khi thêm CSS của phân hệ, đăng ký tại đây; tránh import lại cùng stylesheet ở nhiều component. Sau khi đổi cấu trúc hoặc import, chạy `npm run build` và kiểm tra các trang bị ảnh hưởng.
+
+## Quy ước backend
+
+```text
+backend/
+├── main.py              # Ghép app, middleware, router, frontend tĩnh
+├── api/                 # Router tổng, health, HTTP middleware
+├── bootstrap/           # Lifespan và seed demo
+├── core/                # Database, thời gian, xác thực/phân quyền
+├── infrastructure/      # Storage riêng, AI provider, vector, worker
+├── models/              # ORM chia theo miền; __init__ đăng ký toàn bộ model
+└── modules/
+    ├── identity/        # Đăng nhập, đăng xuất, tài khoản hiện tại
+    ├── organization/    # Khoa/phòng, nhóm và phạm vi tổ chức
+    ├── administration/  # Tài khoản, phân quyền, nhật ký, cấu hình
+    ├── documents/       # Upload, trích xuất, nguồn, kiểm duyệt tài liệu
+    ├── assistant/       # Truy xuất có nguồn, hội thoại, đánh giá
+    ├── courses/         # Nội dung, phiên bản, kiểm duyệt, xuất bản
+    ├── training/        # Phân công, tiến độ học, quiz
+    ├── reports/         # Báo cáo đào tạo theo phạm vi
+    ├── calendar/        # Lịch đào tạo hiện có
+    ├── credentials/     # Chứng chỉ và mốc nhắc
+    ├── notifications/   # API nhắc hạn hiện có
+    ├── feedback/        # Gửi, tổng hợp, xử lý góp ý
+    └── jobs/            # Theo dõi, kiểm tra quyền, thử lại tác vụ
+```
+
+Mỗi phân hệ chỉ có các file cần dùng: `api.py` cho endpoint, `schemas.py` cho input, `services.py` cho xử lý dùng lại. Tài liệu và học liệu tách thêm `access.py`, `serializers.py`, `ingestion.py` hoặc `generation.py` khi có xử lý riêng. Không tạo các lớp hoặc file rỗng chỉ để đủ mẫu.
+
+Dùng import tường minh `backend...`, tránh `import *`. Router tổng nằm trong `backend/api/router.py`; không import router từ service. Model chỉ phụ thuộc database nền/vector, không import HTTP hoặc nghiệp vụ. Quyền và phạm vi phải được kiểm tra ở backend, kể cả khi frontend đã ẩn thao tác.
+
+Worker dùng bảng tác vụ hiện tại; handler được đăng ký tường minh khi startup trong `infrastructure/handlers.py`. Giữ entry point `backend.main:app`, đường dẫn API, thư mục dữ liệu và cấu hình Docker/local hiện có. Migration chỉ đổi nơi import database; các revision và snapshot cũ được giữ nguyên.
+
+Xem [CONTRIBUTING.md](../../CONTRIBUTING.md) để chạy frontend/backend riêng, format/lint và kiểm thử hồi quy trên database cô lập.
 
 ## Giao diện và thao tác
 

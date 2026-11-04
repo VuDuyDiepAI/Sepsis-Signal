@@ -6,6 +6,8 @@ Repository làm việc chung của **VuDuyDiepAI** cho Healthcare Knowledge & Le
 
 Ứng dụng được đặt trong [`Prototype/clinical-training-hub`](Prototype/clinical-training-hub). Thư mục này chứa frontend React/TypeScript, backend FastAPI, migration database, tài liệu mẫu và cấu hình Docker.
 
+Frontend được chia thành `src/app`, `src/features`, `src/shared`; backend gồm `api`, `bootstrap`, `core`, `infrastructure`, `models`, `modules`. Xem [hướng dẫn làm việc nhóm](CONTRIBUTING.md) để chọn đúng phân hệ, chạy môi trường phát triển và kiểm thử.
+
 ## Chạy trên Windows
 
 Cần Git, Python 3.12+ và Node.js 22.12+.
@@ -44,7 +46,7 @@ git commit -m "Mo ta thay doi"
 git push -u origin feature/ten-cong-viec
 ```
 
-Tạo Pull Request vào `main` để đồng đội review. GitHub Actions kiểm tra build frontend, cú pháp Python, migration trên database mới, đăng nhập ba vai trò và một số giới hạn phân quyền. Thay đổi nghiệp vụ vẫn cần kiểm thử tương ứng.
+Tạo Pull Request vào `main` để đồng đội review. GitHub Actions kiểm tra build frontend, cấu trúc/import, định dạng Python, migration và workflow trên SQLite lẫn PostgreSQL. Thay đổi nghiệp vụ vẫn cần kiểm thử tương ứng.
 
 Không commit `.env`, API key, database, upload thực tế, thư viện đã cài hoặc bản build. File `.env.example` chỉ chứa cấu hình mẫu. Không sử dụng dữ liệu người bệnh thật cho prototype.
 

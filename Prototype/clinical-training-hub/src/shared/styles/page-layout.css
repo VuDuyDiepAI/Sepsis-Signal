@@ -1,0 +1,8 @@
+.context-heading {
+  font-size: 16px;
+  margin: 8px 0 14px;
+  color: #164e75;
+}
+main > .tabs {
+  margin-top: 0;
+}
