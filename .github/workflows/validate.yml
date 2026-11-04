@@ -21,7 +21,7 @@ jobs:
       DEMO_MODE: 'true'
       AI_PROVIDER: demo
       ALLOW_EXTERNAL_AI: 'false'
-      DATA_DIR: ${{ runner.temp }}/vinmec-ci-data
+      DATA_DIR: data
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
