@@ -41,7 +41,10 @@ Seed chỉ tạo tài khoản demo trên database mới khi `DEMO_MODE=true`. Đ
 
 ## Dữ liệu và các thư mục cần giữ
 
-- `src/`: giao diện; `backend/`: API và nghiệp vụ.
+- `src/app/`: ghép ứng dụng, layout, điều hướng theo vai trò và thứ tự nạp CSS.
+- `src/features/`: từng phân hệ — quản trị, tài liệu, trợ lý AI, học liệu, học tập, lịch, chứng chỉ, dashboard, báo cáo, góp ý và tác vụ xử lý. Component và CSS riêng nằm cùng phân hệ.
+- `src/shared/`: API client, kiểu dữ liệu/quyền tài khoản, context, hook, hàm xử lý và UI/CSS dùng chung.
+- `src/main.tsx`: điểm khởi chạy frontend; `backend/`: API và nghiệp vụ.
 - `migrations/`: schema, phiên bản và snapshot bắt buộc để khởi tạo/nâng database.
 - `data/`: database đang dùng, file upload, backup và log vận hành. Không xóa nếu muốn giữ dữ liệu.
 - `demo/` và `scripts/create_samples.py`: tài liệu giả lập phục vụ seed; backend có sử dụng script này.
@@ -50,6 +53,38 @@ Seed chỉ tạo tài khoản demo trên database mới khi `DEMO_MODE=true`. Đ
 - [Hướng dẫn sử dụng](docs/PILOT_GUIDE.md).
 
 API được sinh trực tiếp tại [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs). Không cần lưu bản báo cáo hoặc snapshot OpenAPI riêng.
+
+## Quy ước frontend
+
+```text
+src/
+├── main.tsx
+├── app/                 # App, layout, workspace, styles.css
+├── features/
+│   ├── administration/  # Quản trị tài khoản, khoa/phòng, nhóm
+│   ├── assistant/       # Chatbot và hội thoại
+│   ├── calendar/        # Lịch đào tạo và nhắc hạn
+│   ├── courses/         # Tạo, biên tập, kiểm duyệt, phân công học liệu
+│   ├── credentials/     # Chứng chỉ
+│   ├── dashboard/       # Tổng quan theo vai trò
+│   ├── documents/       # Tài liệu, phiên bản, nguồn và kiểm duyệt
+│   ├── feedback/        # Gửi và xử lý góp ý
+│   ├── jobs/            # Tác vụ xử lý
+│   ├── reports/         # Báo cáo đào tạo
+│   └── training/        # Khóa học của tôi, học/quiz, hộp phân công
+└── shared/
+    ├── api/             # HTTP client
+    ├── auth/            # Kiểu User và hàm kiểm tra quyền
+    ├── context/         # Trạng thái dùng chung của ứng dụng
+    ├── hooks/           # Hook tải dữ liệu
+    ├── lib/             # Ngày, nhãn trạng thái, thống kê dùng chung
+    ├── styles/          # CSS nền và quy tắc dùng nhiều phân hệ
+    └── ui/              # Modal, bảng, bộ lọc, toast, trình soạn thảo
+```
+
+Dùng alias `@/` để import từ gốc `src`, ví dụ `@/shared/api/client`. Khi thêm trang, đặt trong phân hệ tương ứng và nối vào `app/App.tsx`; tránh gom các trang khác nghiệp vụ vào một file. `shared/` không import từ `features/` hoặc `app/`. Chỉ đưa phần được nhiều phân hệ sử dụng vào `shared/`.
+
+CSS được nạp tập trung qua `app/styles.css` để giữ thứ tự ưu tiên. Khi thêm CSS của phân hệ, đăng ký tại đây; tránh import lại cùng stylesheet ở nhiều component. Sau khi đổi cấu trúc hoặc import, chạy `npm run build` và kiểm tra các trang bị ảnh hưởng.
 
 ## Giao diện và thao tác
 
