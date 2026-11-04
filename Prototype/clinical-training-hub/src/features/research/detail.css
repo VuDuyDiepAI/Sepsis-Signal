@@ -1,0 +1,401 @@
+.pd-panel {
+  height: 100%;
+  width: 100%;
+  min-width: 0;
+  background: #fff;
+  color: #243b3b;
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, "Segoe UI", sans-serif;
+  overflow: hidden;
+}
+.pd-header {
+  height: 58px;
+  min-height: 58px;
+  border-bottom: 1px solid #e7eded;
+  display: flex;
+  align-items: stretch;
+  padding: 0 22px 0 30px;
+  gap: 16px;
+}
+.pd-tabs {
+  display: flex;
+  align-items: stretch;
+  gap: 30px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.pd-tabs::-webkit-scrollbar {
+  display: none;
+}
+.pd-tab {
+  position: relative;
+  white-space: nowrap;
+  border: 0;
+  background: transparent;
+  color: #728282;
+  font:
+    500 14px Arial,
+    "Segoe UI",
+    sans-serif;
+  padding: 0 1px;
+  cursor: pointer;
+}
+.pd-tab:hover {
+  color: #155e58;
+}
+.pd-tab.is-active {
+  color: #155e58;
+  font-weight: 700;
+}
+.pd-tab.is-active:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+  background: #168378;
+}
+.pd-close {
+  align-self: center;
+  flex: 0 0 auto;
+  margin-left: auto;
+  border: 0;
+  background: transparent;
+  color: #607171;
+  padding: 7px;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  cursor: pointer;
+}
+.pd-close:hover {
+  background: #eff5f4;
+  color: #174e4a;
+}
+.pd-scroll {
+  overflow: auto;
+  flex: 1;
+  min-height: 0;
+}
+.pd-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 35px 56px 56px;
+}
+.pd-demo {
+  display: inline-block;
+  margin-bottom: 13px;
+  padding: 5px 9px;
+  border-radius: 5px;
+  background: #fff5df;
+  color: #89631b;
+  font-size: 12px;
+  font-weight: 700;
+}
+.pd-title {
+  font-size: 28px;
+  line-height: 1.32;
+  letter-spacing: -0.35px;
+  color: #123f3d;
+  margin: 0 0 14px;
+  font-weight: 700;
+}
+.pd-byline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  align-items: center;
+  color: #6a7a7a;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.pd-dot {
+  color: #a0adad;
+}
+.pd-journal {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 17px;
+  color: #355d59;
+  font-size: 14px;
+}
+.pd-citations {
+  margin-left: 12px;
+  color: #72817f;
+  font-size: 13px;
+}
+.pd-doi {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #637472;
+  font-size: 13px;
+}
+.pd-doi a,
+.pd-metadata a,
+.pd-quote a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #15776e;
+  text-decoration: none;
+}
+.pd-doi a:hover,
+.pd-metadata a:hover,
+.pd-quote a:hover {
+  text-decoration: underline;
+}
+.pd-doi button {
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: #70827f;
+  padding: 3px;
+  cursor: pointer;
+}
+.pd-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin: 23px 0 29px;
+  padding-bottom: 23px;
+  border-bottom: 1px solid #e8eeee;
+}
+.pd-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid #d8e3e1;
+  border-radius: 7px;
+  padding: 9px 12px;
+  background: #fff;
+  color: #315c58;
+  text-decoration: none;
+  font:
+    600 13px Arial,
+    "Segoe UI",
+    sans-serif;
+  cursor: pointer;
+}
+.pd-action:hover {
+  background: #f2f8f7;
+  border-color: #b9d0cd;
+}
+.pd-action.is-saved {
+  background: #eaf5f2;
+  border-color: #c6e0db;
+  color: #126b60;
+}
+.pd-pdf {
+  background: #155e58;
+  color: #fff;
+  border-color: #155e58;
+}
+.pd-pdf:hover {
+  background: #0e4e49;
+  color: #fff;
+}
+.pd-section h2 {
+  font-size: 21px;
+  line-height: 1.35;
+  color: #183e3c;
+  margin: 0 0 14px;
+  font-weight: 700;
+}
+.pd-section h3 {
+  font-size: 16px;
+  color: #284e4b;
+  margin: 24px 0 10px;
+}
+.pd-abstract {
+  font-size: 16px;
+  line-height: 1.65;
+  color: #455b59;
+  margin: 0;
+  white-space: pre-line;
+}
+.pd-muted {
+  font-size: 14px;
+  color: #788886;
+  margin: 0;
+  padding: 12px 0;
+}
+.pd-file {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 16px;
+  border: 1px solid #e1e9e8;
+  border-radius: 9px;
+  color: #28736c;
+  text-decoration: none;
+  max-width: 420px;
+}
+.pd-file span {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 5px;
+  color: #294b48;
+}
+.pd-file small {
+  font-size: 12px;
+  color: #7a8987;
+}
+.pd-file:hover {
+  background: #f5faf9;
+}
+.pd-evidence-list {
+  border: 1px solid #e4ebea;
+  border-radius: 9px;
+  overflow: hidden;
+}
+.pd-evidence + .pd-evidence {
+  border-top: 1px solid #e7eded;
+}
+.pd-evidence-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 0;
+  background: #fff;
+  padding: 15px 17px;
+  text-align: left;
+  color: #31504d;
+  cursor: pointer;
+}
+.pd-evidence-toggle:hover {
+  background: #f7faf9;
+}
+.pd-evidence-toggle span:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.pd-evidence-toggle strong {
+  font-size: 14px;
+}
+.pd-evidence-toggle small {
+  font-size: 12px;
+  color: #80908e;
+}
+.pd-chevron {
+  font-size: 21px;
+  color: #428078;
+}
+.pd-quote {
+  padding: 0 17px 16px 17px;
+  color: #4f6260;
+}
+.pd-quote p {
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0 0 10px;
+}
+.pd-quote a {
+  font-size: 13px;
+}
+.pd-metadata {
+  display: grid;
+  grid-template-columns: minmax(135px, 190px) 1fr;
+  gap: 0 20px;
+  margin: 0;
+}
+.pd-metadata dt,
+.pd-metadata dd {
+  border-bottom: 1px solid #edf1f0;
+  padding: 12px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.pd-metadata dt {
+  color: #788986;
+}
+.pd-metadata dd {
+  margin: 0;
+  color: #344d4a;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 760px) {
+  .pd-header {
+    padding: 0 12px 0 16px;
+    gap: 8px;
+  }
+  .pd-tabs {
+    gap: 21px;
+  }
+  .pd-tab {
+    font-size: 13px;
+  }
+  .pd-content {
+    padding: 26px 22px 40px;
+  }
+  .pd-title {
+    font-size: 24px;
+  }
+  .pd-metadata {
+    grid-template-columns: 120px 1fr;
+  }
+}
+/* Paper header: back/title row above the tab row. */
+.rs-detail .pd-header {
+  height: auto;
+  min-height: 98px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0 16px;
+}
+.pd-topbar {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.pd-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  border: 0;
+  padding: 8px 0;
+  background: transparent;
+  color: #173a49;
+  cursor: pointer;
+  font:
+    14px Arial,
+    sans-serif;
+}
+.pd-back:hover {
+  color: #007793;
+}
+.pd-topbar .pd-close {
+  margin-left: auto;
+  border: 1px solid #cbdce3;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  padding: 6px;
+}
+.rs-detail .pd-tabs {
+  min-height: 49px;
+  flex-shrink: 0;
+  gap: 23px;
+}
+.rs-detail .pd-tab {
+  font-size: 13px;
+}
+.pd-back:focus-visible {
+  outline: 2px solid #007793;
+  outline-offset: 3px;
+}
