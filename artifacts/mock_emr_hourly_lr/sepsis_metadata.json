@@ -1,0 +1,154 @@
+{
+  "model_name": "Logistic regression",
+  "model_version": "mock-emr-hourly-sepsis-lr-v2",
+  "data_kind": "SYNTHETIC_MOCK_EMR",
+  "target": "sepsis_next_6h",
+  "horizon_hours": 6,
+  "first_prediction_hour": 1,
+  "prediction_interval_minutes": 60,
+  "features": [
+    "age_years",
+    "bmi_kg_m2",
+    "diabetes",
+    "cardiovascular_disease",
+    "chronic_kidney_disease",
+    "chronic_liver_disease",
+    "chronic_lung_disease",
+    "cancer",
+    "immunosuppression",
+    "heart_rate_last_bpm",
+    "respiratory_rate_last_per_min",
+    "sbp_last_mmhg",
+    "map_last_mmhg",
+    "spo2_last_pct",
+    "temperature_last_c",
+    "gcs_last",
+    "heart_rate_delta_6h_bpm",
+    "sbp_delta_6h_mmhg",
+    "heart_rate_mean_6h_bpm",
+    "vital_observation_count_6h",
+    "WBC_last_10e9_L",
+    "platelets_last_10e9_L",
+    "creatinine_last_mg_dL",
+    "bilirubin_last_mg_dL",
+    "CRP_last_mg_L",
+    "procalcitonin_last_ng_mL",
+    "creatinine_measured_24h",
+    "CRP_measured_24h",
+    "hours_since_creatinine_result",
+    "symptom_respiratory",
+    "symptom_urinary",
+    "symptom_abdominal",
+    "symptom_skin",
+    "symptom_cns",
+    "sex",
+    "location_code"
+  ],
+  "expanded_feature_count": 53,
+  "class_weight": null,
+  "regularization_C": 0.05,
+  "cv_tuning": {
+    "cv_folds": 5,
+    "best_C": 0.05,
+    "oof_auprc": 0.8483,
+    "oof_auroc": 0.9876,
+    "c_grid_results": [
+      {
+        "C": 0.01,
+        "oof_auprc": 0.8353,
+        "oof_auroc": 0.9854
+      },
+      {
+        "C": 0.02,
+        "oof_auprc": 0.844,
+        "oof_auroc": 0.9867
+      },
+      {
+        "C": 0.05,
+        "oof_auprc": 0.8483,
+        "oof_auroc": 0.9876
+      },
+      {
+        "C": 0.1,
+        "oof_auprc": 0.8479,
+        "oof_auroc": 0.9875
+      },
+      {
+        "C": 0.25,
+        "oof_auprc": 0.8445,
+        "oof_auroc": 0.9866
+      },
+      {
+        "C": 0.5,
+        "oof_auprc": 0.8343,
+        "oof_auroc": 0.9854
+      },
+      {
+        "C": 1.0,
+        "oof_auprc": 0.8221,
+        "oof_auroc": 0.984
+      },
+      {
+        "C": 2.0,
+        "oof_auprc": 0.8124,
+        "oof_auroc": 0.9826
+      }
+    ]
+  },
+  "epv_positive_encounters_per_input_var": 1.03,
+  "threshold": 0.0914,
+  "threshold_rule": "Highest validation threshold with encounter early recall >= 0.80 and snapshot recall >= 0.80 (natural prevalence calibration)",
+  "source_sha256": "a2bd10092fea5d87222714699150170534db52d973174c3811e672b140f657d3",
+  "trained_at_utc": "2026-11-18T04:25:39.319055+00:00",
+  "train_encounters": 214,
+  "train_positive_encounters": 37,
+  "validation_encounters": 72,
+  "validation_positive_encounters": 12,
+  "temporal_holdout_encounters": 71,
+  "temporal_holdout_positive_encounters": 11,
+  "validation_synthetic_metrics": {
+    "snapshots": 1942,
+    "positive_snapshots": 70,
+    "auroc": 0.9857142857142857,
+    "auprc": 0.8198913676762248,
+    "brier": 0.013938950615897592,
+    "observed_prevalence": 0.03604531410916581,
+    "mean_predicted_probability": 0.0284667230131977,
+    "recall": 0.7857142857142857,
+    "precision": 0.5392156862745098,
+    "alert_fraction": 0.05252317198764161,
+    "encounter_early_recall": 0.9166666666666666,
+    "encounter_precision": 0.6470588235294118,
+    "nne_encounters": 1.55,
+    "false_alert_encounters_per_100": 8.33,
+    "alert_episodes_per_100": 33.33,
+    "median_lead_hours": 5.0,
+    "iqr_lead_hours": [
+      5.0,
+      6.0
+    ]
+  },
+  "temporal_holdout_synthetic_metrics": {
+    "snapshots": 1926,
+    "positive_snapshots": 66,
+    "auroc": 0.9914956011730205,
+    "auprc": 0.8689390878952515,
+    "brier": 0.012654736588515875,
+    "observed_prevalence": 0.03426791277258567,
+    "mean_predicted_probability": 0.02642205907415766,
+    "recall": 0.9242424242424242,
+    "precision": 0.6224489795918368,
+    "alert_fraction": 0.05088265835929388,
+    "encounter_early_recall": 1.0,
+    "encounter_precision": 0.6875,
+    "nne_encounters": 1.45,
+    "false_alert_encounters_per_100": 7.04,
+    "alert_episodes_per_100": 32.39,
+    "median_lead_hours": 6.0,
+    "iqr_lead_hours": [
+      5.0,
+      6.0
+    ]
+  },
+  "warning": "Synthetic, event-enriched and rule-generated data. Not a clinical probability or clinical validation."
+}

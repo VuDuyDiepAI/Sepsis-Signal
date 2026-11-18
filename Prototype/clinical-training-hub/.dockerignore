@@ -1,8 +1,0 @@
-node_modules
-.venv
-data
-.git
-.env
-__pycache__
-*.zip
-dist

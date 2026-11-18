@@ -1,0 +1,139 @@
+{
+  "model_name": "Logistic regression",
+  "model_version": "mock-emr-hourly-shock-lr-v2",
+  "data_kind": "SYNTHETIC_MOCK_EMR",
+  "target": "shock_next_6h",
+  "horizon_hours": 6,
+  "first_prediction_hour": 1,
+  "prediction_interval_minutes": 60,
+  "features": [
+    "age_years",
+    "bmi_kg_m2",
+    "diabetes",
+    "cardiovascular_disease",
+    "chronic_kidney_disease",
+    "chronic_liver_disease",
+    "chronic_lung_disease",
+    "cancer",
+    "immunosuppression",
+    "heart_rate_last_bpm",
+    "respiratory_rate_last_per_min",
+    "sbp_last_mmhg",
+    "map_last_mmhg",
+    "spo2_last_pct",
+    "temperature_last_c",
+    "gcs_last",
+    "heart_rate_delta_6h_bpm",
+    "sbp_delta_6h_mmhg",
+    "heart_rate_mean_6h_bpm",
+    "vital_observation_count_6h",
+    "WBC_last_10e9_L",
+    "platelets_last_10e9_L",
+    "creatinine_last_mg_dL",
+    "bilirubin_last_mg_dL",
+    "CRP_last_mg_L",
+    "procalcitonin_last_ng_mL",
+    "creatinine_measured_24h",
+    "CRP_measured_24h",
+    "hours_since_creatinine_result",
+    "symptom_respiratory",
+    "symptom_urinary",
+    "symptom_abdominal",
+    "symptom_skin",
+    "symptom_cns",
+    "sex",
+    "location_code"
+  ],
+  "expanded_feature_count": 53,
+  "class_weight": null,
+  "regularization_C": 0.05,
+  "cv_tuning": {
+    "cv_folds": 5,
+    "best_C": 0.05,
+    "oof_auprc": 0.937,
+    "oof_auroc": 0.9994,
+    "c_grid_results": [
+      {
+        "C": 0.005,
+        "oof_auprc": 0.9091,
+        "oof_auroc": 0.9991
+      },
+      {
+        "C": 0.01,
+        "oof_auprc": 0.9155,
+        "oof_auroc": 0.9992
+      },
+      {
+        "C": 0.02,
+        "oof_auprc": 0.93,
+        "oof_auroc": 0.9993
+      },
+      {
+        "C": 0.05,
+        "oof_auprc": 0.937,
+        "oof_auroc": 0.9994
+      },
+      {
+        "C": 0.1,
+        "oof_auprc": 0.933,
+        "oof_auroc": 0.9993
+      }
+    ]
+  },
+  "epv_positive_encounters_per_input_var": 0.19,
+  "threshold": 0.15,
+  "threshold_rule": "Highest validation threshold with encounter early recall >= 0.80 and snapshot recall >= 0.80 (natural prevalence calibration)",
+  "source_sha256": "a2bd10092fea5d87222714699150170534db52d973174c3811e672b140f657d3",
+  "trained_at_utc": "2026-11-18T04:25:42.292290+00:00",
+  "train_encounters": 214,
+  "train_positive_encounters": 7,
+  "validation_encounters": 72,
+  "validation_positive_encounters": 3,
+  "temporal_holdout_encounters": 71,
+  "temporal_holdout_positive_encounters": 2,
+  "validation_synthetic_metrics": {
+    "snapshots": 2120,
+    "positive_snapshots": 18,
+    "auroc": 0.9994714028967121,
+    "auprc": 0.9445577184174797,
+    "brier": 0.00202408273158554,
+    "observed_prevalence": 0.008490566037735849,
+    "mean_predicted_probability": 0.008475399969392042,
+    "recall": 0.8888888888888888,
+    "precision": 0.8,
+    "alert_fraction": 0.009433962264150943,
+    "encounter_early_recall": 1.0,
+    "encounter_precision": 1.0,
+    "nne_encounters": 1.0,
+    "false_alert_encounters_per_100": 0.0,
+    "alert_episodes_per_100": 6.94,
+    "median_lead_hours": 8.0,
+    "iqr_lead_hours": [
+      7.0,
+      8.0
+    ]
+  },
+  "temporal_holdout_synthetic_metrics": {
+    "snapshots": 2108,
+    "positive_snapshots": 12,
+    "auroc": 0.9985289440203562,
+    "auprc": 0.8973214285714287,
+    "brier": 0.0015033582062277226,
+    "observed_prevalence": 0.0056925996204933585,
+    "mean_predicted_probability": 0.004542062659927899,
+    "recall": 0.8333333333333334,
+    "precision": 0.8333333333333334,
+    "alert_fraction": 0.0056925996204933585,
+    "encounter_early_recall": 1.0,
+    "encounter_precision": 1.0,
+    "nne_encounters": 1.0,
+    "false_alert_encounters_per_100": 0.0,
+    "alert_episodes_per_100": 4.23,
+    "median_lead_hours": 6.0,
+    "iqr_lead_hours": [
+      5.0,
+      7.0
+    ]
+  },
+  "warning": "Synthetic, event-enriched and rule-generated data. Not a clinical probability or clinical validation."
+}
