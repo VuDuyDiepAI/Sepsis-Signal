@@ -136,7 +136,7 @@ def create_case(*, triage_completed_at: datetime, age_years: int, sex: str,
     init_db(path)
     age = int(age_years)
     if not 18 <= age <= 120 or sex not in ('F', 'M'):
-        raise ValueError('Ca demo cần tuổi 18–120 và giới F hoặc M.')
+        raise ValueError('Hồ sơ trải nghiệm cần tuổi từ 18 đến 120 và thông tin giới tính.')
     height = _finite(height_cm, 'chiều cao', (80, 250))
     weight = _finite(weight_kg, 'cân nặng', (20, 400))
     bmi = round(weight / (height / 100) ** 2, 1) if height and weight else None
@@ -340,7 +340,7 @@ def build_features(encounter_id: str, prediction_at: datetime,
 def score_hour(encounter_id: str, hour: int, *, path: Path | None = None,
                bundles: dict | None = None) -> dict:
     if not 1 <= int(hour) <= 36:
-        raise ValueError('Prototype hỗ trợ các mốc T0+1 đến T0+36 giờ.')
+        raise ValueError('Chọn mốc từ T0+1 đến T0+36 giờ.')
     case = get_case(encounter_id, path)
     t = _dt(case['triage_completed_at']) + timedelta(hours=int(hour))
     frame = build_features(encounter_id, t, path)

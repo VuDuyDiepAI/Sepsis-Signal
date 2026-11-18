@@ -1,10 +1,15 @@
-# Sepsis Signal — prototype nghiên cứu
+# Sepsis Signal
 
-Prototype Streamlit cho phép nhập hồ sơ EMR **giả lập** theo từng mốc giờ và xem mô hình hồi quy Logistic ước tính nguy cơ sepsis trong 6 giờ tiếp theo. Bản demo hiện có thêm một mô hình sốc nhiễm khuẩn thử nghiệm riêng.
+Ứng dụng Streamlit để trải nghiệm theo dõi nguy cơ sepsis trong 6 giờ tiếp theo bằng hồ sơ EMR mẫu.
 
-## Chạy ứng dụng
+- **Chạy ca mẫu**: mở E0009, chuyển từ T0+7h sang T0+8h để xem điểm, biểu đồ và kết quả xét nghiệm mới.
+- **Nhập ca theo giờ**: tạo hồ sơ, cập nhật dữ liệu và chấm điểm từng mốc.
+- **Danh sách theo dõi**: mở lại các hồ sơ đã nhập tại mốc chấm gần nhất.
+- **Đánh giá mô hình**: xem kết quả theo ca và theo giờ, quy tắc chọn ngưỡng và phần mở rộng minh họa về sốc nhiễm khuẩn.
 
-Yêu cầu Python 3.11 trên Windows:
+## Chạy trên Windows
+
+Dùng Python 3.11. Mở terminal ở thư mục gốc của repo:
 
 ```powershell
 py -3.11 -m venv .venv
@@ -12,12 +17,12 @@ py -3.11 -m venv .venv
 .\.venv\Scripts\python.exe -m streamlit run app\streamlit_app.py
 ```
 
-Mở địa chỉ local do Streamlit hiển thị. Các hồ sơ nhập tay được lưu cục bộ trong `data/manual_cases.sqlite3`; tệp này bị loại khỏi Git.
+Mở địa chỉ Streamlit hiển thị trong terminal. Repo đã gồm bộ hồ sơ mẫu và các model tương ứng. Hồ sơ nhập tay được lưu cục bộ trong SQLite.
 
-## Dữ liệu và mô hình
+## Hồ sơ mẫu và mô hình
 
-- `data/mock_ed_hospital_emr_v3_hourly.xlsx`: 360 lượt khám giả lập, 12.960 mốc theo giờ, kèm bảng từ điển dữ liệu.
-- `artifacts/mock_emr_hourly_lr/`: model và metadata tương ứng; mã kiểm tra dữ liệu trong metadata dùng để xác nhận workbook khớp model.
-- `scripts/train_mock_emr.py`: huấn luyện lại hai model demo từ workbook. Chạy lệnh này sau khi cài các gói trong `requirements.txt`.
+- [Workbook EMR mẫu](data/mock_ed_hospital_emr_v3_hourly.xlsx) gồm **360 lượt khám và 12.960 mốc theo giờ**. Mở sheet `Guide` để xem cách đọc và sheet `DataDictionary` để xem schema.
+- [Metadata mô hình](artifacts/mock_emr_hourly_lr) chứa phiên bản, checksum workbook, ngưỡng và các chỉ số đánh giá.
+- Để tính lại ngưỡng và chỉ số từ model đã lưu, chạy `python scripts/train_mock_emr.py --refresh-metrics` trong môi trường ở trên. Bỏ tùy chọn này để huấn luyện lại.
 
-Toàn bộ bệnh án và nhãn trong workbook là dữ liệu sinh tổng hợp, không phải dữ liệu MIMIC, PhysioNet hay bệnh nhân thật. Điểm nguy cơ và kết quả đánh giá trên dữ liệu này chỉ minh họa luồng kỹ thuật; không dùng để chẩn đoán, điều trị hoặc ra quyết định lâm sàng.
+Dùng hồ sơ mẫu trong chế độ trải nghiệm. Các chỉ số được tính trên dữ liệu mô phỏng và chưa được kiểm định trên hồ sơ bệnh nhân thật.

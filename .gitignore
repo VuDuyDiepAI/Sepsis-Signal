@@ -1,9 +1,14 @@
 .venv/
+node_modules/
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.env
+.env.*
 .streamlit/secrets.toml
-data/manual_cases.sqlite3
-data/manual_cases.sqlite3-*
+data/*
+!data/mock_ed_hospital_emr_v3_hourly.xlsx
 logs/
+reports/
+deliverables/
 *.log

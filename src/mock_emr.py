@@ -195,7 +195,7 @@ SHEETS = [
 
 def load_tables(path: Path = DATA_PATH) -> dict[str, pd.DataFrame]:
     if not path.exists():
-        raise FileNotFoundError(f'Chưa có bộ EMR mock: {path}. Chạy script huấn luyện theo README.')
+        raise FileNotFoundError(f'Chưa có bộ hồ sơ mẫu: {path}. Xem hướng dẫn chuẩn bị dữ liệu trong README.')
     tables = pd.read_excel(path, sheet_name=SHEETS, engine='openpyxl')
     for table in tables.values():
         for column in table.columns:
@@ -234,9 +234,9 @@ def load_bundle(target: str = 'sepsis') -> tuple[object, dict]:
     if (meta.get('data_kind') != 'SYNTHETIC_MOCK_EMR'
             or meta.get('features') != FEATURES
             or meta.get('target') != TARGETS[target][1]):
-        raise ValueError('Metadata mô hình không khớp hợp đồng EMR mock.')
+        raise ValueError('Cấu hình mô hình không khớp với bộ hồ sơ mẫu.')
     if not DATA_PATH.exists() or hashlib.sha256(DATA_PATH.read_bytes()).hexdigest() != meta.get('source_sha256'):
-        raise ValueError('Workbook EMR mock đã thay đổi; cần huấn luyện lại trước khi dự báo.')
+        raise ValueError('Bộ hồ sơ mẫu đã thay đổi. Cần huấn luyện lại mô hình trước khi chấm điểm.')
     return joblib.load(bundle_path), meta
 
 

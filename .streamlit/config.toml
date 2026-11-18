@@ -1,10 +1,16 @@
 [theme]
 base = "light"
-primaryColor = "#08749A"
-backgroundColor = "#F5F8FB"
-secondaryBackgroundColor = "#F0F6FA"
-textColor = "#17324D"
+primaryColor = "#155CA8"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#EDF4FC"
+textColor = "#152B45"
 font = "sans serif"
+baseFontSize = 17
+baseRadius = "4px"
+buttonRadius = "4px"
+
+[client]
+toolbarMode = "minimal"
 
 [server]
 maxUploadSize = 15

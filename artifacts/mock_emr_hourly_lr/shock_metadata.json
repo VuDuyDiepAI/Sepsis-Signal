@@ -82,7 +82,7 @@
   },
   "epv_positive_encounters_per_input_var": 0.19,
   "threshold": 0.15,
-  "threshold_rule": "Highest validation threshold with encounter early recall >= 0.80 and snapshot recall >= 0.80 (natural prevalence calibration)",
+  "threshold_rule": "Highest validation threshold within the demo ceiling meeting both recall targets; fallbacks are recorded under threshold_selection.",
   "source_sha256": "a2bd10092fea5d87222714699150170534db52d973174c3811e672b140f657d3",
   "trained_at_utc": "2026-11-18T04:25:42.292290+00:00",
   "train_encounters": 214,
@@ -103,14 +103,17 @@
     "precision": 0.8,
     "alert_fraction": 0.009433962264150943,
     "encounter_early_recall": 1.0,
+    "timely_alert_encounters": 3,
+    "too_early_alert_encounters": 2,
+    "too_early_only_encounters": 0,
     "encounter_precision": 1.0,
     "nne_encounters": 1.0,
     "false_alert_encounters_per_100": 0.0,
     "alert_episodes_per_100": 6.94,
-    "median_lead_hours": 8.0,
+    "median_lead_hours": 6.0,
     "iqr_lead_hours": [
-      7.0,
-      8.0
+      5.0,
+      6.0
     ]
   },
   "temporal_holdout_synthetic_metrics": {
@@ -125,15 +128,27 @@
     "precision": 0.8333333333333334,
     "alert_fraction": 0.0056925996204933585,
     "encounter_early_recall": 1.0,
+    "timely_alert_encounters": 2,
+    "too_early_alert_encounters": 1,
+    "too_early_only_encounters": 0,
     "encounter_precision": 1.0,
     "nne_encounters": 1.0,
     "false_alert_encounters_per_100": 0.0,
     "alert_episodes_per_100": 4.23,
-    "median_lead_hours": 6.0,
+    "median_lead_hours": 5.0,
     "iqr_lead_hours": [
-      5.0,
-      7.0
+      4.5,
+      5.5
     ]
   },
-  "warning": "Synthetic, event-enriched and rule-generated data. Not a clinical probability or clinical validation."
+  "warning": "Synthetic, event-enriched and rule-generated data. Not a clinical probability or clinical validation.",
+  "evaluation_version": "timely-alert-v1",
+  "evaluated_at_utc": "2026-11-18T13:21:39.994364+00:00",
+  "threshold_selection": {
+    "branch": "both_recall_targets",
+    "minimum_recall": 0.8,
+    "demo_ceiling": 0.15,
+    "validation_encounter_recall": 1.0,
+    "validation_snapshot_recall": 0.8888888888888888
+  }
 }
