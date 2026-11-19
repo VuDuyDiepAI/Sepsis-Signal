@@ -89,7 +89,7 @@ def show_entry_form(case_id, hour, at, location):
         st.subheader('Dữ liệu ban đầu · T0' if hour == 0 else f'Cập nhật dữ liệu · T0+{hour}h')
         vital_tab, lab_tab, context_tab = st.tabs(['Sinh hiệu', 'Xét nghiệm', 'Triệu chứng và khoa'])
         with vital_tab:
-            st.caption('Nhập sinh hiệu mới nếu có. Có thể dùng bản đo đã lưu trong 6 giờ gần nhất.')
+            st.caption('Nhập sinh hiệu mới nếu có. Các bản đo đã lưu từ T0 được dùng để tổng hợp diễn biến đến mốc đang xem.')
             cols = st.columns(2)
             vitals = {
                 'heart_rate_bpm': cols[0].number_input('Nhịp tim (lần/phút)', 20, 250, value=None),
@@ -193,7 +193,10 @@ except (FileNotFoundError, ValueError) as exc:
 at_key = at.isoformat(timespec='seconds')
 features = build_features(case_id, at)
 current = next((row for row in history if row['prediction_at'] == at_key), None)
-previous = next((row for row in reversed(history) if row['prediction_at'] < at_key), None)
+previous = next((row for row in reversed(history) if row['prediction_at'] < at_key
+                 and row['model_version'] == (current['model_version'] if current else meta['model_version'])), None)
+if current and current['model_version'] != meta['model_version']:
+    st.info('Kết quả đã lưu dùng phiên bản mô hình trước. Lưu và chấm lại để áp dụng cửa sổ tích lũy từ T0.')
 latest = history[-1] if history else None
 if latest and at_key < latest['prediction_at']:
     st.info(f'Đang xem lịch sử T0+{hour}h · Kết quả mới nhất T0+{int(last_hour)}h '
@@ -204,6 +207,10 @@ labs = pd.DataFrame(event_rows(case_id, 'labs'))
 for frame in (vitals, labs):
     if not frame.empty:
         frame['available_at'] = pd.to_datetime(frame['available_at'])
+if not vitals.empty:
+    vitals = vitals.sort_values(['measured_at', 'available_at'])
+if not labs.empty:
+    labs = labs.sort_values(['collected_at', 'available_at'])
 previous_at = (pd.Timestamp(previous['prediction_at']) if previous else pd.Timestamp(t0))
 if hour == 0:
     previous_at = pd.Timestamp(t0) - pd.Timedelta(microseconds=1)
@@ -259,7 +266,7 @@ with clinical:
         else:
             show_result(at)
             if pd.isna(features.iloc[0]['heart_rate_last_bpm']):
-                st.caption('Cần bản đo gồm nhịp tim, nhịp thở và HA tâm thu trong 6 giờ gần nhất.')
+                st.caption('Cần bản đo gồm nhịp tim, nhịp thở và HA tâm thu từ T0 đến mốc đang xem.')
     with st.container(border=True, key='timeline_panel'):
         st.subheader('Diễn biến nguy cơ', anchor=False)
         show_timeline(timeline, hour, lab_events=lab_markers(visible_labs, t0))

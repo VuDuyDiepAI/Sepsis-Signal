@@ -365,53 +365,13 @@ def event_rows(encounter_id: str, table: str, path: Path | None = None,
 def build_features(encounter_id: str, prediction_at: datetime,
                    path: Path | None = None) -> pd.DataFrame:
     """One 36-field feature row using only values visible at the scoring time."""
+    from src.observation_features import build_snapshot
     case = get_case(encounter_id, path)
-    t = prediction_at.replace(microsecond=0)
-    t0 = _dt(case['triage_completed_at'])
-    if t < t0:
-        raise ValueError('Mốc tổng hợp dữ liệu không được trước T0.')
-    vitals = [r for r in event_rows(encounter_id, 'vitals', path)
-              if _dt(r['available_at']) <= t and _dt(r['available_at']) >= t - timedelta(hours=6)]
-    labs = [r for r in event_rows(encounter_id, 'labs', path)
-            if _dt(r['available_at']) <= t and _dt(r['available_at']) >= t - timedelta(hours=24)]
-    symptoms = [r for r in event_rows(encounter_id, 'symptoms', path)
-                if _dt(r['available_at']) <= t]
-    locations = [r for r in event_rows(encounter_id, 'locations', path)
-                 if _dt(r['available_at']) <= t and _dt(r['effective_at']) <= t]
-    last_v = vitals[-1] if vitals else None
-    early_v = vitals[0] if vitals else None
-    last_symptom = symptoms[-1] if symptoms else None
-    last_location = locations[-1]['location_code'] if locations else 'ED'
-    last_labs = {r['test_code']: r for r in labs}
-    lab_value = lambda code: last_labs[code]['value_num'] if code in last_labs else np.nan
-    creat = last_labs.get('creatinine')
-    row = {
-        'encounter_id': encounter_id, 'prediction_at': t, 'location_code': last_location,
-        'age_years': case['age_years'], 'sex': case['sex'],
-        'bmi_kg_m2': case['bmi_kg_m2'] if case['bmi_kg_m2'] is not None else np.nan,
-        **{key: case[key] for key in COMORBIDITIES},
-        'heart_rate_last_bpm': last_v['heart_rate_bpm'] if last_v else np.nan,
-        'respiratory_rate_last_per_min': last_v['respiratory_rate_per_min'] if last_v else np.nan,
-        'sbp_last_mmhg': last_v['sbp_mmhg'] if last_v else np.nan,
-        'map_last_mmhg': last_v['map_mmhg'] if last_v and last_v['map_mmhg'] is not None else np.nan,
-        'spo2_last_pct': last_v['spo2_pct'] if last_v and last_v['spo2_pct'] is not None else np.nan,
-        'temperature_last_c': last_v['temperature_c'] if last_v and last_v['temperature_c'] is not None else np.nan,
-        'gcs_last': last_v['gcs'] if last_v and last_v['gcs'] is not None else np.nan,
-        'heart_rate_delta_6h_bpm': last_v['heart_rate_bpm'] - early_v['heart_rate_bpm'] if last_v else np.nan,
-        'sbp_delta_6h_mmhg': last_v['sbp_mmhg'] - early_v['sbp_mmhg'] if last_v else np.nan,
-        'heart_rate_mean_6h_bpm': round(sum(v['heart_rate_bpm'] for v in vitals) / len(vitals), 1) if vitals else np.nan,
-        'vital_observation_count_6h': len(vitals),
-        'WBC_last_10e9_L': lab_value('WBC'),
-        'platelets_last_10e9_L': lab_value('platelets'),
-        'creatinine_last_mg_dL': lab_value('creatinine'),
-        'bilirubin_last_mg_dL': lab_value('bilirubin_total'),
-        'CRP_last_mg_L': lab_value('CRP'),
-        'procalcitonin_last_ng_mL': lab_value('procalcitonin'),
-        'creatinine_measured_24h': int(creat is not None),
-        'CRP_measured_24h': int('CRP' in last_labs),
-        'hours_since_creatinine_result': round((t - _dt(creat['available_at'])).total_seconds() / 3600, 2) if creat else np.nan,
-        **{f'symptom_{key}': last_symptom[key] if last_symptom else np.nan for key in SYMPTOMS},
-    }
+    row = build_snapshot(case, prediction_at,
+                         event_rows(encounter_id, 'vitals', path),
+                         event_rows(encounter_id, 'labs', path),
+                         event_rows(encounter_id, 'symptoms', path),
+                         event_rows(encounter_id, 'locations', path))
     frame = pd.DataFrame([row])
     assert set(FEATURES) <= set(frame.columns)
     return frame
@@ -425,7 +385,7 @@ def score_hour(encounter_id: str, hour: int, *, path: Path | None = None,
     t = _dt(case['triage_completed_at']) + timedelta(hours=int(hour))
     frame = build_features(encounter_id, t, path)
     if pd.isna(frame.iloc[0]['heart_rate_last_bpm']):
-        raise ValueError('Chưa có sinh hiệu hợp lệ trong 6 giờ gần đây để chấm mốc này.')
+        raise ValueError('Chưa có sinh hiệu hợp lệ từ T0 đến mốc đang xem để chấm điểm.')
     result = {'encounter_id': encounter_id, 'prediction_at': t,
               'missing_features': int(frame[FEATURES].isna().sum(axis=1).iloc[0]),
               'features': frame}

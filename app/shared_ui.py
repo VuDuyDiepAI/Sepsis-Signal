@@ -245,6 +245,11 @@ def show_review(result_key, case_id, at, model_version, *, prediction_id=None):
 
 def show_feature_details(snapshot, model=None):
     with st.expander('Xem dữ liệu đầu vào và cách tính điểm'):
+        if not set(FEATURES).issubset(snapshot.columns):
+            st.info('Bản tính này dùng cấu hình đặc trưng cũ. Dữ liệu lịch sử được giữ nguyên; chấm lại để dùng cấu hình từ T0.')
+            st.dataframe(snapshot.T.rename(columns={snapshot.index[0]: 'Giá trị đã lưu'}), width='stretch')
+            return
+        st.caption('Cửa sổ quan sát tích lũy từ T0 đến mốc đang xem; khoảng dự báo tương lai là 6 giờ.')
         missing = int(snapshot[FEATURES].isna().sum(axis=1).iloc[0])
         st.caption(f'{len(FEATURES) - missing}/{len(FEATURES)} trường có giá trị trước tiền xử lý.')
         if model is not None:

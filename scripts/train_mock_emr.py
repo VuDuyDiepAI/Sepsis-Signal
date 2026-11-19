@@ -36,6 +36,8 @@ from src.mock_emr import (  # noqa: E402
     DATA_PATH,
     EXPANDED_NUMERIC_FEATURES,
     FEATURES,
+    FEATURE_SCHEMA_VERSION,
+    OBSERVATION_WINDOW,
     TARGETS,
     ClinicalFeatureExpander,
     bundle_paths,
@@ -263,10 +265,12 @@ def train_target(tables, target):
 
     metadata = {
         'model_name': 'Logistic regression',
-        'model_version': f'mock-emr-hourly-{target}-lr-v2',
+        'model_version': f'mock-emr-hourly-{target}-lr-v3-expanding-t0',
         'data_kind': 'SYNTHETIC_MOCK_EMR',
         'target': label_col,
         'horizon_hours': 6,
+        'feature_schema_version': FEATURE_SCHEMA_VERSION,
+        'observation_window': OBSERVATION_WINDOW,
         'first_prediction_hour': 1,
         'prediction_interval_minutes': 60,
         'features': FEATURES,

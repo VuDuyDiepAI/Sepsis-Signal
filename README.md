@@ -50,7 +50,7 @@ Sau khi chạy ứng dụng, chọn một tài khoản trải nghiệm ở màn 
 
 1. Chọn hồ sơ **E0009** và mốc **T0+7h**.
 2. Xem điểm sepsis, trạng thái cảnh báo và các chỉ số đang có.
-3. Bấm **Sang mốc tiếp theo** để đến **T0+8h**. Với bộ dữ liệu và mô hình hiện tại, điểm tăng từ khoảng **2,72% lên 23,93%**, vượt ngưỡng **9,14%**.
+3. Bấm **Sang mốc tiếp theo** để đến **T0+8h**. Với bộ dữ liệu và mô hình hiện tại, điểm và trạng thái được cập nhật theo dữ liệu mới. Điểm cụ thể và ngưỡng phụ thuộc phiên bản mô hình đang phục vụ.
 4. Đối chiếu mục **Xét nghiệm mới trả** và **Sinh hiệu gần nhất** để hiểu thông tin nào đã có thêm tại mốc mới.
 5. Bật **Hiện mốc khởi phát tham chiếu** để so thời điểm cảnh báo với diễn biến được thiết kế trong hồ sơ mẫu.
 
@@ -69,7 +69,7 @@ Bộ dữ liệu mô phỏng cấu trúc EMR và thời điểm thông tin có s
 | Sinh hiệu | Nhịp tim, nhịp thở, huyết áp tâm thu, MAP, SpO₂, nhiệt độ, GCS. |
 | Xét nghiệm | Bạch cầu, tiểu cầu, creatinine, bilirubin toàn phần, CRP, procalcitonin. |
 | Triệu chứng | Các nhóm hô hấp, tiết niệu, tiêu hóa và ổ bụng, da và mô mềm, thần kinh trung ương. |
-| Diễn biến và mức độ đầy đủ | Thay đổi nhịp tim và huyết áp, nhịp tim trung bình, số lần đo trong cửa sổ 6 giờ, cờ có xét nghiệm và thời gian từ kết quả creatinine gần nhất. |
+| Diễn biến và mức độ đầy đủ | Thay đổi nhịp tim và huyết áp, nhịp tim trung bình, số lần đo tích lũy từ T0, cờ có xét nghiệm và thời gian từ kết quả creatinine gần nhất. |
 
 Biểu mẫu còn nhận huyết áp tâm trương để tính MAP khi cần. Workbook chứa thêm các trường phục vụ mô tả hồ sơ và xây dựng nhãn. Danh sách **36 đặc trưng đầu vào** được lưu trong metadata mô hình.
 
@@ -86,7 +86,7 @@ Bộ hồ sơ đi kèm và dữ liệu huấn luyện mô hình là **EMR mô ph
 Phiên bản đang phục vụ sử dụng **hồi quy logistic có điều chuẩn L2**. Mô hình đã được huấn luyện và đóng gói cùng bộ tiền xử lý, ngưỡng cảnh báo và metadata trong repo.
 
 1. **Lấy dữ liệu tại mốc cần chấm.** Chỉ dùng bản ghi đã có trên EMR tại mốc đó. Kết quả xét nghiệm trả ở T0+2 được sử dụng từ T0+2.
-2. **Tạo đặc trưng.** Tổng hợp giá trị gần nhất và diễn biến trong cửa sổ quy định thành 36 trường đầu vào.
+2. **Tạo đặc trưng.** Tổng hợp giá trị gần nhất, thay đổi đầu–cuối, mạch trung bình và số lần đo trên toàn bộ khoảng **[T0, mốc dự báo]** thành 36 trường đầu vào. Cửa sổ quan sát tăng dần, không loại sinh hiệu chỉ vì đã quá 6 giờ hoặc xét nghiệm đã quá 24 giờ. Chỉ dùng bản ghi đã có trên EMR tại mốc đó; giá trị gần nhất được chọn theo giờ đo hoặc lấy mẫu để kết quả cũ trả muộn không ghi đè bản đo mới hơn.
 3. **Tiền xử lý.** Tạo các biến bổ sung, xử lý giá trị thiếu, chuẩn hóa và mã hóa theo bộ biến đổi đã học trong quá trình huấn luyện.
 4. **Tính điểm và so ngưỡng.** Mô hình trả điểm sepsis. Điểm bằng hoặc cao hơn ngưỡng tạo trạng thái cảnh báo.
 5. **Hiển thị và lưu lịch sử.** Người dùng xem điểm cùng sinh hiệu, xét nghiệm và biểu đồ để đối chiếu qua các giờ.
@@ -114,6 +114,7 @@ app/
   shared_ui.py          Thành phần hiển thị dùng chung
   styles.css            Giao diện
 src/
+  observation_features.py  Hàm tạo đặc trưng từ T0 dùng chung khi huấn luyện và nhập tay
   mock_emr.py           Đọc workbook, tạo biến bổ sung và nạp mô hình
   manual_cases.py       Lưu ca nhập tay, dựng đặc trưng và chấm theo giờ
 data/
@@ -142,13 +143,22 @@ Huấn luyện lại từ workbook hiện tại và cập nhật các artifact m
 .\.venv\Scripts\python.exe scripts\train_mock_emr.py
 ```
 
+Dựng lại sheet đặc trưng từ các sự kiện gốc mà không thay nhãn hoặc tạo lại người bệnh:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\rebuild_observation_snapshots.py
+.\.venv\Scripts\python.exe scripts\train_mock_emr.py
+```
+
+Tên biến `*_since_t0` và metadata `observation_window.type = expanding` xác định cấu hình mới. Các kết quả đã lưu bằng mô hình cũ được giữ nguyên; ứng dụng ghi rõ phiên bản và không diễn giải chúng bằng cấu hình mới.
+
 Khi thay workbook, cần huấn luyện và cập nhật artifact tương ứng để khớp kiểm tra checksum dữ liệu.
 
 Kiểm tra luồng nhập ca, phiên bản kết quả, lưu xem xét và các trang giao diện.
 
 ```powershell
 .\.venv\Scripts\python.exe -m pip install pytest
-.\.venv\Scripts\python.exe -m pytest -q tests/test_auth.py tests/test_manual_cases.py tests/test_streamlit_manual.py
+.\.venv\Scripts\python.exe -m pytest -q tests/test_auth.py tests/test_manual_cases.py tests/test_mock_emr.py tests/test_streamlit_manual.py
 ```
 
 </details>

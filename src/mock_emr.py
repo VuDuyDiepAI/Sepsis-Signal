@@ -13,6 +13,7 @@ import joblib
 import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
+from src.observation_features import FEATURE_SCHEMA_VERSION, OBSERVATION_WINDOW
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_PATH = ROOT / 'data' / 'mock_ed_hospital_emr_v3_hourly.xlsx'
@@ -34,11 +35,11 @@ NUMERIC_FEATURES = [
     'cancer', 'immunosuppression', 'heart_rate_last_bpm',
     'respiratory_rate_last_per_min', 'sbp_last_mmhg', 'map_last_mmhg',
     'spo2_last_pct', 'temperature_last_c', 'gcs_last',
-    'heart_rate_delta_6h_bpm', 'sbp_delta_6h_mmhg',
-    'heart_rate_mean_6h_bpm', 'vital_observation_count_6h',
+    'heart_rate_delta_since_t0_bpm', 'sbp_delta_since_t0_mmhg',
+    'heart_rate_mean_since_t0_bpm', 'vital_observation_count_since_t0',
     'WBC_last_10e9_L', 'platelets_last_10e9_L', 'creatinine_last_mg_dL',
     'bilirubin_last_mg_dL', 'CRP_last_mg_L', 'procalcitonin_last_ng_mL',
-    'creatinine_measured_24h', 'CRP_measured_24h',
+    'creatinine_measured_since_t0', 'CRP_measured_since_t0',
     'hours_since_creatinine_result', 'symptom_respiratory',
     'symptom_urinary', 'symptom_abdominal', 'symptom_skin', 'symptom_cns',
 ]
@@ -66,13 +67,13 @@ NONLINEAR_CLINICAL_FEATURES = [
 ]
 
 MISSINGNESS_FLAG_FEATURES = [
-    'procalcitonin_measured_24h',
-    'bilirubin_measured_24h',
-    'WBC_measured_24h',
-    'platelets_measured_24h',
-    'spo2_measured_6h',
-    'temperature_measured_6h',
-    'gcs_measured_6h',
+    'procalcitonin_measured_since_t0',
+    'bilirubin_measured_since_t0',
+    'WBC_measured_since_t0',
+    'platelets_measured_since_t0',
+    'spo2_measured_since_t0',
+    'temperature_measured_since_t0',
+    'gcs_measured_since_t0',
 ]
 
 EXPANDED_NUMERIC_FEATURES = (
@@ -96,18 +97,18 @@ FEATURE_LABELS_VI = {
     'spo2_last_pct': 'SpO₂ gần nhất (%)',
     'temperature_last_c': 'Nhiệt độ gần nhất (°C)',
     'gcs_last': 'Thang điểm hôn mê GCS gần nhất',
-    'heart_rate_delta_6h_bpm': 'Thay đổi mạch trong 6 giờ (lần/phút)',
-    'sbp_delta_6h_mmhg': 'Thay đổi HA tâm thu trong 6 giờ (mmHg)',
-    'heart_rate_mean_6h_bpm': 'Mạch trung bình trong 6 giờ (lần/phút)',
-    'vital_observation_count_6h': 'Số lần đo sinh hiệu trong 6 giờ',
+    'heart_rate_delta_since_t0_bpm': 'Thay đổi mạch từ T0 (lần/phút)',
+    'sbp_delta_since_t0_mmhg': 'Thay đổi HA tâm thu từ T0 (mmHg)',
+    'heart_rate_mean_since_t0_bpm': 'Mạch trung bình từ T0 (lần/phút)',
+    'vital_observation_count_since_t0': 'Số lần đo sinh hiệu từ T0',
     'WBC_last_10e9_L': 'Bạch cầu WBC gần nhất (log1p · 10⁹/L)',
     'platelets_last_10e9_L': 'Tiểu cầu gần nhất (log1p · 10⁹/L)',
     'creatinine_last_mg_dL': 'Creatinine gần nhất (log1p · mg/dL)',
     'bilirubin_last_mg_dL': 'Bilirubin toàn phần gần nhất (log1p · mg/dL)',
     'CRP_last_mg_L': 'CRP gần nhất (log1p · mg/L)',
     'procalcitonin_last_ng_mL': 'Procalcitonin gần nhất (log1p · ng/mL)',
-    'creatinine_measured_24h': 'Đã có KQ Creatinine trong 24 giờ',
-    'CRP_measured_24h': 'Đã có KQ CRP trong 24 giờ',
+    'creatinine_measured_since_t0': 'Đã có KQ Creatinine từ T0',
+    'CRP_measured_since_t0': 'Đã có KQ CRP từ T0',
     'hours_since_creatinine_result': 'Số giờ từ KQ Creatinine gần nhất (log1p)',
     'symptom_respiratory': 'Triệu chứng nghi nhiễm: Hô hấp',
     'symptom_urinary': 'Triệu chứng nghi nhiễm: Tiết niệu',
@@ -121,13 +122,13 @@ FEATURE_LABELS_VI = {
     'sbp_hypotension_gap': 'Mức tụt HA tâm thu (< 100 mmHg · qSOFA)',
     'map_hypoperfusion_gap': 'Mức giảm tưới máu MAP (< 65 mmHg)',
     'rr_tachypnea_excess': 'Mức thở nhanh (> 22 lần/phút · qSOFA)',
-    'procalcitonin_measured_24h': 'Đã chỉ định & có KQ Procalcitonin (24h)',
-    'bilirubin_measured_24h': 'Đã chỉ định & có KQ Bilirubin (24h)',
-    'WBC_measured_24h': 'Đã chỉ định & có KQ Bạch cầu WBC (24h)',
-    'platelets_measured_24h': 'Đã chỉ định & có KQ Tiểu cầu (24h)',
-    'spo2_measured_6h': 'Đã đo SpO₂ trong 6 giờ',
-    'temperature_measured_6h': 'Đã đo Nhiệt độ trong 6 giờ',
-    'gcs_measured_6h': 'Đã đánh giá GCS trong 6 giờ',
+    'procalcitonin_measured_since_t0': 'Đã có KQ Procalcitonin (từ T0)',
+    'bilirubin_measured_since_t0': 'Đã có KQ Bilirubin (từ T0)',
+    'WBC_measured_since_t0': 'Đã có KQ Bạch cầu WBC (từ T0)',
+    'platelets_measured_since_t0': 'Đã có KQ Tiểu cầu (từ T0)',
+    'spo2_measured_since_t0': 'Đã đo SpO₂ từ T0',
+    'temperature_measured_since_t0': 'Đã đo Nhiệt độ từ T0',
+    'gcs_measured_since_t0': 'Đã đánh giá GCS từ T0',
     'sex_F': 'Giới tính: Nữ',
     'sex_M': 'Giới tính: Nam',
     'location_code_ED': 'Khu vực: Khoa Cấp cứu (ED)',
@@ -160,13 +161,13 @@ class ClinicalFeatureExpander(BaseEstimator, TransformerMixin):
         rr = df['respiratory_rate_last_per_min']
 
         # 1. Missingness indicators (MNAR clinical ordering & monitoring signals)
-        df['procalcitonin_measured_24h'] = df['procalcitonin_last_ng_mL'].notna().astype(float)
-        df['bilirubin_measured_24h'] = df['bilirubin_last_mg_dL'].notna().astype(float)
-        df['WBC_measured_24h'] = wbc.notna().astype(float)
-        df['platelets_measured_24h'] = df['platelets_last_10e9_L'].notna().astype(float)
-        df['spo2_measured_6h'] = df['spo2_last_pct'].notna().astype(float)
-        df['temperature_measured_6h'] = temp.notna().astype(float)
-        df['gcs_measured_6h'] = df['gcs_last'].notna().astype(float)
+        df['procalcitonin_measured_since_t0'] = df['procalcitonin_last_ng_mL'].notna().astype(float)
+        df['bilirubin_measured_since_t0'] = df['bilirubin_last_mg_dL'].notna().astype(float)
+        df['WBC_measured_since_t0'] = wbc.notna().astype(float)
+        df['platelets_measured_since_t0'] = df['platelets_last_10e9_L'].notna().astype(float)
+        df['spo2_measured_since_t0'] = df['spo2_last_pct'].notna().astype(float)
+        df['temperature_measured_since_t0'] = temp.notna().astype(float)
+        df['gcs_measured_since_t0'] = df['gcs_last'].notna().astype(float)
 
         # 2. U-shaped & clinical threshold hinge terms (SIRS / qSOFA / Sepsis-3)
         df['temp_hypothermia_deg'] = np.where(temp.notna(), np.maximum(0.0, 36.0 - temp), np.nan)
@@ -233,7 +234,9 @@ def load_bundle(target: str = 'sepsis') -> tuple[object, dict]:
     meta = json.loads(meta_path.read_text(encoding='utf-8'))
     if (meta.get('data_kind') != 'SYNTHETIC_MOCK_EMR'
             or meta.get('features') != FEATURES
-            or meta.get('target') != TARGETS[target][1]):
+            or meta.get('target') != TARGETS[target][1]
+            or meta.get('feature_schema_version') != FEATURE_SCHEMA_VERSION
+            or meta.get('observation_window') != OBSERVATION_WINDOW):
         raise ValueError('Cấu hình mô hình không khớp với bộ hồ sơ mẫu.')
     if not DATA_PATH.exists() or hashlib.sha256(DATA_PATH.read_bytes()).hexdigest() != meta.get('source_sha256'):
         raise ValueError('Bộ hồ sơ mẫu đã thay đổi. Cần huấn luyện lại mô hình trước khi chấm điểm.')
@@ -272,4 +275,6 @@ def latest_available(tables: dict[str, pd.DataFrame], encounter_id: str, at: pd.
     labs = labs.loc[(labs.encounter_id == encounter_id) & (labs.available_at <= at)]
     symptoms = tables['Symptoms']
     symptoms = symptoms.loc[(symptoms.encounter_id == encounter_id) & (symptoms.available_at <= at)]
-    return vitals.sort_values('available_at').tail(1), labs.sort_values('available_at'), symptoms.sort_values('available_at')
+    return (vitals.sort_values(['observed_at', 'available_at']).tail(1),
+            labs.sort_values(['collected_at', 'available_at']),
+            symptoms.sort_values(['recorded_at', 'available_at']))

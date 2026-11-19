@@ -31,7 +31,7 @@ def test_delayed_lab_is_hidden_until_available_and_both_models_score(setup_case)
     features1 = build_features(case_id, t1, path)
     features2 = build_features(case_id, t2, path)
     assert pd.isna(features1.iloc[0]['creatinine_last_mg_dL'])
-    assert features1.iloc[0]['creatinine_measured_24h'] == 0
+    assert features1.iloc[0]['creatinine_measured_since_t0'] == 0
     assert features2.iloc[0]['creatinine_last_mg_dL'] == 1.8
     assert features2.iloc[0]['map_last_mmhg'] == 78.3
     first = score_hour(case_id, 1, path=path, bundles=models)
@@ -157,6 +157,54 @@ def test_baseline_data_carries_to_first_score_without_future_lab_leakage(setup_c
     score_hour(case_id, 1, path=path, bundles=models)
     first = build_features(case_id, t1, path).iloc[0]
     assert first['heart_rate_last_bpm'] == 95
-    assert first['vital_observation_count_6h'] == 1
+    assert first['vital_observation_count_since_t0'] == 1
     assert pd.isna(first['creatinine_last_mg_dL'])
     assert build_features(case_id, t2, path).iloc[0]['creatinine_last_mg_dL'] == 1.8
+
+
+def test_expanding_history_keeps_baseline_after_six_and_twenty_four_hours(tmp_path):
+    path = tmp_path / 'long.sqlite3'
+    t0 = datetime(2026,1,1,8)
+    eid = create_case(path=path, triage_completed_at=t0, age_years=50, sex='F')
+    save_entry(eid, path=path, measured_at=t0, vital_available_at=t0,
+               vitals={'heart_rate_bpm':80,'respiratory_rate_per_min':18,'sbp_mmhg':120,
+                       'spo2_pct':97,'temperature_c':36.8},
+               lab_collected_at=t0, lab_available_at=t0, labs={'creatinine':1.4})
+    t7 = t0 + timedelta(hours=7)
+    save_entry(eid,path=path,measured_at=t7,vital_available_at=t7,
+               vitals={'heart_rate_bpm':120,'respiratory_rate_per_min':25,'sbp_mmhg':90})
+    other = create_case(path=path,triage_completed_at=t0,age_years=60,sex='M')
+    save_entry(other,path=path,measured_at=t7,vital_available_at=t7,
+               vitals={'heart_rate_bpm':200,'respiratory_rate_per_min':40,'sbp_mmhg':60})
+    for hour in [7,25,36]:
+        row = build_features(eid,t0+timedelta(hours=hour),path).iloc[0]
+        assert row['vital_observation_count_since_t0'] == 2
+        assert row['heart_rate_delta_since_t0_bpm'] == 40
+        assert row['heart_rate_mean_since_t0_bpm'] == 100
+        assert row['creatinine_last_mg_dL'] == 1.4
+        assert row['creatinine_measured_since_t0'] == 1
+        assert row['hours_since_creatinine_result'] == hour
+        assert row['spo2_last_pct'] == 97
+        assert row['temperature_last_c'] == 36.8
+
+
+def test_delayed_older_measurement_does_not_override_newer_sample(tmp_path):
+    path = tmp_path / 'delayed.sqlite3'
+    t0 = datetime(2026,1,1,8)
+    eid = create_case(path=path,triage_completed_at=t0,age_years=50,sex='F')
+    t7,t8,t10=[t0+timedelta(hours=h) for h in (7,8,10)]
+    save_entry(eid,path=path,measured_at=t0,vital_available_at=t10,
+               vitals={'heart_rate_bpm':80,'respiratory_rate_per_min':18,'sbp_mmhg':120,
+                       'spo2_pct':97,'temperature_c':36.8},
+               lab_collected_at=t0,lab_available_at=t10,labs={'creatinine':1.0})
+    save_entry(eid,path=path,measured_at=t7,vital_available_at=t7,
+               vitals={'heart_rate_bpm':120,'respiratory_rate_per_min':25,'sbp_mmhg':90},
+               lab_collected_at=t7,lab_available_at=t7,labs={'creatinine':2.0})
+    before = build_features(eid,t8,path).iloc[0]
+    after = build_features(eid,t10,path).iloc[0]
+    assert before['vital_observation_count_since_t0'] == 1
+    assert after['vital_observation_count_since_t0'] == 2
+    assert after['heart_rate_last_bpm'] == before['heart_rate_last_bpm'] == 120
+    assert after['creatinine_last_mg_dL'] == before['creatinine_last_mg_dL'] == 2.0
+    assert after['heart_rate_delta_since_t0_bpm'] == 40
+    assert after['hours_since_creatinine_result'] == 3

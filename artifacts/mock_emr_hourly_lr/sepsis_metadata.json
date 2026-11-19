@@ -1,9 +1,18 @@
 {
   "model_name": "Logistic regression",
-  "model_version": "mock-emr-hourly-sepsis-lr-v2",
+  "model_version": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
   "data_kind": "SYNTHETIC_MOCK_EMR",
   "target": "sepsis_next_6h",
   "horizon_hours": 6,
+  "feature_schema_version": "expanding-t0-v1",
+  "observation_window": {
+    "type": "expanding",
+    "start": "triage_completed_at",
+    "end": "prediction_at",
+    "availability_rule": "available_at <= prediction_at",
+    "latest_order": "measurement_or_collection_time_then_availability",
+    "missing_value_policy": "latest_nonmissing_available_since_t0"
+  },
   "first_prediction_hour": 1,
   "prediction_interval_minutes": 60,
   "features": [
@@ -23,18 +32,18 @@
     "spo2_last_pct",
     "temperature_last_c",
     "gcs_last",
-    "heart_rate_delta_6h_bpm",
-    "sbp_delta_6h_mmhg",
-    "heart_rate_mean_6h_bpm",
-    "vital_observation_count_6h",
+    "heart_rate_delta_since_t0_bpm",
+    "sbp_delta_since_t0_mmhg",
+    "heart_rate_mean_since_t0_bpm",
+    "vital_observation_count_since_t0",
     "WBC_last_10e9_L",
     "platelets_last_10e9_L",
     "creatinine_last_mg_dL",
     "bilirubin_last_mg_dL",
     "CRP_last_mg_L",
     "procalcitonin_last_ng_mL",
-    "creatinine_measured_24h",
-    "CRP_measured_24h",
+    "creatinine_measured_since_t0",
+    "CRP_measured_since_t0",
     "hours_since_creatinine_result",
     "symptom_respiratory",
     "symptom_urinary",
@@ -46,85 +55,94 @@
   ],
   "expanded_feature_count": 53,
   "class_weight": null,
-  "regularization_C": 0.05,
+  "regularization_C": 2.0,
   "cv_tuning": {
     "cv_folds": 5,
-    "best_C": 0.05,
-    "oof_auprc": 0.8483,
-    "oof_auroc": 0.9876,
+    "best_C": 2.0,
+    "oof_auprc": 0.8683,
+    "oof_auroc": 0.9865,
     "c_grid_results": [
       {
         "C": 0.01,
-        "oof_auprc": 0.8353,
-        "oof_auroc": 0.9854
+        "oof_auprc": 0.8315,
+        "oof_auroc": 0.9831
       },
       {
         "C": 0.02,
-        "oof_auprc": 0.844,
-        "oof_auroc": 0.9867
+        "oof_auprc": 0.8438,
+        "oof_auroc": 0.9851
       },
       {
         "C": 0.05,
-        "oof_auprc": 0.8483,
-        "oof_auroc": 0.9876
+        "oof_auprc": 0.852,
+        "oof_auroc": 0.9867
       },
       {
         "C": 0.1,
-        "oof_auprc": 0.8479,
-        "oof_auroc": 0.9875
+        "oof_auprc": 0.8555,
+        "oof_auroc": 0.9873
       },
       {
         "C": 0.25,
-        "oof_auprc": 0.8445,
-        "oof_auroc": 0.9866
+        "oof_auprc": 0.8637,
+        "oof_auroc": 0.9877
       },
       {
         "C": 0.5,
-        "oof_auprc": 0.8343,
-        "oof_auroc": 0.9854
+        "oof_auprc": 0.8633,
+        "oof_auroc": 0.9873
       },
       {
         "C": 1.0,
-        "oof_auprc": 0.8221,
-        "oof_auroc": 0.984
+        "oof_auprc": 0.8642,
+        "oof_auroc": 0.9866
       },
       {
         "C": 2.0,
-        "oof_auprc": 0.8124,
-        "oof_auroc": 0.9826
+        "oof_auprc": 0.8683,
+        "oof_auroc": 0.9865
       }
     ]
   },
   "epv_positive_encounters_per_input_var": 1.03,
-  "threshold": 0.09137694853895821,
-  "threshold_rule": "Highest validation threshold within the demo ceiling meeting both recall targets; fallbacks are recorded under threshold_selection.",
-  "source_sha256": "a2bd10092fea5d87222714699150170534db52d973174c3811e672b140f657d3",
-  "trained_at_utc": "2026-11-18T04:25:39.319055+00:00",
+  "source_sha256": "9d9731df827badd8be67eea2afcc0c05537b4cad81b95e1c55ed6b7ea05b492f",
+  "trained_at_utc": "2026-11-19T04:18:58.622643+00:00",
   "train_encounters": 214,
   "train_positive_encounters": 37,
   "validation_encounters": 72,
   "validation_positive_encounters": 12,
   "temporal_holdout_encounters": 71,
   "temporal_holdout_positive_encounters": 11,
+  "evaluation_version": "timely-alert-v1",
+  "evaluated_at_utc": "2026-11-19T04:18:58.679630+00:00",
+  "threshold": 0.02757396730151618,
+  "threshold_rule": "Highest validation threshold within the demo ceiling meeting both recall targets; fallbacks are recorded under threshold_selection.",
+  "threshold_selection": {
+    "branch": "both_recall_targets",
+    "minimum_recall": 0.8,
+    "demo_ceiling": 0.28,
+    "validation_encounter_recall": 0.9166666666666666,
+    "validation_snapshot_recall": 0.8
+  },
   "validation_synthetic_metrics": {
     "snapshots": 1942,
     "positive_snapshots": 70,
-    "auroc": 0.9857142857142857,
-    "auprc": 0.8198913676762248,
-    "brier": 0.013938950615897592,
+    "auroc": 0.9799068986568986,
+    "auprc": 0.8045906986741992,
+    "brier": 0.013844179140126435,
     "observed_prevalence": 0.03604531410916581,
-    "mean_predicted_probability": 0.0284667230131977,
+    "mean_predicted_probability": 0.030687219854960122,
     "recall": 0.8,
-    "precision": 0.5436893203883495,
-    "alert_fraction": 0.05303810504634397,
+    "precision": 0.4409448818897638,
+    "alert_fraction": 0.06539649845520082,
     "encounter_early_recall": 0.9166666666666666,
     "timely_alert_encounters": 11,
-    "too_early_alert_encounters": 0,
+    "too_early_alert_encounters": 1,
     "too_early_only_encounters": 0,
-    "encounter_precision": 0.6470588235294118,
-    "nne_encounters": 1.55,
-    "false_alert_encounters_per_100": 8.33,
-    "alert_episodes_per_100": 33.33,
+    "encounter_precision": 0.6111111111111112,
+    "nne_encounters": 1.64,
+    "false_alert_encounters_per_100": 9.72,
+    "alert_episodes_per_100": 38.89,
     "median_lead_hours": 5.0,
     "iqr_lead_hours": [
       5.0,
@@ -134,36 +152,27 @@
   "temporal_holdout_synthetic_metrics": {
     "snapshots": 1926,
     "positive_snapshots": 66,
-    "auroc": 0.9914956011730205,
-    "auprc": 0.8689390878952515,
-    "brier": 0.012654736588515875,
+    "auroc": 0.9936705767350928,
+    "auprc": 0.9013549562195304,
+    "brier": 0.009505733578968988,
     "observed_prevalence": 0.03426791277258567,
-    "mean_predicted_probability": 0.02642205907415766,
-    "recall": 0.9242424242424242,
-    "precision": 0.6224489795918368,
-    "alert_fraction": 0.05088265835929388,
+    "mean_predicted_probability": 0.030805818154884586,
+    "recall": 0.9696969696969697,
+    "precision": 0.512,
+    "alert_fraction": 0.06490134994807892,
     "encounter_early_recall": 1.0,
     "timely_alert_encounters": 11,
-    "too_early_alert_encounters": 2,
+    "too_early_alert_encounters": 4,
     "too_early_only_encounters": 0,
-    "encounter_precision": 0.6875,
-    "nne_encounters": 1.45,
-    "false_alert_encounters_per_100": 7.04,
-    "alert_episodes_per_100": 32.39,
+    "encounter_precision": 0.6470588235294118,
+    "nne_encounters": 1.55,
+    "false_alert_encounters_per_100": 8.45,
+    "alert_episodes_per_100": 36.62,
     "median_lead_hours": 6.0,
     "iqr_lead_hours": [
-      5.0,
+      6.0,
       6.0
     ]
   },
-  "warning": "Synthetic, event-enriched and rule-generated data. Not a clinical probability or clinical validation.",
-  "evaluation_version": "timely-alert-v1",
-  "evaluated_at_utc": "2026-11-18T13:21:39.815656+00:00",
-  "threshold_selection": {
-    "branch": "both_recall_targets",
-    "minimum_recall": 0.8,
-    "demo_ceiling": 0.28,
-    "validation_encounter_recall": 0.9166666666666666,
-    "validation_snapshot_recall": 0.8
-  }
+  "warning": "Synthetic, event-enriched and rule-generated data. Not a clinical probability or clinical validation."
 }
