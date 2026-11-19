@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 from streamlit.testing.v1 import AppTest
 
-from src.manual_cases import create_case, prediction_history, review_history
+from src.manual_cases import create_case, event_rows, prediction_history, review_history
 from src.auth import create_first_account, sign_in
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -33,6 +33,20 @@ def test_manual_journey_and_other_pages(tmp_path, monkeypatch):
     assert any(box.label == 'Hồ sơ' and box.value == case_id for box in app.selectbox)
     for label, value in [('Nhịp tim (lần/phút)', 90), ('Nhịp thở (lần/phút)', 20), ('HA tâm thu (mmHg)', 120)]:
         next(n for n in app.number_input if n.label == label).set_value(value)
+    assert next(n for n in app.number_input if n.label == 'Giờ sau T0').value == 0
+    next(n for n in app.number_input if n.key and str(n.key).endswith('_lab_creatinine')).set_value(1.4)
+    next(b for b in app.button if b.label == 'Lưu dữ liệu T0').click()
+    app = app.run()
+    assert not app.exception
+    assert any('Đã lưu dữ liệu T0' in message.value for message in app.success)
+    assert not app.metric
+    assert prediction_history(case_id) == []
+    assert event_rows(case_id, 'vitals')[0]['measured_at'] == t0.isoformat()
+    assert event_rows(case_id, 'labs')[0]['available_at'] == t0.isoformat()
+    next(b for b in app.button if b.label == 'Cập nhật mốc T0+1h').click()
+    app = app.run()
+    assert not app.exception
+    assert next(n for n in app.number_input if n.label == 'Giờ sau T0').value == 1
     next(b for b in app.button if b.label == 'Lưu dữ liệu và chấm điểm').click()
     app = app.run()
     assert not app.exception

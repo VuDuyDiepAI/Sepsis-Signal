@@ -144,9 +144,9 @@ def lab_markers(labs, t0):
     return events
 
 
-def show_changes(previous_vitals, current_vitals, labs, previous_at, at):
+def show_changes(previous_vitals, current_vitals, labs, previous_at, at, *, title='Thay đổi từ lần trước'):
     """Display source observations and result availability beside their changes."""
-    st.subheader('Thay đổi từ lần trước', anchor=False)
+    st.subheader(title, anchor=False)
     before = {} if previous_vitals.empty else previous_vitals.iloc[-1]
     current = {} if current_vitals.empty else current_vitals.iloc[-1]
     changed, other, new_results = [], [], []

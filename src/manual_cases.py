@@ -216,7 +216,7 @@ def case_overview(path: Path | None = None) -> list[dict]:
             'review_status': ('Đã xem xét' if review else 'Chờ xem xét') if latest else 'Chưa có kết quả',
             'change': (latest['score'] - history[-2]['score']) * 100 if len(history) > 1 else None,
             'hour': int((_dt(latest['prediction_at']) - _dt(case['triage_completed_at']))
-                        .total_seconds() // 3600) if latest else 1,
+                        .total_seconds() // 3600) if latest else 0,
             'rank': 0 if pending_alert else 1 if latest and latest['alert'] else 2 if latest else 3,
         })
     return sorted(rows, key=lambda r: (r['rank'], -(r['latest']['score'] if r['latest'] else 0)))
@@ -368,8 +368,8 @@ def build_features(encounter_id: str, prediction_at: datetime,
     case = get_case(encounter_id, path)
     t = prediction_at.replace(microsecond=0)
     t0 = _dt(case['triage_completed_at'])
-    if t < t0 + timedelta(hours=1):
-        raise ValueError('Mốc dự báo đầu tiên là T0+1 giờ.')
+    if t < t0:
+        raise ValueError('Mốc tổng hợp dữ liệu không được trước T0.')
     vitals = [r for r in event_rows(encounter_id, 'vitals', path)
               if _dt(r['available_at']) <= t and _dt(r['available_at']) >= t - timedelta(hours=6)]
     labs = [r for r in event_rows(encounter_id, 'labs', path)

@@ -54,9 +54,9 @@ Sau khi chạy ứng dụng, chọn một tài khoản trải nghiệm ở màn 
 4. Đối chiếu mục **Xét nghiệm mới trả** và **Sinh hiệu gần nhất** để hiểu thông tin nào đã có thêm tại mốc mới.
 5. Bật **Hiện mốc khởi phát tham chiếu** để so thời điểm cảnh báo với diễn biến được thiết kế trong hồ sơ mẫu.
 
-Muốn thử nhập trực tiếp, mở **Nhập ca theo giờ**, tạo hồ sơ và nhập sinh hiệu tại T0+1. Sau đó chuyển sang T0+2, bổ sung dữ liệu mới rồi chấm lại để xem diễn biến.
+Muốn thử nhập trực tiếp, mở **Hồ sơ và chỉ số**, tạo hồ sơ và nhập sinh hiệu, xét nghiệm ban đầu tại **T0 (Giờ sau T0 = 0)** rồi bấm **Lưu dữ liệu T0**. Chuyển sang **T0+1h** để chấm lần đầu, sử dụng dữ liệu T0 còn hiệu lực và những thông tin mới đã có. Tiếp tục cập nhật tại T0+2 và các mốc sau. Xét nghiệm trả sau chỉ được dùng từ giờ có kết quả trên EMR, dù lấy mẫu tại T0.
 
-**T0 là thời điểm hoàn tất phân loại ban đầu.** Hệ thống hỗ trợ chấm từ **T0+1 đến T0+36 giờ**. Điểm hiển thị được đối chiếu với ngưỡng cảnh báo và diễn biến của các mốc trước để hỗ trợ bác sĩ xem xét ca bệnh.
+**T0 là thời điểm hoàn tất phân loại ban đầu.** Người dùng nhập dữ liệu được ngay tại T0; mốc này lưu thông tin ban đầu và chưa tạo điểm cảnh báo. Mô hình hiện tại hỗ trợ chấm từ **T0+1 đến T0+36 giờ**. Điểm hiển thị được đối chiếu với ngưỡng cảnh báo và diễn biến của các mốc trước để hỗ trợ bác sĩ xem xét ca bệnh.
 
 ## Dữ liệu đầu vào gồm những gì?
 

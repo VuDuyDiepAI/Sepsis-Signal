@@ -86,7 +86,7 @@ def show_new_case():
 def show_entry_form(case_id, hour, at, location):
     key = f'{case_id}_{hour}'
     with st.form(f'entry_{key}'):
-        st.subheader(f'Cập nhật dữ liệu · T0+{hour}h')
+        st.subheader('Dữ liệu ban đầu · T0' if hour == 0 else f'Cập nhật dữ liệu · T0+{hour}h')
         vital_tab, lab_tab, context_tab = st.tabs(['Sinh hiệu', 'Xét nghiệm', 'Triệu chứng và khoa'])
         with vital_tab:
             st.caption('Nhập sinh hiệu mới nếu có. Có thể dùng bản đo đã lưu trong 6 giờ gần nhất.')
@@ -124,7 +124,8 @@ def show_entry_form(case_id, hour, at, location):
             new_location = st.selectbox('Khoa điều trị tại mốc này', [None, *LOCATIONS],
                                         format_func=lambda code: LOCATION_NAMES[code] if code else 'Giữ nguyên')
             st.caption(f'Khoa hiện tại · {LOCATION_NAMES.get(location, location)}')
-        submitted = st.form_submit_button('Lưu dữ liệu và chấm điểm', type='primary', width='stretch')
+        submitted = st.form_submit_button('Lưu dữ liệu T0' if hour == 0 else 'Lưu dữ liệu và chấm điểm',
+                                          type='primary', width='stretch')
 
     if not submitted:
         return None
@@ -162,7 +163,7 @@ if st.session_state.pop('new_case_requested', False):
 cases = list_cases()
 
 if not cases:
-    st.info('Tạo lượt khám để bắt đầu ở T0+1h, hoặc mở trang Chạy ca mẫu.')
+    st.info('Tạo lượt khám để nhập dữ liệu ban đầu tại T0, hoặc mở trang Chạy ca mẫu.')
     st.stop()
 
 ids = [row['encounter_id'] for row in cases]
@@ -176,7 +177,8 @@ t0 = datetime.fromisoformat(case['triage_completed_at'])
 history = sepsis_history(case_id)
 last_hour = (datetime.fromisoformat(history[-1]['prediction_at']) - t0).total_seconds() // 3600 if history else 0
 hour_key = f'hour_{case_id}'
-hour = cols[1].number_input('Giờ sau T0', 1, 36, max(1, min(36, int(last_hour))), key=hour_key)
+hour = cols[1].number_input('Giờ sau T0', 0, 36, max(0, min(36, int(last_hour))), key=hour_key,
+                           help='0 là T0: nhập dữ liệu ban đầu. Mô hình hiện tại chấm từ T0+1 giờ.')
 at = t0 + timedelta(hours=hour)
 cols[2].text_input('Mốc đang xem', value=f'{at:%d/%m/%Y · %H:%M}', disabled=True)
 sex = 'Nữ' if case['sex'] == 'F' else 'Nam'
@@ -202,7 +204,9 @@ labs = pd.DataFrame(event_rows(case_id, 'labs'))
 for frame in (vitals, labs):
     if not frame.empty:
         frame['available_at'] = pd.to_datetime(frame['available_at'])
-previous_at = pd.Timestamp(previous['prediction_at']) if previous else pd.Timestamp(t0)
+previous_at = (pd.Timestamp(previous['prediction_at']) if previous else pd.Timestamp(t0))
+if hour == 0:
+    previous_at = pd.Timestamp(t0) - pd.Timedelta(microseconds=1)
 visible_vitals = vitals.loc[vitals['available_at'].le(at)].tail(1) if not vitals.empty else vitals
 previous_vitals = vitals.loc[vitals['available_at'].le(previous_at)].tail(1) if not vitals.empty else vitals
 visible_labs = labs.loc[labs['available_at'].le(at)] if not labs.empty else labs
@@ -211,13 +215,18 @@ with st.expander('Nhập chỉ số và cập nhật kết quả', expanded=curr
     if payload is not None:
         try:
             changed = save_entry(case_id, **payload)
+            if hour == 0 and changed is None:
+                raise ValueError('Nhập sinh hiệu, xét nghiệm hoặc thông tin mới để lưu dữ liệu T0.')
             bundles = {'sepsis': (model, meta)}
             recompute_scored_hours(case_id, changed, bundles=bundles)
-            score_hour(case_id, hour, bundles=bundles)
+            if hour > 0:
+                score_hour(case_id, hour, bundles=bundles)
         except ValueError as exc:
             st.warning(str(exc))
         else:
-            st.session_state['entry_saved'] = 'Đã lưu dữ liệu và cập nhật kết quả chấm điểm.'
+            st.session_state['entry_saved'] = (
+                'Đã lưu dữ liệu T0. Dữ liệu sẽ được dùng từ mốc có sẵn trên EMR.' if hour == 0
+                else 'Đã lưu dữ liệu và cập nhật kết quả chấm điểm.')
             st.rerun()
     if message := st.session_state.pop('entry_saved', None):
         st.success(message)
@@ -243,6 +252,10 @@ with clinical:
             st.caption(f'{"Đã xem xét" if review else "Chờ xem xét"} · '
                        f'Bản tính {current["revision"]} · Chấm lúc '
                        f'{datetime.fromisoformat(current["scored_at"]):%d/%m %H:%M}')
+        elif hour == 0:
+            st.info('T0 · Ghi nhận dữ liệu ban đầu. Mô hình hiện tại bắt đầu chấm từ T0+1 giờ.')
+            st.caption('Bạn có thể nhập ngay sinh hiệu và kết quả xét nghiệm đã có. '
+                       'Kết quả trả sau chỉ được dùng từ giờ có kết quả trên EMR.')
         else:
             show_result(at)
             if pd.isna(features.iloc[0]['heart_rate_last_bpm']):
@@ -252,7 +265,8 @@ with clinical:
         show_timeline(timeline, hour, lab_events=lab_markers(visible_labs, t0))
 with observations:
     with st.container(border=True, key='changes_panel'):
-        show_changes(previous_vitals, visible_vitals, visible_labs, previous_at, at)
+        show_changes(previous_vitals, visible_vitals, visible_labs, previous_at, at,
+                     title='Sinh hiệu và xét nghiệm tại T0' if hour == 0 else 'Thay đổi từ lần trước')
 
 if current:
     show_review(f'manual:{current["id"]}', case_id, at, current['model_version'],

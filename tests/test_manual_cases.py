@@ -137,3 +137,26 @@ def test_concurrent_review_keeps_one_acknowledgement(tmp_path):
         saved = list(pool.map(submit, ['Người A', 'Người B']))
     assert saved[0] == saved[1]
     assert len(review_history('E0009', path)) == 1
+
+
+def test_baseline_data_carries_to_first_score_without_future_lab_leakage(setup_case):
+    path, t0, case_id, models = setup_case
+    t1, t2 = t0 + timedelta(hours=1), t0 + timedelta(hours=2)
+    save_entry(case_id, path=path, measured_at=t0, vital_available_at=t0,
+               vitals={'heart_rate_bpm': 95, 'respiratory_rate_per_min': 22, 'sbp_mmhg': 110},
+               lab_collected_at=t0, lab_available_at=t2, labs={'creatinine': 1.8})
+    baseline = build_features(case_id, t0, path).iloc[0]
+    assert baseline['heart_rate_last_bpm'] == 95
+    assert pd.isna(baseline['creatinine_last_mg_dL'])
+    assert case_overview(path)[0]['hour'] == 0
+    assert prediction_history(case_id, path=path) == []
+    with pytest.raises(ValueError, match=r'T0\+1'):
+        score_hour(case_id, 0, path=path, bundles=models)
+    with pytest.raises(ValueError, match='trước T0'):
+        build_features(case_id, t0 - timedelta(minutes=1), path)
+    score_hour(case_id, 1, path=path, bundles=models)
+    first = build_features(case_id, t1, path).iloc[0]
+    assert first['heart_rate_last_bpm'] == 95
+    assert first['vital_observation_count_6h'] == 1
+    assert pd.isna(first['creatinine_last_mg_dL'])
+    assert build_features(case_id, t2, path).iloc[0]['creatinine_last_mg_dL'] == 1.8
