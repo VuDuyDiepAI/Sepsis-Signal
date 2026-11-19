@@ -11,7 +11,7 @@ import os
 import sqlite3
 import uuid
 from contextlib import contextmanager
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import numpy as np
@@ -117,6 +117,13 @@ def init_db(path: Path | None = None) -> None:
           UNIQUE(encounter_id, prediction_at, target, revision)
         );
         CREATE INDEX IF NOT EXISTS predictions_case_time ON predictions(encounter_id, prediction_at);
+        CREATE TABLE IF NOT EXISTS result_reviews (
+          result_key TEXT PRIMARY KEY, encounter_id TEXT NOT NULL,
+          prediction_id INTEGER UNIQUE REFERENCES predictions(id) ON DELETE CASCADE,
+          prediction_at TEXT NOT NULL, model_version TEXT NOT NULL,
+          reviewed_by TEXT NOT NULL, reviewed_at TEXT NOT NULL, note TEXT NOT NULL
+        );
+        CREATE INDEX IF NOT EXISTS reviews_case ON result_reviews(encounter_id);
         ''')
 
 
@@ -178,6 +185,75 @@ def delete_case(encounter_id: str, path: Path | None = None) -> None:
     with _connection(path) as con:
         for table in ('predictions', 'vitals', 'labs', 'symptoms', 'locations', 'encounters'):
             con.execute(f'DELETE FROM {table} WHERE encounter_id=?', (encounter_id,))
+
+
+def review_history(encounter_id: str, path: Path | None = None) -> list[dict]:
+    init_db(path)
+    with _connection(path) as con:
+        return [dict(row) for row in con.execute(
+            'SELECT * FROM result_reviews WHERE encounter_id=? ORDER BY reviewed_at DESC',
+            (encounter_id,))]
+
+
+def case_overview(path: Path | None = None) -> list[dict]:
+    rows = []
+    for case in list_cases(path):
+        eid = case['encounter_id']
+        history = [p for p in prediction_history(eid, path=path) if p['target'] == 'sepsis']
+        latest = history[-1] if history else None
+        reviews = {r['result_key']: r for r in review_history(eid, path)}
+        review = reviews.get(f'manual:{latest["id"]}') if latest else None
+        locations = [r for r in event_rows(eid, 'locations', path)
+                     if latest is None or r['available_at'] <= latest['prediction_at']]
+        status = ('Vượt ngưỡng' if latest['alert'] else 'Dưới ngưỡng') if latest else 'Chưa chấm'
+        pending_alert = bool(latest and latest['alert'] and not review)
+        rows.append({
+            **case, 'latest': latest, 'review': review, 'status': status,
+            'location': locations[-1]['location_code'] if locations else 'ED',
+            'review_status': ('Đã xem xét' if review else 'Chờ xem xét') if latest else 'Chưa có kết quả',
+            'change': (latest['score'] - history[-2]['score']) * 100 if len(history) > 1 else None,
+            'hour': int((_dt(latest['prediction_at']) - _dt(case['triage_completed_at']))
+                        .total_seconds() // 3600) if latest else 1,
+            'rank': 0 if pending_alert else 1 if latest and latest['alert'] else 2 if latest else 3,
+        })
+    return sorted(rows, key=lambda r: (r['rank'], -(r['latest']['score'] if r['latest'] else 0)))
+
+
+def record_review(*, result_key: str, encounter_id: str, prediction_at: str,
+                  model_version: str, reviewed_by: str, note: str = '',
+                  prediction_id: int | None = None, path: Path | None = None) -> dict:
+    """Persist the first review of an exact result, rejecting stale manual revisions."""
+    reviewer, note = reviewed_by.strip(), note.strip()
+    if not reviewer or len(reviewer) > 120 or len(note) > 1000:
+        raise ValueError('Nhập người ghi nhận (tối đa 120 ký tự), ghi chú tối đa 1.000 ký tự.')
+    init_db(path)
+    with _connection(path) as con:
+        con.execute('BEGIN IMMEDIATE')
+        if prediction_id is not None:
+            prediction = con.execute('SELECT * FROM predictions WHERE id=?',
+                                     (prediction_id,)).fetchone()
+            if (prediction is None or prediction['encounter_id'] != encounter_id
+                    or prediction['target'] != 'sepsis'
+                    or prediction['prediction_at'] != _stamp(prediction_at)
+                    or prediction['model_version'] != model_version
+                    or result_key != f'manual:{prediction_id}'):
+                raise ValueError('Kết quả được chọn không hợp lệ. Mở lại hồ sơ để xem kết quả mới nhất.')
+            newest = con.execute('''SELECT MAX(revision) FROM predictions
+                WHERE encounter_id=? AND prediction_at=? AND target='sepsis' ''',
+                (encounter_id, prediction['prediction_at'])).fetchone()[0]
+            if prediction['revision'] != newest:
+                raise ValueError('Kết quả đã có bản tính mới. Tải lại trang để xem xét bản mới nhất.')
+        elif not result_key.startswith('sample:'):
+            raise ValueError('Mã kết quả mẫu không hợp lệ.')
+        reviewed_at = _stamp(datetime.now(timezone(timedelta(hours=7))).replace(tzinfo=None))
+        con.execute('''INSERT INTO result_reviews
+            (result_key,encounter_id,prediction_id,prediction_at,model_version,
+             reviewed_by,reviewed_at,note) VALUES(?,?,?,?,?,?,?,?)
+            ON CONFLICT(result_key) DO NOTHING''',
+            (result_key, encounter_id, prediction_id, _stamp(prediction_at), model_version,
+             reviewer, reviewed_at, note))
+        return dict(con.execute('SELECT * FROM result_reviews WHERE result_key=?',
+                                (result_key,)).fetchone())
 
 
 def _replace_event(con, table: str, identity: dict, values: dict) -> int:

@@ -21,8 +21,8 @@ Mục tiêu của ứng dụng là hỗ trợ bác sĩ nhận diện nguy cơ s�
 | Trang | Người dùng làm gì? | Kết quả nhận được |
 | --- | --- | --- |
 | **Chạy ca mẫu** | Chọn hồ sơ có sẵn và chuyển qua từng giờ. | Điểm sepsis, trạng thái cảnh báo, biểu đồ, sinh hiệu gần nhất và xét nghiệm mới trả. |
-| **Nhập ca theo giờ** | Tạo hồ sơ trải nghiệm, nhập chỉ số và cập nhật khi có dữ liệu mới. | Kết quả chấm tại từng mốc, thông tin còn thiếu và lịch sử điểm. |
-| **Danh sách theo dõi** | Xem lại nhiều hồ sơ đã nhập, mở ca cần xem xét. | Mốc chấm gần nhất và tình trạng cảnh báo của từng ca. |
+| **Nhập ca theo giờ** | Tạo hồ sơ, cập nhật chỉ số và ghi nhận đã xem xét kết quả. | Cảnh báo, dữ kiện thay đổi, biểu đồ và lịch sử xem xét theo từng bản tính. |
+| **Danh sách theo dõi** | Lọc ca theo cảnh báo, trạng thái xem xét và khoa. Chọn một dòng để mở hồ sơ. | Ưu tiên ca vượt ngưỡng đang chờ xem xét, kèm điểm mới nhất và người ghi nhận. |
 | **Đánh giá mô hình** | Xem cách chọn ngưỡng và kết quả kiểm tra mô hình. | Các chỉ số theo giờ, theo lượt khám và thời gian cảnh báo trước khởi phát tham chiếu. |
 
 Quy trình sử dụng là **tạo ca → nhập chỉ số → lưu và chấm điểm → xem cảnh báo → cập nhật ở giờ tiếp theo**. Người dùng nhập trực tiếp trên biểu mẫu hoặc chọn hồ sơ mẫu có sẵn để xem diễn biến theo thời gian.
@@ -108,7 +108,7 @@ scripts/
 requirements.txt        Thư viện để chạy ứng dụng
 ```
 
-Hồ sơ nhập tay được tạo trong `data/manual_cases.sqlite3` khi sử dụng ứng dụng.
+Hồ sơ nhập tay và ghi nhận xem xét được lưu trong `data/manual_cases.sqlite3`. Mỗi lượt xem xét gắn với đúng mốc giờ và phiên bản kết quả. Khi chấm ra bản tính mới, bản đó có trạng thái xem xét riêng. Người ghi nhận được nhập trên biểu mẫu.
 
 <details>
 <summary>Dành cho người phát triển · tính lại chỉ số và huấn luyện</summary>
@@ -126,5 +126,12 @@ Huấn luyện lại từ workbook hiện tại và cập nhật các artifact m
 ```
 
 Khi thay workbook, cần huấn luyện và cập nhật artifact tương ứng để khớp kiểm tra checksum dữ liệu.
+
+Kiểm tra luồng nhập ca, phiên bản kết quả, lưu xem xét và các trang giao diện.
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install pytest
+.\.venv\Scripts\python.exe -m pytest -q tests/test_manual_cases.py tests/test_streamlit_manual.py
+```
 
 </details>

@@ -1,73 +1,74 @@
-"""Review the most recent sepsis result for each manual demo encounter."""
+"""Review the latest sepsis results and their acknowledgement state."""
 import pandas as pd
 import streamlit as st
 
-from app.shared_ui import display_case_id, page_header
-from src.manual_cases import delete_case, event_rows, list_cases, prediction_history
+from app.shared_ui import display_case_id, page_header, select_manual_case
+from src.manual_cases import case_overview, delete_case
 
-page_header('Danh sách theo dõi', 'Xem kết quả sepsis mới nhất của từng hồ sơ.')
-cases = list_cases()
+LOCATION_NAMES = {'ED': 'Cấp cứu', 'WARD': 'Nội trú', 'ICU': 'Hồi sức tích cực'}
+page_header('Danh sách theo dõi', 'Ưu tiên ca vượt ngưỡng đang chờ xem xét.')
+cases = case_overview()
 if not cases:
     st.info('Chưa có hồ sơ theo dõi.')
     st.page_link('views/1_manual.py', label='Tạo hồ sơ', icon=':material/add:')
     st.stop()
 
-rows = []
-for case in cases:
-    eid = case['encounter_id']
-    latest = next((p for p in reversed(prediction_history(eid)) if p['target'] == 'sepsis'), None)
-    locations = event_rows(eid, 'locations')
-    available = [row for row in locations if latest is None or row['available_at'] <= latest['prediction_at']]
-    location = available[-1]['location_code'] if available else 'ED'
-    status = 'Chưa chấm'
-    if latest is not None:
-        status = 'Vượt ngưỡng' if latest['alert'] else 'Dưới ngưỡng'
-    rows.append({
-        'Mã hồ sơ': display_case_id(eid),
-        'encounter_id': eid,
-        'Trạng thái': status,
-        'Khoa': location,
-        'Tuổi': case['age_years'],
-        'Mốc chấm cuối': pd.Timestamp(latest['prediction_at']) if latest else pd.NaT,
-        'hour': int((pd.Timestamp(latest['prediction_at']) - pd.Timestamp(case['triage_completed_at']))
-                    .total_seconds() // 3600) if latest else 1,
-        'Điểm sepsis': latest['score'] * 100 if latest else None,
-        'Ngưỡng tại mốc': latest['threshold'] * 100 if latest else None,
-        'rank': {'Vượt ngưỡng': 0, 'Dưới ngưỡng': 1, 'Chưa chấm': 2}[status],
-    })
-
-data = pd.DataFrame(rows)
 cols = st.columns(3)
-cols[0].metric('Hồ sơ đã tạo', len(data))
-cols[1].metric('Vượt ngưỡng cảnh báo', int(data['rank'].eq(0).sum()))
-cols[2].metric('Chưa chấm', int(data['rank'].eq(2).sum()))
+cols[0].metric('Hồ sơ theo dõi', len(cases))
+cols[1].metric('Cảnh báo chờ xem xét', sum(item['rank'] == 0 for item in cases))
+cols[2].metric('Đã xem xét · mốc mới nhất', sum(item['review'] is not None for item in cases))
 
-status_filter, location_filter = st.columns(2)
-status = status_filter.selectbox('Trạng thái', ['Tất cả', 'Vượt ngưỡng', 'Dưới ngưỡng', 'Chưa chấm'])
-locations = location_filter.multiselect('Khoa', ['ED', 'WARD', 'ICU'], placeholder='Tất cả khoa')
-filtered = data.loc[
-    (data['Trạng thái'].eq(status) if status != 'Tất cả' else data['Trạng thái'].notna())
-    & (data['Khoa'].isin(locations) if locations else data['Khoa'].notna())
-].sort_values(['rank', 'Mốc chấm cuối'], ascending=[True, False])
-if filtered.empty:
-    st.info('Không có ca khớp bộ lọc.')
+with st.container(border=True, key='watchlist_filters'):
+    a, b, c, d = st.columns(4)
+    search = a.text_input('Tìm mã hồ sơ', placeholder='Nhập mã hồ sơ')
+    status = b.selectbox('Trạng thái cảnh báo', ['Tất cả', 'Vượt ngưỡng', 'Dưới ngưỡng', 'Chưa chấm'])
+    review_status = c.selectbox('Xem xét', ['Tất cả', 'Chờ xem xét', 'Đã xem xét', 'Chưa có kết quả'])
+    location = d.selectbox('Khoa', ['Tất cả', *LOCATION_NAMES],
+                           format_func=lambda code: LOCATION_NAMES.get(code, code))
+
+filtered = [r for r in cases
+            if search.lower() in display_case_id(r['encounter_id']).lower()
+            and (status == 'Tất cả' or r['status'] == status)
+            and (review_status == 'Tất cả' or r['review_status'] == review_status)
+            and (location == 'Tất cả' or r['location'] == location)]
+if not filtered:
+    st.info('Không có ca khớp bộ lọc. Thay đổi điều kiện để xem thêm hồ sơ.')
     st.stop()
 
-st.dataframe(filtered.drop(columns=['rank', 'hour', 'encounter_id']), hide_index=True, width='stretch', row_height=40, column_config={
+rows = []
+for item in filtered:
+    latest, review = item['latest'], item['review']
+    rows.append({
+        'Mã hồ sơ': display_case_id(item['encounter_id']),
+        'Cảnh báo': item['status'], 'Xem xét': item['review_status'],
+        'Khoa': LOCATION_NAMES[item['location']],
+        'Điểm sepsis': latest['score'] * 100 if latest else None,
+        'Thay đổi · điểm %': item['change'],
+        'Mốc chấm cuối': pd.Timestamp(latest['prediction_at']) if latest else pd.NaT,
+        'Người ghi nhận': review['reviewed_by'] if review else '—',
+        'Giờ xem xét': pd.Timestamp(review['reviewed_at']) if review else pd.NaT,
+    })
+
+st.caption('Chọn một dòng để mở hồ sơ tại mốc chấm gần nhất.')
+selection = st.dataframe(pd.DataFrame(rows), hide_index=True, width='stretch', row_height=54,
+                        on_select='rerun', selection_mode='single-row',
+                        column_config={
     'Điểm sepsis': st.column_config.NumberColumn(format='%.2f%%'),
-    'Ngưỡng tại mốc': st.column_config.NumberColumn(format='%.2f%%'),
-    'Mốc chấm cuối': st.column_config.DatetimeColumn(format='DD/MM/YYYY HH:mm'),
+    'Thay đổi · điểm %': st.column_config.NumberColumn(format='%+.2f'),
+    'Mốc chấm cuối': st.column_config.DatetimeColumn(format='DD/MM HH:mm'),
+    'Giờ xem xét': st.column_config.DatetimeColumn(format='DD/MM HH:mm'),
 })
-selected = st.selectbox('Hồ sơ muốn mở', filtered['encounter_id'].tolist(), format_func=display_case_id)
-if st.button('Mở hồ sơ', type='primary'):
-    st.session_state.manual_case_id = selected
-    st.session_state[f'hour_{selected}'] = int(data.loc[data['encounter_id'].eq(selected), 'hour'].iloc[0])
+if selection.selection.rows:
+    selected = filtered[selection.selection.rows[0]]
+    select_manual_case(selected['encounter_id'], selected['hour'])
     st.switch_page('views/1_manual.py')
+
 with st.expander('Quản lý hồ sơ trải nghiệm'):
-    confirmed = st.checkbox(f'Xác nhận xóa lịch sử hồ sơ {display_case_id(selected)}',
-                            key=f'confirm_delete_{selected}')
+    eid = st.selectbox('Hồ sơ cần quản lý', [r['encounter_id'] for r in filtered], format_func=display_case_id)
+    confirmed = st.checkbox(f'Xác nhận xóa lịch sử hồ sơ {display_case_id(eid)}', key=f'confirm_delete_{eid}')
     if st.button('Xóa hồ sơ', disabled=not confirmed):
-        delete_case(selected)
-        if st.session_state.get('manual_case_id') == selected:
+        delete_case(eid)
+        if st.session_state.get('manual_case_id') == eid:
             st.session_state.pop('manual_case_id')
+            st.session_state.pop('manual_case_picker', None)
         st.rerun()

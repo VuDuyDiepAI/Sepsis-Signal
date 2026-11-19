@@ -5,7 +5,7 @@ backgroundColor = "#FFFFFF"
 secondaryBackgroundColor = "#EDF4FC"
 textColor = "#152B45"
 font = "sans serif"
-baseFontSize = 17
+baseFontSize = 18
 baseRadius = "4px"
 buttonRadius = "4px"
 

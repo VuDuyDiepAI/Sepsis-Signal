@@ -5,11 +5,11 @@
     --signal-accent: #155ca8;
     --signal-border: #d9e4f0;
     --signal-header-height: 3.75rem;
-    --signal-control-height: 2.75rem;
+    --signal-control-height: 3rem;
     --signal-radius: 4px;
 }
 [data-testid="stMainBlockContainer"] {
-    max-width: 1240px;
+    max-width: 1440px;
     padding-top: calc(var(--signal-header-height) + 0.75rem);
     padding-bottom: 4rem;
 }
@@ -131,12 +131,12 @@ body:has([data-testid="stSidebar"][aria-expanded="false"]) .signal-header {
     width: 100%;
     border-collapse: collapse;
     color: var(--signal-ink);
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-variant-numeric: tabular-nums;
 }
 .signal-data-table th,
 .signal-data-table td {
-    padding: 0.36rem 0.55rem;
+    padding: 0.65rem 0.7rem;
     border-bottom: 1px solid var(--signal-border);
     text-align: right;
     vertical-align: middle;
@@ -175,7 +175,7 @@ body:has([data-testid="stSidebar"][aria-expanded="false"]) .signal-header {
     border-left-color: #657b94;
     color: #314960;
 }
-.signal-result strong { display: block; font-size: 1.18rem; }
+.signal-result strong { display: block; font-size: 1.35rem; }
 .signal-result span { display: block; margin-top: 0.2rem; font-size: 0.94rem; }
 [data-testid="stMetricValue"] {
     font-size: 2.25rem;
@@ -184,7 +184,7 @@ body:has([data-testid="stSidebar"][aria-expanded="false"]) .signal-header {
 }
 [data-testid="stMetricLabel"] p {
     color: var(--signal-muted);
-    font-size: 0.95rem;
+    font-size: 1rem;
     font-weight: 600;
 }
 [data-testid="stCaptionContainer"] p {
@@ -235,12 +235,21 @@ body:has([data-testid="stSidebar"][aria-expanded="false"]) .signal-header {
     outline: 2px solid var(--signal-accent);
     outline-offset: 2px;
 }
-@media (min-width: 1050px) and (min-height: 700px) {
-    [data-testid="stHorizontalBlock"] > [data-testid="stColumn"]:has(.st-key-manual_result) {
-        position: sticky;
-        top: calc(var(--signal-header-height) + 1rem);
-        align-self: flex-start;
-    }
+.signal-table-scroll { overflow-x: auto; }
+.signal-changes { min-width: 680px; }
+.signal-changes :is(th, td) { text-align: left; }
+.signal-changes td:nth-child(3) { font-weight: 700; color: #154677; }
+.signal-changes td:last-child { font-size: 0.88rem; color: var(--signal-muted); }
+.st-key-manual_result, .st-key-sample_result { border-top: 3px solid var(--signal-accent); }
+.st-key-review_panel { background: #f7faff; }
+.st-key-entry_panel { border-top: 3px solid var(--signal-border); }
+.st-key-case_list { border-top: 1px solid var(--signal-border); margin-top: 0.5rem; padding-top: 0.5rem; }
+.st-key-case_list [data-testid="stButton"] button { justify-content: flex-start; border-radius: 4px; }
+.st-key-case_list [data-testid="stCaptionContainer"] p { font-size: 0.78rem; }
+[data-testid="stTextArea"] textarea { font-size: 1rem; }
+[data-testid="stTextInput"] input:disabled { -webkit-text-fill-color: var(--signal-ink); }
+[data-testid="stTextInput"]:has(input:disabled) [data-testid="stWidgetLabel"] p {
+    color: var(--signal-muted);
 }
 @media (min-width: 651px) and (max-width: 1120px) {
     .st-key-replay_toolbar [data-testid="stHorizontalBlock"] {
@@ -264,8 +273,20 @@ body:has([data-testid="stSidebar"][aria-expanded="false"]) .signal-header {
     }
 }
 @media (max-width: 650px) {
-    .signal-header { padding-right: 1rem; }
+    .signal-header { gap: 0.35rem; padding-right: 0.6rem; }
     .signal-brand small { display: none; }
+    .signal-brand { gap: 0.5rem; }
+    .signal-brand b { font-size: 0.95rem; }
+    .signal-mark { width: 1.7rem; height: 1.7rem; flex-basis: 1.7rem; }
+    .signal-mode {
+        flex: 0 1 5rem;
+        max-width: 5rem;
+        white-space: normal;
+        text-align: right;
+        font-size: 0.7rem;
+        line-height: 1.25;
+        padding-left: 0.4rem;
+    }
     [data-testid="stMainBlockContainer"] {
         padding-left: 1rem;
         padding-right: 1rem;
@@ -278,6 +299,10 @@ body:has([data-testid="stSidebar"][aria-expanded="false"]) .signal-header {
         width: auto;
         min-width: 0;
     }
+    .st-key-score_summary [data-testid="stColumn"]:first-child {
+        grid-column: 1 / -1;
+    }
+    .signal-changes { min-width: 620px; }
 }
 @media (max-width: 360px) {
     .signal-header { gap: 0.35rem; padding-right: 0.5rem; }

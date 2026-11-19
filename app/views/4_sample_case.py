@@ -1,31 +1,15 @@
 """Replay sepsis scores using mock EMR values available at each selected hour."""
-from html import escape
+import hashlib
 
 import pandas as pd
 import streamlit as st
 
-from app.shared_ui import page_header, show_feature_details, show_result, show_timeline
+from app.shared_ui import (lab_markers, page_header, show_changes, show_feature_details,
+                           show_result, show_review, show_timeline)
+from src.manual_cases import review_history
 from src.mock_emr import DATA_PATH, latest_available, load_bundle, load_tables, predict_scores
 
 LOCATIONS = {'ED': 'Cấp cứu', 'WARD': 'Nội trú', 'ICU': 'Hồi sức tích cực'}
-VITAL_FIELDS = (
-    ('Nhịp tim', 'lần/phút', 'heart_rate_bpm', 0),
-    ('Nhịp thở', 'lần/phút', 'respiratory_rate_per_min', 0),
-    ('HA tâm thu', 'mmHg', 'sbp_mmhg', 0),
-    ('MAP', 'mmHg', 'map_mmhg', 0),
-    ('SpO₂', '%', 'spo2_pct', 0),
-    ('Nhiệt độ', '°C', 'temperature_c', 1),
-    ('GCS', 'điểm', 'gcs', 0),
-)
-LAB_NAMES = {
-    'WBC': 'Bạch cầu', 'platelets': 'Tiểu cầu', 'creatinine': 'Creatinine',
-    'bilirubin_total': 'Bilirubin toàn phần', 'CRP': 'CRP', 'procalcitonin': 'Procalcitonin',
-    'lactate': 'Lactate', 'PaO2': 'PaO₂',
-    'glucose': 'Glucose', 'albumin': 'Albumin', 'hemoglobin': 'Hemoglobin',
-    'sodium': 'Natri', 'potassium': 'Kali', 'PaCO2': 'PaCO₂', 'HCO3': 'HCO₃⁻',
-}
-
-
 @st.cache_data(show_spinner='Đang tải hồ sơ mẫu…')
 def sample_tables(workbook_stamp):
     return load_tables()
@@ -51,72 +35,6 @@ def choose_example(scored, outcomes):
 
 def step_to(key, value):
     st.session_state[key] = value
-
-
-def vital_comparison(previous_vitals, current_vitals, previous_hour, hour):
-    def value(row, field, decimals):
-        number = row.get(field)
-        return '—' if pd.isna(number) else f'{number:.{decimals}f}'.replace('.', ',')
-
-    previous = {} if previous_vitals.empty else previous_vitals.iloc[0]
-    current = {} if current_vitals.empty else current_vitals.iloc[0]
-    previous_label = f'T0+{previous_hour:g}h' if previous_hour is not None else 'Mốc trước'
-    rows = []
-    for label, unit, field, decimals in VITAL_FIELDS:
-        before, now = value(previous, field, decimals), value(current, field, decimals)
-        changed = ' class="signal-value-changed"' if before != now and '—' not in (before, now) else ''
-        rows.append(
-            f'<tr><th scope="row">{label} <small>{unit}</small></th>'
-            f'<td>{before}</td><td{changed}>{now}</td></tr>'
-        )
-    st.html(
-        '<table class="signal-data-table signal-vitals" aria-label="So sánh sinh hiệu gần nhất">'
-        '<thead><tr><th scope="col">Chỉ số</th>'
-        f'<th scope="col">{previous_label}</th><th scope="col">T0+{hour:g}h</th>'
-        '</tr></thead>'
-        f'<tbody>{"".join(rows)}</tbody></table>'
-    )
-    if not current_vitals.empty:
-        measured = current['observed_at']
-        if previous.get('observed_at') == measured:
-            st.caption(f'Cả hai mốc dùng cùng bản đo lúc {measured:%d/%m %H:%M}.')
-        else:
-            st.caption(f'Lần đo gần nhất tại mốc đang xem: {measured:%d/%m %H:%M}.')
-    else:
-        st.caption('Chưa có bản đo sinh hiệu tại mốc này.')
-
-
-def lab_results(labs, start, at):
-    new_labs = labs.loc[labs['available_at'].gt(start)].sort_values(
-        'available_at', ascending=False, kind='stable',
-    )
-    st.subheader('Xét nghiệm mới trả', anchor=False)
-    if new_labs.empty:
-        st.caption(f'Chưa có kết quả mới từ sau {start:%H:%M} đến {at:%H:%M}.')
-        return
-    st.caption(f'{len(new_labs)} kết quả có trên EMR từ sau {start:%H:%M} đến {at:%H:%M}.')
-
-    def render(results):
-        rows = []
-        for result in results.itertuples(index=False):
-            label = escape(LAB_NAMES.get(result.test_code, str(result.test_code)))
-            unit = escape(str(result.unit).replace('10^9/L', '×10⁹/L'))
-            value = '—' if pd.isna(result.value_num) else f'{result.value_num:g}'.replace('.', ',')
-            rows.append(
-                f'<tr><th scope="row">{label}</th><td>{value} <small>{unit}</small></td>'
-                f'<td>{result.available_at:%H:%M}</td></tr>'
-            )
-        st.html(
-            '<table class="signal-data-table signal-labs" aria-label="Xét nghiệm mới trả">'
-            '<thead><tr><th scope="col">Xét nghiệm</th><th scope="col">Kết quả</th>'
-            '<th scope="col">Giờ có KQ</th></tr></thead>'
-            f'<tbody>{"".join(rows)}</tbody></table>'
-        )
-
-    render(new_labs.head(5))
-    if len(new_labs) > 5:
-        with st.expander(f'Xem {len(new_labs) - 5} kết quả còn lại'):
-            render(new_labs.iloc[5:])
 
 
 page_header('Chạy ca mẫu', 'Theo dõi điểm sepsis và dữ liệu EMR tại từng mốc giờ.')
@@ -157,8 +75,8 @@ with st.container(key='replay_toolbar', border=True):
     )
     position = times.index(at)
     row = points.iloc[position]
-    location = escape(LOCATIONS.get(row['location_code'], str(row['location_code'])))
-    ward.html(f'<div class="signal-readout"><span>Khoa tại mốc này</span><div>{location}</div></div>')
+    ward.text_input('Khoa tại mốc này', value=LOCATIONS.get(row['location_code'], str(row['location_code'])),
+                    disabled=True)
     action.button('Sang mốc tiếp theo', disabled=position + 1 == len(times),
                   type='primary', key='replay_next', on_click=step_to,
                   args=(time_key, times[min(position + 1, len(times)-1)]), width='stretch')
@@ -174,18 +92,29 @@ previous_at = previous['prediction_at'] if previous is not None else t0
 previous_vitals = (
     latest_available(tables, case_id, previous_at)[0] if previous is not None else vitals.iloc[:0]
 )
-result, context = st.columns([1.15, 1], gap='medium', border=True)
-with result:
-    st.subheader('Kết quả sepsis', anchor=False)
+sample_signature = '|'.join((case_id, at.isoformat(), meta['model_version'],
+                             meta['source_sha256'], repr(float(row['risk_score'])),
+                             repr(float(meta['threshold']))))
+review_key = 'sample:' + hashlib.sha256(sample_signature.encode()).hexdigest()
+reviews = {r['result_key']: r for r in review_history(case_id)}
+with st.container(border=True, key='sample_result'):
+    st.subheader('Trạng thái cảnh báo', anchor=False)
     show_result(at, row['risk_score'], meta['threshold'],
                 previous['risk_score'] if previous is not None else None)
-    st.subheader('Diễn biến theo giờ', anchor=False)
+    st.caption('Đã xem xét' if review_key in reviews else 'Chờ xem xét')
+
+with st.container(border=True):
+    show_changes(previous_vitals, vitals, labs, previous_at, at)
+
+with st.container(border=True, key='timeline_panel'):
+    st.subheader('Diễn biến nguy cơ', anchor=False)
     chart_area = st.container()
     reveal = st.toggle('Hiện mốc khởi phát tham chiếu')
     onset = outcomes.loc[case_id, 'sepsis_onset_at']
     onset_hour = (onset - t0).total_seconds() / 3600 if reveal and pd.notna(onset) else None
     with chart_area:
-        show_timeline(points.iloc[:position+1].rename(columns={'risk_score': 'score'}), row['hour'], onset_hour)
+        show_timeline(points.iloc[:position+1].rename(columns={'risk_score': 'score'}),
+                      row['hour'], onset_hour, lab_events=lab_markers(labs, t0))
     if reveal:
         if pd.isna(onset):
             st.caption('Theo hồ sơ mẫu, sepsis không khởi phát trong lượt khám này.')
@@ -193,11 +122,11 @@ with result:
             within = 0 < (onset - at).total_seconds() <= 6 * 3600
             window = 'trong' if within else 'ngoài'
             st.caption(f'Mốc khởi phát tham chiếu {onset:%d/%m %H:%M} nằm {window} cửa sổ 6 giờ của mốc đang xem.')
-with context:
-    st.subheader('Sinh hiệu gần nhất', anchor=False)
-    vital_comparison(previous_vitals, vitals, previous['hour'] if previous is not None else None,
-                     row['hour'])
-    lab_results(labs, previous_at, at)
+
+show_review(review_key, case_id, at, meta['model_version'])
+st.button('Xem mốc tiếp theo', disabled=position + 1 == len(times),
+          key='sample_next_bottom', on_click=step_to,
+          args=(time_key, times[min(position + 1, len(times)-1)]), width='stretch')
 
 with st.expander('Xem bản ghi EMR sẵn có'):
     a, b, c = st.tabs(['Sinh hiệu gần nhất', 'Xét nghiệm', 'Triệu chứng'])

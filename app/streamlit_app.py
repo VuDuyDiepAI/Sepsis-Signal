@@ -23,7 +23,7 @@ st.html(f'<style>{styles}</style>')
 st.html(
     '<header class="signal-header" aria-label="Sepsis Signal">'
     '<div class="signal-brand"><span class="signal-mark" aria-hidden="true">S</span>'
-    '<div><b>Sepsis Signal</b><small>Theo dõi nguy cơ sepsis</small></div></div>'
+    '<div><b>Sepsis Signal</b><small>Khoa Cấp cứu · Vinmec</small></div></div>'
     '<span class="signal-mode">Chế độ trải nghiệm</span>'
     '</header>'
 )
