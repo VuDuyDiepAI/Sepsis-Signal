@@ -30,8 +30,6 @@
     background: #dbeaf2; border-left: 3px solid var(--signal-accent); color: #075777;
 }
 [data-testid="stSidebarNav"] a span:not([data-testid="stIconMaterial"]) { font-size: .95rem; font-weight: 600; }
-.st-key-account_menu { border-top: 1px solid #cfdbe4; margin-top: 1.5rem; padding-top: .8rem; }
-.st-key-account_menu [data-testid="stMarkdownContainer"] p { font-size: .95rem; }
 .signal-header {
     position: fixed; inset: 0 0 auto; z-index: 999992;
     display: flex; align-items: center; justify-content: space-between;
@@ -40,14 +38,37 @@
 }
 body:has([data-testid="stSidebar"][aria-expanded="false"]) .signal-header { padding-left: 4rem; }
 .signal-brand, .signal-account { display: flex; align-items: center; gap: .7rem; }
-.signal-brand b { display: block; font-size: 1.15rem; line-height: 1.2; }
+.signal-brand b { display: block; font-size: 1.15rem; line-height: 1.2; white-space: nowrap; }
 .signal-brand small, .signal-account small { display: block; color: #d2e6ee; font-size: .78rem; }
 .signal-mark { width: 2.3rem; height: 2.3rem; display: grid; place-items: center;
     border: 1px solid #7eabbf; border-radius: 3px; font-size: 1.4rem; font-weight: 750; }
-.signal-account { text-align: right; }
+.signal-account { text-align: left; margin-right: 8.5rem; }
 .signal-account b { display: block; font-size: .9rem; font-weight: 600; }
 .account-avatar { display: grid; place-items: center; width: 2rem; height: 2rem;
     background: #277c9d; border-radius: 3px; font-weight: 700; }
+.st-key-header_logout {
+    position: fixed;
+    top: calc((var(--signal-header-height) - var(--signal-control-height)) / 2);
+    right: 1.5rem;
+    width: 7.5rem;
+    z-index: 999994;
+}
+.st-key-header_logout [data-testid="stButton"] button {
+    height: var(--signal-control-height);
+    color: white;
+    background: transparent;
+    border: 1px solid #72a3ba;
+    border-radius: 3px;
+    white-space: nowrap;
+}
+.st-key-header_logout [data-testid="stButton"] button:hover {
+    background: #24789a;
+    color: white;
+    border-color: #bfdce8;
+}
+.st-key-header_logout [data-testid="stButton"] button:focus-visible {
+    outline: 2px solid white;
+}
 [data-testid="stHeading"] h1 { font-size: 1.8rem; letter-spacing: -.025em; color: var(--signal-ink); line-height: 1.2; }
 [data-testid="stHeading"] :is(h2,h3) { font-size: 1.2rem; font-weight: 650; color: var(--signal-ink); }
 .signal-lead { color: var(--signal-muted); font-size: 1rem; margin: 0 0 .2rem; }
@@ -119,6 +140,13 @@ body:has(.st-key-login_shell) [data-testid="stHeader"] { display: none; }
     .signal-brand b { font-size: 1rem; }
     .signal-brand small, .signal-account small, .account-avatar { display: none; }
     .signal-account b { max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .8rem; }
+    .signal-account { margin-right: 3.5rem; }
+    .st-key-header_logout { right: .8rem; width: var(--signal-control-height); }
+    .st-key-header_logout [data-testid="stButton"] button { padding: 0; gap: 0; }
+    .st-key-header_logout [data-testid="stButton"] button p {
+        position: absolute; width: 1px; height: 1px; overflow: hidden;
+        clip-path: inset(50%); white-space: nowrap;
+    }
     .signal-mark { width: 1.8rem; height: 1.8rem; font-size: 1rem; }
     .st-key-score_summary [data-testid="stHorizontalBlock"] { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: .4rem; }
     .st-key-score_summary [data-testid="stColumn"] { width: auto; min-width: 0; }
@@ -126,6 +154,13 @@ body:has(.st-key-login_shell) [data-testid="stHeader"] { display: none; }
     .st-key-score_summary [data-testid="stMetricLabel"] p { font-size: .77rem; }
     .st-key-login_form { padding: 1.3rem; }
     body:has(.st-key-login_shell) [data-testid="stMainBlockContainer"] { padding: 1rem; }
+}
+@media (max-width: 450px) {
+    .signal-account > div { display: none; }
+    .signal-account .account-avatar { display: grid; }
+}
+@media (max-width: 380px) {
+    .signal-brand .signal-mark { display: none; }
 }
 
 /* Keep clinical panels visually separate from the workspace background. */

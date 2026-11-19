@@ -75,8 +75,5 @@ def show_app_header(user):
         f'<div><b>{escape(user["display_name"])}</b><small>{escape(user["username"])}</small></div>'
         '</div></header>'
     )
-    with st.sidebar:
-        with st.container(key='account_menu'):
-            st.caption('TÀI KHOẢN')
-            st.write(user['display_name'])
-            st.button('Đăng xuất', icon=':material/logout:', on_click=logout, width='stretch')
+    with st.container(key='header_logout'):
+        st.button('Đăng xuất', icon=':material/logout:', on_click=logout, width='stretch')
