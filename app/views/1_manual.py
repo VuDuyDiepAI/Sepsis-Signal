@@ -140,8 +140,8 @@ def show_entry_form(case_id, hour, at, location):
     )
 
 
-def sepsis_history(case_id):
-    return [row for row in prediction_history(case_id) if row['target'] == 'sepsis']
+def sepsis_history(case_id, *, include_invalid=False):
+    return [row for row in prediction_history(case_id, include_invalid=include_invalid) if row['target'] == 'sepsis']
 
 
 def change_hour(key, hour):
@@ -175,7 +175,8 @@ st.session_state.manual_case_id = case_id
 case = get_case(case_id)
 t0 = datetime.fromisoformat(case['triage_completed_at'])
 history = sepsis_history(case_id)
-last_hour = (datetime.fromisoformat(history[-1]['prediction_at']) - t0).total_seconds() // 3600 if history else 0
+attempts = sepsis_history(case_id, include_invalid=True)
+last_hour = (datetime.fromisoformat(attempts[-1]['prediction_at']) - t0).total_seconds() // 3600 if attempts else 0
 hour_key = f'hour_{case_id}'
 hour = cols[1].number_input('Giờ sau T0', 0, 36, max(0, min(36, int(last_hour))), key=hour_key,
                            help='0 là T0: nhập dữ liệu ban đầu. Mô hình hiện tại chấm từ T0+1 giờ.')
@@ -193,6 +194,7 @@ except (FileNotFoundError, ValueError) as exc:
 at_key = at.isoformat(timespec='seconds')
 features = build_features(case_id, at)
 current = next((row for row in history if row['prediction_at'] == at_key), None)
+invalid_current = next((row for row in attempts if row['prediction_at'] == at_key and not row['valid']), None)
 previous = next((row for row in reversed(history) if row['prediction_at'] < at_key
                  and row['model_version'] == (current['model_version'] if current else meta['model_version'])), None)
 if current and current['model_version'] != meta['model_version']:
@@ -229,12 +231,15 @@ with st.expander('Nhập chỉ số và cập nhật kết quả', expanded=curr
             if hour > 0:
                 score_hour(case_id, hour, bundles=bundles)
         except ValueError as exc:
-            st.warning(str(exc))
+            st.session_state['entry_error'] = str(exc)
+            st.rerun()
         else:
             st.session_state['entry_saved'] = (
                 'Đã lưu dữ liệu T0. Dữ liệu sẽ được dùng từ mốc có sẵn trên EMR.' if hour == 0
                 else 'Đã lưu dữ liệu và cập nhật kết quả chấm điểm.')
             st.rerun()
+    if error := st.session_state.pop('entry_error', None):
+        st.warning(error)
     if message := st.session_state.pop('entry_saved', None):
         st.success(message)
 
@@ -259,6 +264,9 @@ with clinical:
             st.caption(f'{"Đã xem xét" if review else "Chờ xem xét"} · '
                        f'Bản tính {current["revision"]} · Chấm lúc '
                        f'{datetime.fromisoformat(current["scored_at"]):%d/%m %H:%M}')
+        elif invalid_current:
+            st.warning('Kết quả cũ đã hết hiệu lực. Mốc này cần được chấm lại.')
+            st.caption(invalid_current['invalid_reason'])
         elif hour == 0:
             st.info('T0 · Ghi nhận dữ liệu ban đầu. Mô hình hiện tại bắt đầu chấm từ T0+1 giờ.')
             st.caption('Bạn có thể nhập ngay sinh hiệu và kết quả xét nghiệm đã có. '
@@ -294,6 +302,8 @@ with st.expander('Lịch sử kết quả và xem xét'):
         review = all_reviews.get(f'manual:{item["id"]}', {})
         versions.append({'Mốc chấm': pd.Timestamp(item['prediction_at']),
                          'Bản tính': item['revision'], 'Điểm sepsis': item['score'],
+                         'Hiệu lực': 'Đã chấm' if item['valid'] else 'Hết hiệu lực',
+                         'Lý do': item['invalid_reason'],
                          'Người ghi nhận': review.get('reviewed_by', 'Chờ xem xét'),
                          'Giờ xem xét': review.get('reviewed_at', ''),
                          'Ghi chú': review.get('note', '')})

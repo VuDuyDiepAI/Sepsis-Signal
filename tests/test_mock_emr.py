@@ -166,9 +166,10 @@ def test_selected_source_records_are_available(tables):
         assert group.available_at.le(row.prediction_at).all()
 
 
-def test_manual_and_workbook_features_match_at_every_hour(tables, tmp_path):
+@pytest.mark.parametrize('scenario', ['stable','infection_without_sepsis','new_sepsis','new_sepsis_then_shock'])
+def test_manual_and_workbook_features_match_at_every_hour(tables, tmp_path, scenario):
     from src.manual_cases import LAB_UNITS, COMORBIDITIES, create_case, save_entry, build_features
-    eid = 'E0009'
+    eid = tables['ReferenceOutcomes'].loc[lambda f: f.scenario_scripted.eq(scenario), 'encounter_id'].iloc[0]
     case = tables['Encounters'].set_index('encounter_id').loc[eid]
     path = tmp_path / 'parity.sqlite3'
     mid = create_case(path=path, triage_completed_at=case.triage_completed_at,
