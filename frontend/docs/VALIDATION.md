@@ -13,12 +13,15 @@ Verified locally on Windows, Node.js 22.14.0, 19 November 2026.
 | npm audit | 0 vulnerabilities |
 | Clean lockfile install (`npm ci`) | Passed |
 | E2E against production `next start` | 9 passed |
+| E2E against default `next dev`, accessed by IP | 9 passed |
 | Production screenshots | 7 captures, no browser page errors |
 | Original `app/`, `src/`, `data/`, `artifacts/`, `tests/` | No diff against original main |
 
 Playwright covers the 5 main screens at 1440, 1280, 1024, 768 and 390px. It checks no document overflow (the wide clinical table intentionally scrolls inside its panel), mobile navigation, collapsed desktop sidebar, search, filters, score ordering, pagination, patient navigation, T0 absence, exact score/threshold, replay, reference-onset visibility, review validation/scope/reset on reload, source metrics and unknown IDs.
 
 On tablet/mobile the clinical observations appear before the review form; responsive tests also verify this order.
+
+The development server explicitly allows only the loopback origins localhost and 127.0.0.1, so Next.js dev resources hydrate correctly when Playwright uses the IP address.
 
 The fixtures are exported through the existing Python model. The exporter checks hashes of source workbook and artifacts before/after. Contract tests compare the workbook hash and entire sepsis metadata, verify all hour cutoffs and revision matching, and distinguish null/missing from numeric zero.
 
