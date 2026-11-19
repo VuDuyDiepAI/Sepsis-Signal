@@ -2,21 +2,21 @@
 
 **Theo dõi nguy cơ nhiễm khuẩn huyết theo giờ, hỗ trợ bác sĩ Khoa Cấp cứu nhận diện người bệnh cần đánh giá sớm.**
 
-Sepsis Signal là prototype cho phép nhập sinh hiệu, kết quả xét nghiệm và triệu chứng của một ca bệnh qua nhiều thời điểm. Ở mỗi mốc giờ, hệ thống tổng hợp thông tin đã có, tính điểm nguy cơ sepsis trong **6 giờ tiếp theo** và hiển thị cảnh báo khi điểm vượt ngưỡng của mô hình.
+Sepsis Signal là ứng dụng hỗ trợ theo dõi nguy cơ nhiễm khuẩn huyết, cho phép nhập sinh hiệu, kết quả xét nghiệm và triệu chứng của một ca bệnh qua nhiều thời điểm. Ở mỗi mốc giờ, hệ thống tổng hợp thông tin đã có, tính điểm nguy cơ sepsis trong **6 giờ tiếp theo** và hiển thị cảnh báo khi điểm vượt ngưỡng của mô hình.
 
-Đầu mối dự án là **Vũ Duy Điệp · Khoa Cấp cứu**. Dự án hướng tới quy trình theo dõi từ Cấp cứu đến Nội trú và Hồi sức tích cực. Phiên bản hiện tại phục vụ trải nghiệm và kiểm thử quy trình bằng hồ sơ EMR mô phỏng. Hiệu quả trên bệnh nhân thực tế cần được đánh giá trong các bước nghiên cứu tiếp theo.
+Đầu mối dự án là **Vũ Duy Điệp · Khoa Cấp cứu**. Ứng dụng tổ chức dữ liệu và diễn biến nguy cơ theo từng ca, với các khu vực điều trị gồm Cấp cứu, Nội trú và Hồi sức tích cực.
 
-## Vấn đề dự án muốn giải quyết
+## Hỗ trợ nhận diện nguy cơ qua diễn biến người bệnh
 
 Thông tin của một người bệnh xuất hiện dần theo thời gian. Sinh hiệu được đo lại, xét nghiệm có kết quả sau khi lấy mẫu, triệu chứng và nơi điều trị tiếp tục thay đổi. Bác sĩ cần tổng hợp những thông tin này để nhận ra diễn biến đáng lo ngại giữa nhiều ca đang theo dõi.
 
-Sepsis Signal hướng tới hỗ trợ công việc đó bằng một màn hình thể hiện **điểm nguy cơ hiện tại, trạng thái cảnh báo, diễn biến theo giờ và dữ liệu tại từng mốc**. Bác sĩ xem lại dữ liệu và trực tiếp đánh giá người bệnh khi có cảnh báo.
+Sepsis Signal tập hợp **điểm nguy cơ hiện tại, trạng thái cảnh báo, diễn biến theo giờ và dữ liệu tại từng mốc** trên cùng một màn hình. Bác sĩ xem lại dữ liệu và trực tiếp đánh giá người bệnh khi có cảnh báo.
 
-Mục tiêu nghiên cứu là rút ngắn thời gian từ dấu hiệu cảnh báo đầu tiên có trên EMR đến khi bác sĩ ghi nhận nghi ngờ sepsis. Mốc mục tiêu **≤4 giờ** sẽ cần được đối chiếu với số liệu trước triển khai tại khoa. Mức cải thiện sẽ được đo khi có dữ liệu thực tế.
+Mục tiêu của ứng dụng là hỗ trợ bác sĩ nhận diện nguy cơ sớm, theo dõi sự thay đổi giữa các lần cập nhật và ưu tiên xem xét những ca có cảnh báo.
 
-**Cửa sổ dự báo 6 giờ** trả lời câu hỏi “tại thời điểm này, người bệnh có nguy cơ khởi phát sepsis trong 6 giờ tới hay không?”. Thời gian bác sĩ nhận diện bệnh là một chỉ số riêng, cần đo trong quy trình thực tế.
+**Cửa sổ dự báo 6 giờ** trả lời câu hỏi “tại thời điểm này, người bệnh có nguy cơ khởi phát sepsis trong 6 giờ tới hay không?”. Điểm được cập nhật khi người dùng bổ sung thông tin và chấm lại tại mốc tiếp theo.
 
-## Trải nghiệm được những gì?
+## Chức năng chính
 
 | Trang | Người dùng làm gì? | Kết quả nhận được |
 | --- | --- | --- |
@@ -25,7 +25,7 @@ Mục tiêu nghiên cứu là rút ngắn thời gian từ dấu hiệu cảnh b
 | **Danh sách theo dõi** | Xem lại nhiều hồ sơ đã nhập, mở ca cần xem xét. | Mốc chấm gần nhất và tình trạng cảnh báo của từng ca. |
 | **Đánh giá mô hình** | Xem cách chọn ngưỡng và kết quả kiểm tra mô hình. | Các chỉ số theo giờ, theo lượt khám và thời gian cảnh báo trước khởi phát tham chiếu. |
 
-Luồng trải nghiệm chính là **tạo ca → nhập chỉ số → lưu và chấm điểm → xem cảnh báo → cập nhật ở giờ tiếp theo**. Người dùng có thể nhập trực tiếp trên biểu mẫu. Hồ sơ mẫu có sẵn giúp trải nghiệm nhanh ngay khi mở ứng dụng.
+Quy trình sử dụng là **tạo ca → nhập chỉ số → lưu và chấm điểm → xem cảnh báo → cập nhật ở giờ tiếp theo**. Người dùng nhập trực tiếp trên biểu mẫu hoặc chọn hồ sơ mẫu có sẵn để xem diễn biến theo thời gian.
 
 ## Thử một ca trong vài phút
 
@@ -39,7 +39,7 @@ Sau khi chạy ứng dụng theo hướng dẫn bên dưới, mở **Chạy ca m
 
 Muốn thử nhập trực tiếp, mở **Nhập ca theo giờ**, tạo hồ sơ và nhập sinh hiệu tại T0+1. Sau đó chuyển sang T0+2, bổ sung dữ liệu mới rồi chấm lại để xem diễn biến.
 
-**T0 là thời điểm hoàn tất phân loại ban đầu.** Prototype hỗ trợ chấm từ **T0+1 đến T0+36 giờ**. Điểm phần trăm hiển thị là đầu ra mô hình được huấn luyện trên dữ liệu mô phỏng, cần kiểm định và hiệu chỉnh trên dữ liệu thực tế trước khi diễn giải thành xác suất lâm sàng.
+**T0 là thời điểm hoàn tất phân loại ban đầu.** Hệ thống hỗ trợ chấm từ **T0+1 đến T0+36 giờ**. Điểm hiển thị được đối chiếu với ngưỡng cảnh báo và diễn biến của các mốc trước để hỗ trợ bác sĩ xem xét ca bệnh.
 
 ## Dữ liệu đầu vào gồm những gì?
 
@@ -58,11 +58,11 @@ Biểu mẫu còn nhận huyết áp tâm trương để tính MAP khi cần. Wo
 
 ### Link dữ liệu mẫu và schema
 
-- **[Mở thư mục dữ liệu trên GitHub](https://github.com/VuDuyDiepAI/Sepsis-Signal/tree/main/data)** để xem hoặc chia sẻ với giám khảo.
+- **[Mở thư mục dữ liệu trên GitHub](https://github.com/VuDuyDiepAI/Sepsis-Signal/tree/main/data)** để xem và tải dữ liệu đi kèm ứng dụng.
 - **[Tải workbook EMR mẫu](data/mock_ed_hospital_emr_v3_hourly.xlsx)** gồm **360 lượt khám và 12.960 mốc theo giờ**. Trong Excel, mở sheet **`Guide`** để đọc hướng dẫn và **`DataDictionary`** để xem schema, kiểu dữ liệu, đơn vị và vai trò của các trường.
 - Các sheet tách hồ sơ, sự kiện, đặc trưng và nhãn để kiểm tra đường đi từ dữ liệu đến kết quả dự báo.
 
-Dữ liệu trong workbook được tạo theo kịch bản, có mô phỏng thiếu dữ liệu và thời điểm trả kết quả. Nguồn dữ liệu của phiên bản trải nghiệm là **EMR tổng hợp**, chưa có kết nối lấy dữ liệu từ hệ thống bệnh án bệnh viện. Khi thử nhập tay, hãy sử dụng mã ca và thông tin mô phỏng.
+Bộ hồ sơ đi kèm và dữ liệu huấn luyện mô hình là **EMR mô phỏng**, được tạo theo kịch bản với tình huống thiếu dữ liệu và thời điểm trả kết quả. Điểm hiển thị phản ánh mô hình học trên bộ dữ liệu này. Khi trải nghiệm nhập tay, sử dụng mã ca và thông tin mô phỏng.
 
 ## Mô hình tính điểm như thế nào?
 
@@ -75,16 +75,6 @@ Phiên bản đang phục vụ sử dụng **hồi quy logistic có điều chu�
 5. **Hiển thị và lưu lịch sử.** Người dùng xem điểm cùng sinh hiệu, xét nghiệm và biểu đồ để đối chiếu qua các giờ.
 
 Khi huấn luyện, các mốc của cùng lượt khám được giữ trong cùng nhóm. Tham số được chọn qua xác thực chéo theo nhóm trên tập huấn luyện, ngưỡng được chọn trên tập xác thực riêng và kết quả cuối được báo trên tập giữ lại theo thời gian mô phỏng. Metadata lưu cấu hình, phiên bản và checksum workbook để đối chiếu. [Xem metadata sepsis](artifacts/mock_emr_hourly_lr/sepsis_metadata.json).
-
-## Mức độ hoàn thiện hiện tại
-
-**Đã có** luồng nhập và chấm điểm theo giờ, phát lại ca mẫu, danh sách theo dõi, biểu đồ diễn biến, mô hình logistic đã huấn luyện và trang đánh giá kỹ thuật. Hồ sơ nhập tay được lưu cục bộ bằng SQLite. Ứng dụng hiện chạy độc lập bằng Streamlit.
-
-**Cần làm tiếp** để tiến tới thử nghiệm tại khoa gồm ánh xạ dữ liệu EMR thực tế, rà soát nhãn với bác sĩ, xử lý đầy đủ các tình huống nhập muộn, đánh giá hồi cứu và thử nghiệm tiền cứu im lặng. Giai đoạn im lặng ghi nhận dự báo để đánh giá trước khi đưa cảnh báo vào quy trình chăm sóc.
-
-Các kết quả trên dữ liệu mô phỏng hiện dùng để kiểm tra hoạt động của prototype. Đánh giá thực tế sẽ cần đo độ nhạy, ca bỏ sót, số cảnh báo giả, độ hiệu chỉnh của điểm và thời gian bác sĩ nhận diện bệnh. Khả năng giảm thời gian nhận diện xuống ≤4 giờ hiện là **mục tiêu nghiên cứu**.
-
-Phạm vi chính hiện tại tập trung vào **sepsis**. Trang đánh giá có mục mở rộng về sốc nhiễm khuẩn với số ca mô phỏng còn ít, phục vụ minh họa kỹ thuật.
 
 ## Cài đặt và chạy trên Windows
 
