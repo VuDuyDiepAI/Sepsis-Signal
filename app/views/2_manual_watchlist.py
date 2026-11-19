@@ -27,8 +27,8 @@ with st.container(key='watchlist_summary'):
 with st.container(border=True, key='watchlist_filters'):
     a, b, c, d = st.columns(4)
     search = a.text_input('Tìm mã hồ sơ', placeholder='Nhập mã hồ sơ')
-    status = b.selectbox('Cảnh báo', ['Tất cả', 'Vượt ngưỡng', 'Dưới ngưỡng', 'Chưa chấm'])
-    review_status = c.selectbox('Xem xét', ['Tất cả', 'Chờ xem xét', 'Đã xem xét', 'Chưa có kết quả'])
+    status = b.selectbox('Cảnh báo', ['Tất cả', 'Vượt ngưỡng', 'Dưới ngưỡng', 'Chưa chấm', 'Không đủ dữ liệu', 'Cần chấm lại'])
+    review_status = c.selectbox('Xem xét', ['Tất cả', 'Chờ xem xét', 'Đã xem xét', 'Chưa có kết quả', 'Cần cập nhật dữ liệu', 'Cần chấm lại'])
     location = d.selectbox('Khoa', ['Tất cả', *LOCATION_NAMES],
                            format_func=lambda code: LOCATION_NAMES.get(code, code))
 

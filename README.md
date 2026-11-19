@@ -126,6 +126,8 @@ scripts/
 requirements.txt        Thư viện để chạy ứng dụng
 ```
 
+Khi sửa bản ghi, các kết quả bị ảnh hưởng được đánh dấu hết hiệu lực ngay khi lưu dữ liệu. Hệ thống chấm lại các mốc đó; mốc không còn đủ dữ liệu sẽ không hiển thị điểm hoặc cho ghi nhận xem xét. Bản tính và ghi nhận cũ vẫn được giữ trong lịch sử. Lỗi chấm điểm cũng không làm kết quả cũ trở lại hiệu lực.
+
 Hồ sơ nhập tay và ghi nhận xem xét được lưu trong `data/manual_cases.sqlite3`. Mỗi lượt xem xét gắn với đúng mốc giờ và phiên bản kết quả. Khi chấm ra bản tính mới, bản đó có trạng thái xem xét riêng. Người ghi nhận và mã tài khoản được lấy từ phiên đăng nhập, gắn với đúng bản tính đang xem.
 
 <details>
@@ -154,7 +156,9 @@ Tên biến `*_since_t0` và metadata `observation_window.type = expanding` xác
 
 Khi thay workbook, cần huấn luyện và cập nhật artifact tương ứng để khớp kiểm tra checksum dữ liệu.
 
-Kiểm tra luồng nhập ca, phiên bản kết quả, lưu xem xét và các trang giao diện.
+Kiểm thử tự động gồm dữ liệu sửa làm mất điều kiện chấm, khôi phục sau chỉnh sửa, lỗi mô hình, chỉnh dữ liệu đồng thời khi chấm, lưu xem xét, và đối chiếu các đặc trưng workbook–nhập tay trên 36 giờ của bốn nhóm kịch bản. Bộ kiểm thử độc lập còn dựng lại 12.960 mốc từ dữ liệu nguồn.
+
+GitHub Actions chạy toàn bộ thư mục `tests` trên Python 3.11 cho push và pull request. Cài môi trường kiểm thử bằng `python -m pip install -r requirements-dev.txt`. Nhánh `main` dùng pull request và yêu cầu check **Python tests** thành công; không cho force-push hoặc xóa nhánh. Số phê duyệt bắt buộc là 0 để một người quản lý repo có thể tự hợp nhất sau khi CI đạt.
 
 ```powershell
 .\.venv\Scripts\python.exe -m pip install pytest

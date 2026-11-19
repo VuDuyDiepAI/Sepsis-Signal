@@ -79,3 +79,33 @@ def test_manual_journey_and_other_pages(tmp_path, monkeypatch):
     app = app.switch_page('views/4_sample_case.py').run()
     assert not app.exception
     assert app.title[0].value == 'Chạy ca mẫu'
+
+
+def test_invalidated_hour_hides_old_score_and_review_until_recovery(tmp_path, monkeypatch):
+    from datetime import timedelta
+    from src.manual_cases import save_entry,score_hour,recompute_scored_hours
+    from src.mock_emr import load_bundle
+    monkeypatch.setenv('SEPSIS_MANUAL_DB', str(tmp_path/'invalid.sqlite3'))
+    monkeypatch.setenv('SEPSIS_AUTH_DB', str(tmp_path/'accounts.sqlite3'))
+    create_first_account('doctor', 'Bác sĩ thử nghiệm', 'test-only-password-123')
+    t0=datetime(2026,1,1,8)
+    eid=create_case(triage_completed_at=t0,age_years=60,sex='F')
+    vitals={'heart_rate_bpm':95,'respiratory_rate_per_min':22,'sbp_mmhg':110}
+    save_entry(eid,measured_at=t0,vital_available_at=t0,vitals=vitals)
+    bundles={'sepsis':load_bundle('sepsis')}
+    score_hour(eid,1,bundles=bundles)
+    changed=save_entry(eid,measured_at=t0,vital_available_at=t0+timedelta(hours=2),vitals=vitals)
+    recompute_scored_hours(eid,changed,bundles=bundles)
+    app=AppTest.from_file(str(ROOT/'app/streamlit_app.py'),default_timeout=90)
+    app.session_state.auth_token=sign_in('doctor','test-only-password-123')
+    app.run()
+    assert not app.exception
+    assert 'Không đủ dữ liệu' in app.dataframe[0].value['Cảnh báo'].tolist()
+    app.switch_page('views/1_manual.py').run()
+    assert not app.exception and not app.metric
+    assert any('hết hiệu lực' in w.value for w in app.warning)
+    assert not any(b.label=='Đã xem xét kết quả' for b in app.button)
+    next(b for b in app.button if b.label=='Cập nhật mốc T0+2h').click().run()
+    next(b for b in app.button if b.label=='Lưu dữ liệu và chấm điểm').click().run()
+    assert not app.exception
+    assert any(m.label=='Điểm sepsis' for m in app.metric)

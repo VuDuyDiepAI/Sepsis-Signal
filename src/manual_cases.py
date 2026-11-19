@@ -36,6 +36,10 @@ SYMPTOMS = ('respiratory', 'urinary', 'abdominal', 'skin', 'cns')
 LOCATIONS = ('ED', 'WARD', 'ICU')
 
 
+class InsufficientDataError(ValueError):
+    """A scoring time no longer has the minimum observations it requires."""
+
+
 def db_path() -> Path:
     return Path(os.environ.get('SEPSIS_MANUAL_DB', ROOT / 'data' / 'manual_cases.sqlite3'))
 
@@ -55,7 +59,7 @@ def _dt(value: str) -> datetime:
 def _connection(path: Path | None = None):
     target = Path(path) if path is not None else db_path()
     target.parent.mkdir(parents=True, exist_ok=True)
-    con = sqlite3.connect(target)
+    con = sqlite3.connect(target, timeout=10)
     con.row_factory = sqlite3.Row
     con.execute('PRAGMA foreign_keys = ON')
     try:
@@ -125,6 +129,16 @@ def init_db(path: Path | None = None) -> None:
         );
         CREATE INDEX IF NOT EXISTS reviews_case ON result_reviews(encounter_id);
         ''')
+        con.execute('BEGIN IMMEDIATE')
+        encounter_columns = {row[1] for row in con.execute('PRAGMA table_info(encounters)')}
+        if 'data_revision' not in encounter_columns:
+            con.execute('ALTER TABLE encounters ADD COLUMN data_revision INTEGER NOT NULL DEFAULT 0')
+        prediction_columns = {row[1] for row in con.execute('PRAGMA table_info(predictions)')}
+        for name, definition in [('valid', 'INTEGER NOT NULL DEFAULT 1'),
+                                 ('invalid_reason', "TEXT NOT NULL DEFAULT ''"),
+                                 ('invalidated_at', "TEXT NOT NULL DEFAULT ''")]:
+            if name not in prediction_columns:
+                con.execute(f'ALTER TABLE predictions ADD COLUMN {name} {definition}')
         columns = {row[1] for row in con.execute('PRAGMA table_info(result_reviews)')}
         if 'reviewed_by_user_id' not in columns:
             con.execute('ALTER TABLE result_reviews ADD COLUMN reviewed_by_user_id TEXT')
@@ -155,7 +169,10 @@ def create_case(*, triage_completed_at: datetime, age_years: int, sex: str,
     now = _stamp(datetime.now())
     t0 = _stamp(triage_completed_at)
     with _connection(path) as con:
-        con.execute('''INSERT INTO encounters VALUES
+        con.execute('''INSERT INTO encounters
+          (encounter_id,triage_completed_at,age_years,sex,height_cm,weight_kg,bmi_kg_m2,
+           diabetes,cardiovascular_disease,chronic_kidney_disease,chronic_liver_disease,
+           chronic_lung_disease,cancer,immunosuppression,created_at) VALUES
           (:encounter_id,:triage_completed_at,:age_years,:sex,:height_cm,:weight_kg,:bmi_kg_m2,
            :diabetes,:cardiovascular_disease,:chronic_kidney_disease,:chronic_liver_disease,
            :chronic_lung_disease,:cancer,:immunosuppression,:created_at)''',
@@ -202,21 +219,29 @@ def case_overview(path: Path | None = None) -> list[dict]:
     rows = []
     for case in list_cases(path):
         eid = case['encounter_id']
-        history = [p for p in prediction_history(eid, path=path) if p['target'] == 'sepsis']
-        latest = history[-1] if history else None
+        history = [p for p in prediction_history(eid, path=path, include_invalid=True) if p['target'] == 'sepsis']
+        attempt = history[-1] if history else None
+        latest = attempt if attempt and attempt['valid'] else None
         reviews = {r['result_key']: r for r in review_history(eid, path)}
         review = reviews.get(f'manual:{latest["id"]}') if latest else None
         locations = [r for r in event_rows(eid, 'locations', path)
-                     if latest is None or r['available_at'] <= latest['prediction_at']]
-        status = ('Vượt ngưỡng' if latest['alert'] else 'Dưới ngưỡng') if latest else 'Chưa chấm'
+                     if attempt is None or r['available_at'] <= attempt['prediction_at']]
+        status = (('Vượt ngưỡng' if latest['alert'] else 'Dưới ngưỡng') if latest
+                  else ('Không đủ dữ liệu' if attempt['invalid_reason'].startswith('Chưa có sinh hiệu')
+                        else 'Cần chấm lại') if attempt else 'Chưa chấm')
         pending_alert = bool(latest and latest['alert'] and not review)
         rows.append({
             **case, 'latest': latest, 'review': review, 'status': status,
             'location': locations[-1]['location_code'] if locations else 'ED',
-            'review_status': ('Đã xem xét' if review else 'Chờ xem xét') if latest else 'Chưa có kết quả',
-            'change': (latest['score'] - history[-2]['score']) * 100 if len(history) > 1 else None,
-            'hour': int((_dt(latest['prediction_at']) - _dt(case['triage_completed_at']))
-                        .total_seconds() // 3600) if latest else 0,
+            'review_status': (('Đã xem xét' if review else 'Chờ xem xét') if latest
+                              else ('Cần cập nhật dữ liệu' if status=='Không đủ dữ liệu' else 'Cần chấm lại')
+                              if attempt else 'Chưa có kết quả'),
+            'invalid_reason': attempt['invalid_reason'] if attempt and not attempt['valid'] else '',
+            'change': ((latest['score'] - history[-2]['score']) * 100
+                       if latest and len(history) > 1 and history[-2]['valid']
+                       and latest['model_version'] == history[-2]['model_version'] else None),
+            'hour': int((_dt(attempt['prediction_at']) - _dt(case['triage_completed_at']))
+                        .total_seconds() // 3600) if attempt else 0,
             'rank': 0 if pending_alert else 1 if latest and latest['alert'] else 2 if latest else 3,
         })
     return sorted(rows, key=lambda r: (r['rank'], -(r['latest']['score'] if r['latest'] else 0)))
@@ -247,6 +272,8 @@ def record_review(*, result_key: str, encounter_id: str, prediction_at: str,
                 (encounter_id, prediction['prediction_at'])).fetchone()[0]
             if prediction['revision'] != newest:
                 raise ValueError('Kết quả đã có bản tính mới. Tải lại trang để xem xét bản mới nhất.')
+            if not prediction['valid']:
+                raise ValueError('Kết quả đã hết hiệu lực sau khi dữ liệu thay đổi. Cần chấm lại trước khi xem xét.')
         elif not result_key.startswith('sample:'):
             raise ValueError('Mã kết quả mẫu không hợp lệ.')
         reviewed_at = _stamp(datetime.now(timezone(timedelta(hours=7))).replace(tzinfo=None))
@@ -334,20 +361,27 @@ def save_entry(encounter_id: str, *, measured_at: datetime | None = None,
             raise ValueError('Giờ chuyển khu vực không được trước T0.')
         prepared.append(('locations', {'encounter_id': encounter_id, 'effective_at': when},
                          {'available_at': when, 'location_code': location_code}, _dt(when)))
+    affected = []
     with _connection(path) as con:
+        con.execute('BEGIN IMMEDIATE')
         for table, identity, values, _ in prepared:
-            if table == 'vitals':
-                old = con.execute('''SELECT available_at FROM vitals WHERE encounter_id=?
-                    AND measured_at=? AND active=1 ORDER BY id DESC LIMIT 1''',
-                    (encounter_id, identity['measured_at'])).fetchone()
-                if old and values['available_at'] > old['available_at']:
-                    scored = con.execute('''SELECT 1 FROM predictions WHERE encounter_id=?
-                        AND prediction_at>=? AND prediction_at<? LIMIT 1''',
-                        (encounter_id, old['available_at'], values['available_at'])).fetchone()
-                    if scored:
-                        raise ValueError('Đã có mốc dự báo dùng lần đo này; không thể dời giờ có dữ liệu sang sau mốc đó.')
+            where = ' AND '.join(f'{key}=?' for key in identity)
+            old = con.execute(f'SELECT available_at FROM {table} WHERE {where} AND active=1',
+                              tuple(identity.values())).fetchone()
+            affected.append(_dt(values['available_at']))
+            if old:
+                affected.append(_dt(old['available_at']))
             _replace_event(con, table, identity, values)
-    return min((row[3] for row in prepared), default=None)
+        if affected:
+            con.execute('UPDATE encounters SET data_revision=data_revision+1 WHERE encounter_id=?', (encounter_id,))
+            con.execute('''UPDATE predictions SET valid=0, invalid_reason=?, invalidated_at=?
+                WHERE encounter_id=? AND prediction_at>=? AND valid=1
+                AND revision=(SELECT MAX(p.revision) FROM predictions p
+                    WHERE p.encounter_id=predictions.encounter_id
+                    AND p.prediction_at=predictions.prediction_at AND p.target=predictions.target)''',
+                ('Dữ liệu đã thay đổi; cần chấm lại.', _stamp(datetime.now()),
+                 encounter_id, _stamp(min(affected))))
+    return min(affected, default=None)
 
 
 def event_rows(encounter_id: str, table: str, path: Path | None = None,
@@ -384,8 +418,8 @@ def score_hour(encounter_id: str, hour: int, *, path: Path | None = None,
     case = get_case(encounter_id, path)
     t = _dt(case['triage_completed_at']) + timedelta(hours=int(hour))
     frame = build_features(encounter_id, t, path)
-    if pd.isna(frame.iloc[0]['heart_rate_last_bpm']):
-        raise ValueError('Chưa có sinh hiệu hợp lệ từ T0 đến mốc đang xem để chấm điểm.')
+    if frame[['heart_rate_last_bpm', 'respiratory_rate_last_per_min', 'sbp_last_mmhg']].isna().any(axis=None):
+        raise InsufficientDataError('Chưa có sinh hiệu hợp lệ từ T0 đến mốc đang xem để chấm điểm.')
     result = {'encounter_id': encounter_id, 'prediction_at': t,
               'missing_features': int(frame[FEATURES].isna().sum(axis=1).iloc[0]),
               'features': frame}
@@ -399,10 +433,15 @@ def score_hour(encounter_id: str, hour: int, *, path: Path | None = None,
         feature_json = json.dumps(payload, sort_keys=True, ensure_ascii=False)
         signature = hashlib.sha256((feature_json + meta['model_version'] + str(threshold)).encode()).hexdigest()
         with _connection(path) as con:
+            con.execute('BEGIN IMMEDIATE')
+            revision_now = con.execute('SELECT data_revision FROM encounters WHERE encounter_id=?',
+                                       (encounter_id,)).fetchone()[0]
+            if revision_now != case['data_revision']:
+                raise ValueError('Dữ liệu vừa thay đổi trong lúc chấm điểm. Vui lòng chấm lại.')
             prior = con.execute('''SELECT * FROM predictions WHERE encounter_id=? AND prediction_at=?
                 AND target=? ORDER BY revision DESC LIMIT 1''',
                 (encounter_id, _stamp(t), target)).fetchone()
-            if prior is not None and prior['feature_hash'] == signature:
+            if prior is not None and prior['valid'] and prior['feature_hash'] == signature:
                 revision = prior['revision']
             else:
                 revision = 1 if prior is None else prior['revision'] + 1
@@ -418,14 +457,15 @@ def score_hour(encounter_id: str, hour: int, *, path: Path | None = None,
 
 
 def prediction_history(encounter_id: str, *, path: Path | None = None,
-                       include_revisions: bool = False) -> list[dict]:
+                       include_revisions: bool = False, include_invalid: bool = False) -> list[dict]:
     get_case(encounter_id, path)
     with _connection(path) as con:
         if include_revisions:
             query = '''SELECT * FROM predictions WHERE encounter_id=?
                        ORDER BY prediction_at,target,revision'''
         else:
-            query = '''SELECT p.* FROM predictions p WHERE p.encounter_id=? AND p.revision=(
+            validity = '' if include_invalid else 'AND p.valid=1'
+            query = f'''SELECT p.* FROM predictions p WHERE p.encounter_id=? {validity} AND p.revision=(
                        SELECT MAX(q.revision) FROM predictions q WHERE q.encounter_id=p.encounter_id
                        AND q.prediction_at=p.prediction_at AND q.target=p.target)
                        ORDER BY p.prediction_at,p.target'''
@@ -441,7 +481,17 @@ def recompute_scored_hours(encounter_id: str, from_available_at: datetime | None
     # A correction can remove an older active record. Revisit every scored hour
     # so records before and after the corrected availability stay consistent.
     hours = sorted({round((_dt(p['prediction_at']) - t0).total_seconds() / 3600)
-                    for p in prediction_history(encounter_id, path=path)})
+                    for p in prediction_history(encounter_id, path=path, include_invalid=True)
+                    if _dt(p['prediction_at']) >= from_available_at})
     for hour in hours:
-        score_hour(encounter_id, hour, path=path, bundles=bundles)
+        try:
+            score_hour(encounter_id, hour, path=path, bundles=bundles)
+        except InsufficientDataError as exc:
+            with _connection(path) as con:
+                con.execute('''UPDATE predictions SET valid=0, invalid_reason=?, invalidated_at=?
+                    WHERE encounter_id=? AND prediction_at=?
+                    AND revision=(SELECT MAX(p.revision) FROM predictions p
+                        WHERE p.encounter_id=predictions.encounter_id
+                        AND p.prediction_at=predictions.prediction_at AND p.target=predictions.target)''',
+                    (str(exc), _stamp(datetime.now()), encounter_id, _stamp(t0 + timedelta(hours=hour))))
     return len(hours)

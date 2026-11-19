@@ -71,19 +71,41 @@ def test_invalid_temporal_order_and_missing_vitals_rejected(setup_case):
         score_hour(case_id, 1, path=path, bundles=models)
 
 
-def test_cannot_move_a_used_vital_result_after_its_prediction(setup_case):
-    path, t0, case_id, models = setup_case
-    t1 = t0 + timedelta(hours=1)
-    save_entry(case_id, path=path, measured_at=t1, vital_available_at=t1,
-               vitals={'heart_rate_bpm': 90, 'respiratory_rate_per_min': 20,
-                       'sbp_mmhg': 115})
-    score_hour(case_id, 1, path=path, bundles=models)
-    with pytest.raises(ValueError, match='không thể dời'):
-        save_entry(case_id, path=path, measured_at=t1,
-                   vital_available_at=t1 + timedelta(hours=1),
-                   vitals={'heart_rate_bpm': 95, 'respiratory_rate_per_min': 21,
-                           'sbp_mmhg': 110})
-    assert len(event_rows(case_id, 'vitals', path)) == 1
+def test_delayed_correction_invalidates_ineligible_hours_and_recovers(setup_case):
+    path,t0,eid,models = setup_case
+    t1,t2,t3 = [t0+timedelta(hours=h) for h in (1,2,3)]
+    vitals={'heart_rate_bpm':90,'respiratory_rate_per_min':20,'sbp_mmhg':115}
+    save_entry(eid,path=path,measured_at=t1,vital_available_at=t1,vitals=vitals)
+    score_hour(eid,1,path=path,bundles=models)
+    score_hour(eid,2,path=path,bundles=models)
+    first = next(r for r in prediction_history(eid,path=path) if r['target']=='sepsis')
+    review_args=dict(result_key=f'manual:{first["id"]}',encounter_id=eid,
+                     prediction_at=first['prediction_at'],model_version=first['model_version'],
+                     reviewed_by='Bác sĩ A',prediction_id=first['id'],path=path)
+    record_review(**review_args)
+    changed=save_entry(eid,path=path,measured_at=t1,vital_available_at=t2,vitals=vitals)
+    assert changed==t1
+    assert prediction_history(eid,path=path)==[]  # Invalidated in the same transaction as the edit.
+    with pytest.raises(ValueError,match='hết hiệu lực'):
+        record_review(**review_args)
+    assert recompute_scored_hours(eid,changed,path=path,bundles=models)==2
+    assert {r['prediction_at'] for r in prediction_history(eid,path=path)}=={t2.isoformat()}
+    invalid=next(r for r in prediction_history(eid,path=path,include_invalid=True)
+                 if r['prediction_at']==t1.isoformat())
+    assert not invalid['valid'] and 'Chưa có sinh hiệu' in invalid['invalid_reason']
+    changed=save_entry(eid,path=path,measured_at=t1,vital_available_at=t3,vitals=vitals)
+    recompute_scored_hours(eid,changed,path=path,bundles=models)
+    assert prediction_history(eid,path=path)==[]
+    overview=case_overview(path)[0]
+    assert overview['latest'] is None and overview['hour']==2
+    assert overview['status']=='Không đủ dữ liệu'
+    assert overview['review'] is None
+    changed=save_entry(eid,path=path,measured_at=t1,vital_available_at=t1,vitals=vitals)
+    recompute_scored_hours(eid,changed,path=path,bundles=models)
+    assert len(prediction_history(eid,path=path))==4
+    assert all(r['valid'] and r['revision']>=2 for r in prediction_history(eid,path=path))
+    assert len(review_history(eid,path))==1  # Original acknowledgement is audit history only.
+    assert case_overview(path)[0]['review_status']=='Chờ xem xét'
 
 
 def test_review_persists_and_a_new_revision_requires_its_own_review(setup_case):
@@ -208,3 +230,36 @@ def test_delayed_older_measurement_does_not_override_newer_sample(tmp_path):
     assert after['creatinine_last_mg_dL'] == before['creatinine_last_mg_dL'] == 2.0
     assert after['heart_rate_delta_since_t0_bpm'] == 40
     assert after['hours_since_creatinine_result'] == 3
+
+
+def test_prediction_error_does_not_reactivate_invalidated_scores(setup_case):
+    path,t0,eid,models=setup_case
+    t1=t0+timedelta(hours=1)
+    save_entry(eid,path=path,measured_at=t0,vital_available_at=t0,
+               vitals={'heart_rate_bpm':90,'respiratory_rate_per_min':20,'sbp_mmhg':115})
+    score_hour(eid,1,path=path,bundles=models)
+    changed=save_entry(eid,path=path,lab_collected_at=t0,lab_available_at=t0,labs={'creatinine':2})
+    class BrokenModel:
+        def predict_proba(self,frame):
+            raise RuntimeError('model error')
+    with pytest.raises(RuntimeError,match='model error'):
+        recompute_scored_hours(eid,changed,path=path,bundles={'sepsis':(BrokenModel(),models['sepsis'][1])})
+    assert prediction_history(eid,path=path)==[]
+    assert len(prediction_history(eid,path=path,include_revisions=True))==2
+    assert case_overview(path)[0]['latest'] is None
+
+
+def test_concurrent_edit_cannot_commit_a_stale_prediction(setup_case):
+    path,t0,eid,models=setup_case
+    values={'heart_rate_bpm':90,'respiratory_rate_per_min':20,'sbp_mmhg':115}
+    save_entry(eid,path=path,measured_at=t0,vital_available_at=t0,vitals=values)
+    score_hour(eid,1,path=path,bundles={'sepsis':models['sepsis']})
+    class EditingModel:
+        def predict_proba(self,frame):
+            save_entry(eid,path=path,measured_at=t0,vital_available_at=t0,
+                       vitals={**values,'heart_rate_bpm':140})
+            return models['sepsis'][0].predict_proba(frame)
+    with pytest.raises(ValueError,match='vừa thay đổi'):
+        score_hour(eid,1,path=path,bundles={'sepsis':(EditingModel(),models['sepsis'][1])})
+    assert prediction_history(eid,path=path)==[]
+    assert len(prediction_history(eid,path=path,include_revisions=True))==1
