@@ -29,17 +29,24 @@ Quy trình sử dụng là **tạo ca → nhập chỉ số → lưu và chấm 
 
 ## Đăng nhập và không gian làm việc
 
-Lần chạy đầu tiên hiển thị **Thiết lập tài khoản**. Người vận hành tự đặt tên đăng nhập, tên hiển thị và mật khẩu từ 12 ký tự. Những lần tiếp theo dùng màn hình **Đăng nhập**. Không có tài khoản hay mật khẩu dùng chung được cài sẵn.
+Ứng dụng mở trực tiếp màn hình **Đăng nhập**, không có bước đăng ký. Bên dưới biểu mẫu có hai tài khoản trải nghiệm được tạo sẵn. Chọn một tài khoản để điền tên và mật khẩu, sau đó bấm **Đăng nhập**.
+
+| Tài khoản | Tên hiển thị | Mật khẩu |
+| --- | --- | --- |
+| `bacsi.demo1` | Bác sĩ trải nghiệm 01 | `SepsisDemo2026!` |
+| `bacsi.demo2` | Bác sĩ trải nghiệm 02 | `SepsisDemo2026!` |
+
+Hai tài khoản có cùng các chức năng và dùng chung danh sách hồ sơ. Đây là thông tin đăng nhập công khai phục vụ trải nghiệm; tên được lưu khi xem xét là danh tính tài khoản chung.
 
 Sau đăng nhập, ứng dụng mở **Danh sách theo dõi** với tìm kiếm, bộ lọc theo khoa, trạng thái cảnh báo và xem xét. Bấm **Tạo hồ sơ** để nhập thông tin ban đầu, hoặc chọn một dòng để mở diễn biến. Trong từng ca, trạng thái và biểu đồ nằm cạnh bảng thay đổi chỉ số. Biểu mẫu cập nhật nằm trong **Nhập chỉ số và cập nhật kết quả**. Nút **Đã xem xét kết quả** ghi nhận tên và mã tài khoản đang đăng nhập.
 
 Tài khoản được lưu cục bộ tại `data/accounts.sqlite3`, tách khỏi hồ sơ. Mật khẩu được băm PBKDF2-HMAC-SHA256 với salt riêng và 600.000 vòng; token phiên chỉ lưu bản băm trên máy chủ. Phiên hết hạn sau 8 giờ và bị thu hồi khi đăng xuất. Sau 5 lần nhập sai liên tiếp, tên đăng nhập tạm khóa 5 phút. Tải lại toàn bộ trang cần đăng nhập lại do phiên gắn với kết nối Streamlit.
 
-Có thể đặt `SEPSIS_AUTH_DB` và `SEPSIS_MANUAL_DB` để dùng đường dẫn lưu trữ riêng. Hai tệp SQLite này không được đưa lên Git. Cơ chế hiện tại là tài khoản nội bộ cho một bản cài đặt; chưa kết nối SSO bệnh viện hay phân quyền theo khoa. Khi đưa lên máy chủ dùng chung, người vận hành cần hoàn tất thiết lập tài khoản trước khi mở truy cập.
+Có thể đặt `SEPSIS_AUTH_DB` và `SEPSIS_MANUAL_DB` để dùng đường dẫn lưu trữ riêng. Hai tệp SQLite này không được đưa lên Git. Cơ chế hiện tại là tài khoản nội bộ cho một bản cài đặt; chưa kết nối SSO bệnh viện hay phân quyền theo khoa. Khi dùng với dữ liệu bệnh nhân thật, cần thay tài khoản trải nghiệm công khai bằng tài khoản cá nhân do đơn vị quản lý.
 
 ## Thử một ca trong vài phút
 
-Sau khi chạy ứng dụng, tạo tài khoản ở lần mở đầu tiên rồi đăng nhập. Trang chính là **Danh sách theo dõi**. Mở **Chạy ca mẫu** để xem một hồ sơ có sẵn.
+Sau khi chạy ứng dụng, chọn một tài khoản trải nghiệm ở màn hình đăng nhập rồi bấm **Đăng nhập**. Trang chính là **Danh sách theo dõi**. Mở **Chạy ca mẫu** để xem một hồ sơ có sẵn.
 
 1. Chọn hồ sơ **E0009** và mốc **T0+7h**.
 2. Xem điểm sepsis, trạng thái cảnh báo và các chỉ số đang có.

@@ -144,3 +144,7 @@ body:has(.st-key-login_shell) [data-testid="stHeader"] { display: none; }
     :is(.st-key-watchlist_summary,.st-key-watchlist_filters) [data-testid="stColumn"] { width: auto; min-width: 0; }
     .st-key-watchlist_summary [data-testid="stMetricLabel"] p { font-size: .78rem; min-height: 2.2rem; }
 }
+
+.st-key-demo_accounts { border-top: 1px solid var(--signal-border); margin-top: .7rem; padding-top: 1rem; }
+.st-key-demo_accounts [data-testid="stButton"] button { text-align: left; justify-content: flex-start; background: #f4f8fb; border-color: #d1dfe8; }
+.st-key-demo_accounts [data-testid="stButton"] button:hover { background: #e6f1f7; border-color: #0b6086; }

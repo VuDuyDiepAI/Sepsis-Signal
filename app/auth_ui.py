@@ -3,12 +3,18 @@ from html import escape
 
 import streamlit as st
 
-from src.auth import create_first_account, has_accounts, session_user, sign_in, sign_out
+from src.auth import (DEMO_ACCOUNTS, DEMO_PASSWORD, ensure_demo_accounts,
+                      session_user, sign_in, sign_out)
 
 
 def logout():
     sign_out(st.session_state.get('auth_token'))
     st.session_state.clear()
+
+
+def choose_demo(username):
+    st.session_state.login_username = username
+    st.session_state.login_password = DEMO_PASSWORD
 
 
 def require_login():
@@ -19,7 +25,7 @@ def require_login():
     if st.session_state.get('auth_user'):
         st.session_state.clear()
         st.info('Phiên làm việc đã kết thúc. Vui lòng đăng nhập lại.')
-    setup = not has_accounts()
+    ensure_demo_accounts()
     with st.container(key='login_shell'):
         intro, form = st.columns([1.05, 1], gap='large', vertical_alignment='top')
         with intro:
@@ -33,31 +39,29 @@ def require_login():
             )
         with form:
             with st.container(key='login_form'):
-                st.title('Thiết lập tài khoản' if setup else 'Đăng nhập', anchor=False)
-                st.caption('Tạo tài khoản đầu tiên để bắt đầu sử dụng trên máy này.' if setup
-                           else 'Nhập tài khoản để truy cập hệ thống theo dõi.')
+                st.title('Đăng nhập', anchor=False)
+                st.caption('Đăng nhập hoặc chọn tài khoản trải nghiệm bên dưới.')
                 with st.form('sign_in', clear_on_submit=True):
-                    username = st.text_input('Tên đăng nhập', placeholder='Ví dụ bacsi.diep', max_chars=64)
-                    name = st.text_input('Tên hiển thị', placeholder='Tên dùng khi ghi nhận xem xét',
-                                         max_chars=100) if setup else ''
-                    password = st.text_input('Mật khẩu', type='password', max_chars=128)
-                    confirmation = st.text_input('Nhập lại mật khẩu', type='password', max_chars=128) if setup else ''
-                    if setup:
-                        st.caption('Mật khẩu từ 12 ký tự. Bạn tự chọn thông tin đăng nhập.')
-                    submit = st.form_submit_button('Tạo tài khoản và đăng nhập' if setup else 'Đăng nhập',
-                                                    type='primary', width='stretch')
+                    username = st.text_input('Tên đăng nhập', placeholder='Nhập tên đăng nhập',
+                                             max_chars=64, key='login_username')
+                    password = st.text_input('Mật khẩu', type='password', max_chars=128,
+                                             key='login_password')
+                    submit = st.form_submit_button('Đăng nhập', type='primary', width='stretch')
                 if submit:
                     try:
-                        if setup:
-                            if password != confirmation:
-                                raise ValueError('Hai lần nhập mật khẩu chưa khớp.')
-                            create_first_account(username, name, password)
                         st.session_state.auth_token = sign_in(username, password)
                     except ValueError as exc:
                         st.error(str(exc))
                     else:
                         st.rerun()
-                st.caption('Phiên làm việc tối đa 8 giờ. Khi tải lại trình duyệt, bạn đăng nhập lại.')
+                with st.container(key='demo_accounts'):
+                    st.markdown('**Tài khoản trải nghiệm**')
+                    st.caption('Chọn tài khoản để điền sẵn thông tin, sau đó bấm Đăng nhập.')
+                    for account in DEMO_ACCOUNTS:
+                        st.button(f'{account["display_name"]} · {account["username"]}',
+                                  key=f'demo_{account["username"]}', width='stretch',
+                                  on_click=choose_demo, args=(account['username'],))
+                    st.caption(f'Mật khẩu dùng chung: **{DEMO_PASSWORD}**')
     st.stop()
 
 

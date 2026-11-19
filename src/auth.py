@@ -16,6 +16,11 @@ from src.mock_emr import ROOT
 
 ITERATIONS = 600_000
 SESSION_SECONDS = 8 * 60 * 60
+DEMO_PASSWORD = 'SepsisDemo2026!'
+DEMO_ACCOUNTS = (
+    {'username': 'bacsi.demo1', 'display_name': 'Bác sĩ trải nghiệm 01'},
+    {'username': 'bacsi.demo2', 'display_name': 'Bác sĩ trải nghiệm 02'},
+)
 
 
 def auth_path() -> Path:
@@ -61,6 +66,21 @@ def has_accounts() -> bool:
     init_auth()
     with _connection() as con:
         return con.execute('SELECT 1 FROM users LIMIT 1').fetchone() is not None
+
+
+def ensure_demo_accounts() -> None:
+    """Provision the advertised shared demo identities without changing existing users."""
+    init_auth()
+    with _connection() as con:
+        existing = {row[0] for row in con.execute('SELECT username FROM users')}
+    for account in DEMO_ACCOUNTS:
+        if account['username'] in existing:
+            continue
+        encoded = _password_hash(DEMO_PASSWORD)
+        with _connection() as con:
+            con.execute('''INSERT INTO users(id,username,display_name,password_hash,created_at)
+                VALUES(?,?,?,?,?) ON CONFLICT(username) DO NOTHING''',
+                (uuid.uuid4().hex, account['username'], account['display_name'], encoded, time.time()))
 
 
 def _password_hash(password: str, salt: bytes | None = None) -> str:
