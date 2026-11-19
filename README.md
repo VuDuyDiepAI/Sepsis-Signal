@@ -4,7 +4,7 @@
 
 Sepsis Signal là ứng dụng hỗ trợ theo dõi nguy cơ nhiễm khuẩn huyết, cho phép nhập sinh hiệu, kết quả xét nghiệm và triệu chứng của một ca bệnh qua nhiều thời điểm. Ở mỗi mốc giờ, hệ thống tổng hợp thông tin đã có, tính điểm nguy cơ sepsis trong **6 giờ tiếp theo** và hiển thị cảnh báo khi điểm vượt ngưỡng của mô hình.
 
-Đầu mối dự án là **Vũ Duy Điệp · Khoa Cấp cứu**. Ứng dụng tổ chức dữ liệu và diễn biến nguy cơ theo từng ca, với các khu vực điều trị gồm Cấp cứu, Nội trú và Hồi sức tích cực.
+Đầu mối dự án là **Khoa Cấp cứu – Bệnh viện Đa khoa Quốc tế Vinmec**. Ứng dụng tổ chức dữ liệu và diễn biến nguy cơ theo từng ca, với các khu vực điều trị gồm Cấp cứu, Nội trú và Hồi sức tích cực.
 
 ## Hỗ trợ nhận diện nguy cơ qua diễn biến người bệnh
 
