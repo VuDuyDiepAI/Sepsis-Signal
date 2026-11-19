@@ -83,30 +83,24 @@ frontend/
   src/lib/clinical-types.ts # Hợp đồng TypeScript
   src/lib/clinical-data.ts  # Typed read adapter và hàm as-of
   src/data/                 # Fixture nguồn + tham chiếu tách biệt
-  tests/                    # Contract/component tests + Playwright
 ```
 
 Next.js App Router, React, TypeScript strict, Tailwind, shadcn/ui, Lucide, Recharts, TanStack Table v8, React Hook Form và Zod. Font Inter được đóng gói cục bộ. Không phụ thuộc Google Fonts khi build/chạy.
 
 `ClinicalDataProvider` định nghĩa lớp đọc bất đồng bộ để thay bằng FastAPI về sau. Khi nối API cần bổ sung xác thực, quyền truy cập theo khoa, kiểm tra revision khi ghi review và audit phía server. Không coi state trình duyệt là hồ sơ bệnh viện.
 
-## Kiểm thử
+## Kiểm tra bản demo
+
+Bản giao diện thử nghiệm giữ các bước kiểm tra TypeScript, ESLint và build:
 
 ```powershell
 npm run typecheck
 npm run lint
-npm test
 npm run build
-npx playwright install chromium
-npm run test:e2e
 ```
 
-Nếu đã có Chromium: đặt `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` trỏ đến executable trước khi chạy E2E. Playwright tự chạy dev server nếu cổng 3000 chưa có server. CI frontend dùng Node 22, `npm ci`, các kiểm tra trên và Chromium. Workflow backend giữ nguyên.
-
-Contract tests kiểm tra metadata/checksum, thứ tự ưu tiên, scope revision, giờ +07:00, dữ liệu trả muộn, không xuất nhãn vào fixture lâm sàng, thiếu dữ liệu và chênh lệch điểm. Component tests đối chiếu số nguồn và T0. E2E kiểm tra search/filter/sort/pagination/navigation, review trong phiên, replay, tham chiếu, metrics, unknown ID và cả 5 màn hình ở **1440/1280/1024/768/390px**.
+Sau khi chạy `npm run dev`, kiểm tra thủ công các luồng chính: mở dashboard, lọc hồ sơ, xem chi tiết, chạy ca mẫu, tạo hồ sơ tại T0, chấm điểm từ T0+1h bằng Python, sửa dữ liệu cũ, xem cảnh báo và ghi nhận đã xem xét. Việc kiểm thử tự động của frontend đã được gỡ để tinh gọn bản demo; CI Python gốc trong repository vẫn được giữ nguyên.
 
 ## Bàn giao Git
 
-Ảnh cả 5 màn hình và biên bản kiểm tra ở [`docs/VALIDATION.md`](docs/VALIDATION.md).
-
-Chỉ push nhánh `feat/clinical-ui-refresh`, tạo Draft PR vào `main`; không merge. Không đưa `.next`, `node_modules`, `.env`, SQLite hoặc traces chạy test vào Git.
+Chỉ push nhánh `feat/clinical-ui-refresh`, tạo Draft PR vào `main`; không merge. Không đưa `.next`, `node_modules`, `.env` hoặc SQLite vào Git.
