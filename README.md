@@ -1,5 +1,11 @@
 # Sepsis Signal
 
+## Giao diện Next.js đang phát triển
+
+Nhánh `feat/clinical-ui-refresh` bổ sung giao diện **Modern Clinical Intelligence Platform** trong [`frontend/`](frontend/README.md), gồm tổng quan lâm sàng, chi tiết hồ sơ, trung tâm cảnh báo, diễn tiến ca mẫu và đánh giá mô hình. Bản Streamlit và mô hình Python tiếp tục nằm trong các thư mục gốc.
+
+Chạy giao diện mới bằng Node.js 22: `cd frontend`, `npm ci`, `npm run dev`, rồi mở [localhost:3000](http://localhost:3000). Giao diện dùng fixtures xuất từ workbook mô phỏng và mô hình đã lưu; chưa kết nối EMR, API ghi dữ liệu hay xác thực bệnh viện. Ghi nhận xem xét chỉ tồn tại trong phiên trình duyệt.
+
 **Theo dõi nguy cơ nhiễm khuẩn huyết theo giờ, hỗ trợ bác sĩ Khoa Cấp cứu nhận diện người bệnh cần đánh giá sớm.**
 
 Sepsis Signal là ứng dụng hỗ trợ theo dõi nguy cơ nhiễm khuẩn huyết, cho phép nhập sinh hiệu, kết quả xét nghiệm và triệu chứng của một ca bệnh qua nhiều thời điểm. Ở mỗi mốc giờ, hệ thống tổng hợp thông tin đã có, tính điểm nguy cơ sepsis trong **6 giờ tiếp theo** và hiển thị cảnh báo khi điểm vượt ngưỡng của mô hình.
