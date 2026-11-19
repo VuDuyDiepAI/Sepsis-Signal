@@ -142,37 +142,25 @@ export function availableLabs(
 }
 export const dataProvider: ClinicalDataProvider = {
   async listEncounters() {
-    return dataset.encounters;
+    return createClinicalReader().listEncounters();
   },
   async getEncounter(id) {
-    return dataset.encounters.find((e) => e.id === id) ?? null;
+    return createClinicalReader().getEncounter(id);
   },
   async getPredictions(id, hour) {
-    const e = dataset.encounters.find((e) => e.id === id);
-    return e
-      ? dataset.predictions
-          .filter(
-            (p) => p.encounterId === id && p.hour <= (hour ?? e.currentHour),
-          )
-          .sort((a, b) => a.hour - b.hour)
-      : [];
+    return createClinicalReader().getPredictions(id, hour);
   },
-  async getAvailableVitals(id, h) {
-    return availableVitals(id, h);
+  async getAvailableVitals(id, hour) {
+    return createClinicalReader().getAvailableVitals(id, hour);
   },
-  async getAvailableLabs(id, h) {
-    return availableLabs(id, h);
+  async getAvailableLabs(id, hour) {
+    return createClinicalReader().getAvailableLabs(id, hour);
   },
   async getAlerts() {
-    return dataset.predictions.flatMap((p) => {
-      const e = dataset.encounters.find((e) => e.id === p.encounterId);
-      return e && p.hour <= e.currentHour && p.score >= p.threshold
-        ? [{ encounter: e, prediction: p, department: p.department }]
-        : [];
-    });
+    return createClinicalReader().getAlerts();
   },
   async getModelMetadata() {
-    return dataset.models.sepsis;
+    return createClinicalReader().getModelMetadata();
   },
 };
 export function reviewFor(
@@ -218,5 +206,60 @@ export function summaryOf(rows: MonitoringRow[]) {
     pending: rows.filter((r) => r.state === "above" && !r.review).length,
     reviewed: rows.filter((r) => r.review).length,
     unavailable: rows.filter((r) => !r.prediction).length,
+  };
+}
+/** One read boundary for fixture and session data. Backend adapters can populate the same snapshot. */
+export function createClinicalReader(source: ClinicalDataset = dataset) {
+  const getEncounter = (id: string) =>
+    source.encounters.find((e) => e.id === id) ?? null;
+  const getPredictions = (id: string, hour?: number) => {
+    const e = getEncounter(id);
+    return e
+      ? source.predictions
+          .filter(
+            (p) => p.encounterId === id && p.hour <= (hour ?? e.currentHour),
+          )
+          .sort((a, b) => a.hour - b.hour)
+      : [];
+  };
+  return {
+    listEncounters: () => source.encounters,
+    getEncounter,
+    getPredictions,
+    getPrediction: (id: string, hour: number) => predictionAt(id, hour, source),
+    getChange: (id: string, hour: number) => changeAt(id, hour, source),
+    getDepartment: (id: string, at: string) => departmentAt(id, at, source),
+    getAvailableVitals: (id: string, hour: number) =>
+      availableVitals(id, hour, source),
+    getAvailableLabs: (id: string, hour: number) =>
+      availableLabs(id, hour, source),
+    getMonitoringRows: (reviews: Record<string, Review> = {}) =>
+      monitoringRows(reviews, source),
+    getAlerts: () =>
+      source.encounters.flatMap((e) =>
+        getPredictions(e.id)
+          .filter((p) => p.score >= p.threshold)
+          .map((prediction) => ({
+            encounter: e,
+            prediction,
+            department: prediction.department,
+          })),
+      ),
+    getModelMetadata: (target: "sepsis" | "shock" = "sepsis") =>
+      source.models[target],
+    getProvenance: () => source.provenance,
+    getUpdates: (id: string, hour: number) => {
+      const e = getEncounter(id);
+      if (!e) return { vitals: 0, labs: 0 };
+      const from = timeAt(e.t0, hour - 1);
+      return {
+        vitals: availableVitals(id, hour, source).filter(
+          (v) => v.availableAt > from,
+        ).length,
+        labs: availableLabs(id, hour, source).filter(
+          (l) => l.availableAt > from,
+        ).length,
+      };
+    },
   };
 }

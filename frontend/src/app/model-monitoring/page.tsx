@@ -6,7 +6,7 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 import { PageHeader, Panel } from "@/components/layout/page-container";
-import { dataset, percent } from "@/lib/clinical-data";
+import { createClinicalReader, percent } from "@/lib/clinical-data";
 import type { ModelMetadata, Metrics } from "@/lib/clinical-types";
 function Evaluation({ model }: { model: ModelMetadata }) {
   const metrics: {
@@ -71,8 +71,9 @@ function Evaluation({ model }: { model: ModelMetadata }) {
   );
 }
 export default function Monitoring() {
-  const m = dataset.models.sepsis,
-    s = dataset.models.shock;
+  const reader = createClinicalReader(),
+    m = reader.getModelMetadata(),
+    s = reader.getModelMetadata("shock");
   return (
     <>
       <PageHeader
@@ -163,14 +164,14 @@ export default function Monitoring() {
         <details className="panel secondary-details">
           <summary>Nguồn dữ liệu và hợp đồng đặc trưng</summary>
           <div className="panel-body">
-            <p>{dataset.provenance.source}</p>
+            <p>{reader.getProvenance().source}</p>
             <p className="secondary-text mt-2">
               Quan sát tăng dần từ T0 đến giờ dự báo; chỉ dùng dữ liệu đã có
               trên EMR. Chấm từ T0+1h đến T0+36h. Thời gian báo trước chỉ xét
               cảnh báo trong 6 giờ trước khởi phát tham chiếu.
             </p>
             <p className="model-version mt-3">
-              SHA-256: {dataset.provenance.sourceSha256}
+              SHA-256: {reader.getProvenance().sourceSha256}
             </p>
             <p className="secondary-text mt-3">
               Các chỉ số từ tập mô phỏng được làm giàu biến cố và tạo theo luật;

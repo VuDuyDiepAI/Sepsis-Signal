@@ -1,11 +1,11 @@
 "use client";
-import { useClinicalDataset } from "@/lib/manual-store";
+import { useClinicalReader } from "@/lib/manual-store";
 import { Panel } from "@/components/layout/page-container";
-import { availableLabs, labFields, formatTime } from "@/lib/clinical-data";
+import { labFields, formatTime } from "@/lib/clinical-data";
 export function LaboratoryPanel({ id, hour }: { id: string; hour: number }) {
-  const dataset = useClinicalDataset();
-  const labs = availableLabs(id, hour, dataset),
-    before = hour > 0 ? availableLabs(id, hour - 1, dataset) : [];
+  const reader = useClinicalReader();
+  const labs = reader.getAvailableLabs(id, hour),
+    before = hour > 0 ? reader.getAvailableLabs(id, hour - 1) : [];
   const newly = labs.filter((l) => !before.includes(l)).length;
   return (
     <Panel

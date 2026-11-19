@@ -1,10 +1,10 @@
 "use client";
-import { useClinicalDataset } from "@/lib/manual-store";
+import { useClinicalReader } from "@/lib/manual-store";
 import { Panel } from "@/components/layout/page-container";
-import { availableVitals, vitalFields, formatTime } from "@/lib/clinical-data";
+import { vitalFields, formatTime } from "@/lib/clinical-data";
 export function VitalSignsPanel({ id, hour }: { id: string; hour: number }) {
-  const dataset = useClinicalDataset();
-  const rows = availableVitals(id, hour, dataset);
+  const reader = useClinicalReader();
+  const rows = reader.getAvailableVitals(id, hour);
   return (
     <Panel
       className="vitals-panel"

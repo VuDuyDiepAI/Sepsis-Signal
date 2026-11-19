@@ -2,8 +2,10 @@
 import { useState } from "react";
 import { PageHeader } from "@/components/layout/page-container";
 import { PatientWorkspace } from "./patient-workspace";
-import { dataset, percent, formatTime } from "@/lib/clinical-data";
+import { createClinicalReader, percent, formatTime } from "@/lib/clinical-data";
 export function ReplayScreen() {
+  const reader = createClinicalReader();
+  const encounters = reader.listEncounters();
   const [id, setId] = useState("E0009"),
     [hour, setHour] = useState(7),
     [reveal, setReveal] = useState(false),
@@ -13,7 +15,7 @@ export function ReplayScreen() {
     } | null>(null),
     [loading, setLoading] = useState(false),
     [referenceError, setReferenceError] = useState(false);
-  const encounter = dataset.encounters.find((e) => e.id === id)!;
+  const encounter = encounters.find((e) => e.id === id)!;
   async function toggleReference(checked: boolean) {
     setReveal(checked);
     if (checked) {
@@ -49,14 +51,13 @@ export function ReplayScreen() {
             onChange={(e) => {
               setId(e.target.value);
               setHour(
-                dataset.encounters.find((r) => r.id === e.target.value)!
-                  .currentHour,
+                encounters.find((r) => r.id === e.target.value)!.currentHour,
               );
               setReveal(false);
               setReference(null);
             }}
           >
-            {dataset.encounters.map((e) => (
+            {encounters.map((e) => (
               <option key={e.id} value={e.id}>
                 {e.id} · {e.age} tuổi · {e.sex === "F" ? "Nữ" : "Nam"}
               </option>
@@ -65,7 +66,7 @@ export function ReplayScreen() {
         </label>
         <div>
           <div className="value-label">Ngưỡng từ mô hình đang lưu</div>
-          <strong>{percent(dataset.models.sepsis.threshold)}</strong>
+          <strong>{percent(reader.getModelMetadata().threshold)}</strong>
         </div>
         <div>
           <label className="reference-toggle">

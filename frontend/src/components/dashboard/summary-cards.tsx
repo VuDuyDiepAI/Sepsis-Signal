@@ -1,12 +1,12 @@
 "use client";
-import { useClinicalDataset } from "@/lib/manual-store";
+import { useClinicalReader } from "@/lib/manual-store";
 import { UsersRound, BellRing, ClipboardCheck, Clock3 } from "lucide-react";
-import { monitoringRows, summaryOf } from "@/lib/clinical-data";
+import { summaryOf } from "@/lib/clinical-data";
 import { useReviews } from "@/components/review-context";
 export function SummaryCards() {
-  const dataset = useClinicalDataset();
+  const reader = useClinicalReader();
   const { reviews } = useReviews();
-  const s = summaryOf(monitoringRows(reviews, dataset));
+  const s = summaryOf(reader.getMonitoringRows(reviews));
   return (
     <div className="stats-grid">
       {[

@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useHydrated } from "@/lib/use-hydrated";
 import { Plus, Save, LoaderCircle } from "lucide-react";
@@ -19,7 +19,7 @@ import {
   createManualCase,
   updateManualCase,
   useManualCases,
-  useClinicalDataset,
+  useClinicalReader,
   type ManualCase,
   type ScoreResponse,
 } from "@/lib/manual-store";
@@ -232,7 +232,9 @@ function ManualEntryForm({
     });
     if (!parsed.success) {
       setError(
-        "Kiểm tra chỉ số và thời gian. Sinh hiệu cần đủ nhịp tim, nhịp thở, HA tâm thu; giờ có dữ liệu phải sau giờ đo/lấy mẫu và từ T0.",
+        parsed.error.issues[0]?.message?.startsWith("Giờ")
+          ? parsed.error.issues[0].message
+          : "Kiểm tra chỉ số. Sinh hiệu mới cần đủ nhịp tim, nhịp thở, HA tâm thu và nằm trong khoảng nhập hợp lệ.",
       );
       return;
     }
@@ -256,11 +258,20 @@ function ManualEntryForm({
         parsed.data.entries.find((e) => e.hour === hour)! as ManualEntry,
         response,
       );
-      setMessage(
+      const atMs = Date.parse(at + "+07:00");
+      const delayed =
+        Object.keys(entry.labs).length > 0 &&
+        Date.parse(entry.labAvailableAt + "+07:00") > atMs;
+      const savedMessage =
         hour === 0
           ? "Đã lưu dữ liệu T0. Chọn T0+1h để chấm lần đầu."
           : (response?.errors[String(hour)] ??
-              "Đã lưu dữ liệu và cập nhật kết quả."),
+            "Đã lưu dữ liệu và cập nhật kết quả.");
+      setMessage(
+        savedMessage +
+          (delayed
+            ? " Xét nghiệm trả sau mốc này: đã lưu để mô phỏng, chưa dùng để chấm tại giờ đang xem."
+            : ""),
       );
     } catch (e) {
       setError(e instanceof Error ? e.message : "Không lưu được dữ liệu.");
@@ -447,10 +458,16 @@ export function ManualCaseScreen({
   id: string;
   initialHour?: number;
 }) {
+  const router = useRouter();
+  const [navigationPending, startNavigation] = useTransition();
   const cases = useManualCases(),
-    source = useClinicalDataset();
+    reader = useClinicalReader();
   const record = cases.find((c) => c.profile.id === id);
-  const [hour, setHour] = useState(initialHour ?? 0);
+  const hour = initialHour ?? record?.currentHour ?? 0;
+  const setHour = (next: number) =>
+    startNavigation(() =>
+      router.replace(`/patients/${id}?hour=${next}`, { scroll: false }),
+    );
   if (!record)
     return (
       <div className="empty-state panel">
@@ -461,7 +478,7 @@ export function ManualCaseScreen({
         </Link>
       </div>
     );
-  const encounter = source.encounters.find((e) => e.id === id)!;
+  const encounter = reader.getEncounter(id)!;
   return (
     <>
       <PageHeader
@@ -479,6 +496,7 @@ export function ManualCaseScreen({
         encounter={encounter}
         hour={hour}
         onHourChange={setHour}
+        navigationPending={navigationPending}
         entryForm={
           <ManualEntryForm key={`${id}:${hour}`} record={record} hour={hour} />
         }

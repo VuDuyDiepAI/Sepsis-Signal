@@ -1,5 +1,5 @@
 "use client";
-import { useClinicalDataset } from "@/lib/manual-store";
+import { useClinicalReader } from "@/lib/manual-store";
 import {
   LineChart,
   Line,
@@ -12,13 +12,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Panel } from "@/components/layout/page-container";
-import {
-  availableLabs,
-  hourLabel,
-  percent,
-  formatTime,
-  timeAt,
-} from "@/lib/clinical-data";
+import { hourLabel, percent, formatTime, timeAt } from "@/lib/clinical-data";
 import type { Encounter } from "@/lib/clinical-types";
 export function RiskTimeline({
   encounter,
@@ -31,10 +25,8 @@ export function RiskTimeline({
   onHourChange: (h: number) => void;
   onset?: string | null;
 }) {
-  const dataset = useClinicalDataset();
-  const predictions = dataset.predictions.filter(
-    (p) => p.encounterId === encounter.id && p.hour <= hour,
-  );
+  const reader = useClinicalReader();
+  const predictions = reader.getPredictions(encounter.id, hour);
   const onsetHour = onset
     ? (new Date(onset).getTime() - new Date(encounter.t0).getTime()) / 3600000
     : undefined;
@@ -42,15 +34,17 @@ export function RiskTimeline({
     hour: h,
     score: predictions.find((p) => p.hour === h)?.score ?? null,
   }));
-  const threshold = dataset.models.sepsis.threshold;
+  const threshold = reader.getModelMetadata().threshold;
   const labHours = [
     ...new Set(
-      availableLabs(encounter.id, hour, dataset).map(
-        (l) =>
-          (new Date(l.availableAt).getTime() -
-            new Date(encounter.t0).getTime()) /
-          3600000,
-      ),
+      reader
+        .getAvailableLabs(encounter.id, hour)
+        .map(
+          (l) =>
+            (new Date(l.availableAt).getTime() -
+              new Date(encounter.t0).getTime()) /
+            3600000,
+        ),
     ),
   ];
   const max = Math.min(

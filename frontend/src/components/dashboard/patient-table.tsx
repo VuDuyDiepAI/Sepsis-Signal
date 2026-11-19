@@ -1,7 +1,9 @@
 "use client";
-import { useClinicalDataset } from "@/lib/manual-store";
+import { useClinicalReader } from "@/lib/manual-store";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useHydrated } from "@/lib/use-hydrated";
 import { useMemo, useState } from "react";
 import {
   useReactTable,
@@ -30,7 +32,6 @@ import {
 } from "@/components/clinical/alert-status";
 import { useReviews } from "@/components/review-context";
 import {
-  monitoringRows,
   departments,
   hourLabel,
   formatTime,
@@ -117,25 +118,44 @@ const columns: ColumnDef<MonitoringRow>[] = [
 ];
 export function PatientTable() {
   "use no memo"; // TanStack's stateful table instance must not be compiler-memoized.
-  const dataset = useClinicalDataset();
+  const reader = useClinicalReader();
   const { reviews } = useReviews();
   const router = useRouter();
+  const params = useSearchParams();
+  const hydrated = useHydrated();
+  const [source, setSource] = useState("all");
   const [search, setSearch] = useState("");
   const [department, setDepartment] = useState("all");
-  const [state, setState] = useState("all");
+  const requestedState = params.get("state") ?? "all";
+  const state = ["all", "above", "below", "unavailable"].includes(
+    requestedState,
+  )
+    ? requestedState
+    : "all";
+  const setState = (next: string) =>
+    router.replace("/patients" + (next === "all" ? "" : "?state=" + next), {
+      scroll: false,
+    });
   const [review, setReview] = useState("all");
   const [sorting, setSorting] = useState<SortingState>([]);
   const data = useMemo(
     () =>
-      monitoringRows(reviews, dataset).filter(
-        (r) =>
-          r.encounter.id.toLowerCase().includes(search.trim().toLowerCase()) &&
-          (department === "all" || r.department === department) &&
-          (state === "all" || r.state === state) &&
-          (review === "all" ||
-            (review === "done" ? !!r.review : !!r.prediction && !r.review)),
-      ),
-    [reviews, dataset, search, department, state, review],
+      reader
+        .getMonitoringRows(reviews)
+        .toSorted((a, b) => b.encounter.t0.localeCompare(a.encounter.t0))
+        .filter(
+          (r) =>
+            r.encounter.id
+              .toLowerCase()
+              .includes(search.trim().toLowerCase()) &&
+            (source === "all" ||
+              (source === "manual") === r.encounter.id.startsWith("HS-")) &&
+            (department === "all" || r.department === department) &&
+            (state === "all" || r.state === state) &&
+            (review === "all" ||
+              (review === "done" ? !!r.review : !!r.prediction && !r.review)),
+        ),
+    [reviews, reader, search, department, state, review, source],
   );
   // TanStack Table owns sorting and pagination; the adapter owns default clinical priority.
   // eslint-disable-next-line react-hooks/incompatible-library -- Stateful TanStack instance is intentionally outside compiler memoization (use no memo above).
@@ -155,13 +175,42 @@ export function PatientTable() {
     setState("all");
     setReview("all");
     setSorting([]);
+    setSource("all");
   }
   return (
     <Panel
-      title="Danh sách giám sát"
-      description="Ưu tiên cảnh báo chưa được xem xét tại kết quả mới nhất."
+      title="Danh sách hồ sơ"
+      description="Tìm kiếm và lọc hồ sơ; mặc định hiển thị hồ sơ có T0 mới nhất trước."
       meta={`${data.length} hồ sơ`}
     >
+      <div className="source-switch" role="group" aria-label="Nguồn hồ sơ">
+        {[
+          ["all", "Tất cả"],
+          ["manual", "Nhập tay"],
+          ["sample", "Hồ sơ mẫu"],
+        ].map(([key, label]) => (
+          <Button
+            key={key}
+            variant="ghost"
+            disabled={!hydrated}
+            aria-pressed={source === key}
+            onClick={() => setSource(key)}
+          >
+            {label}
+            <span>
+              {
+                reader
+                  .listEncounters()
+                  .filter(
+                    (e) =>
+                      key === "all" ||
+                      (key === "manual") === e.id.startsWith("HS-"),
+                  ).length
+              }
+            </span>
+          </Button>
+        ))}
+      </div>
       <div className="filters">
         <label className="filter-label">
           Tìm hồ sơ
@@ -171,6 +220,7 @@ export function PatientTable() {
               aria-label="Tìm mã hồ sơ"
               placeholder="Nhập mã hồ sơ…"
               value={search}
+              disabled={!hydrated}
               onChange={(e) => setSearch(e.target.value)}
             />
           </span>
@@ -178,6 +228,7 @@ export function PatientTable() {
         <label className="filter-label">
           Khoa điều trị
           <select
+            disabled={!hydrated}
             value={department}
             onChange={(e) => setDepartment(e.target.value)}
           >
@@ -192,6 +243,7 @@ export function PatientTable() {
         <label className="filter-label">
           Trạng thái cảnh báo
           <select
+            disabled={!hydrated}
             aria-label="Trạng thái cảnh báo"
             value={state}
             onChange={(e) => setState(e.target.value)}
@@ -205,6 +257,7 @@ export function PatientTable() {
         <label className="filter-label">
           Trạng thái xem xét
           <select
+            disabled={!hydrated}
             aria-label="Trạng thái xem xét"
             value={review}
             onChange={(e) => setReview(e.target.value)}
@@ -283,9 +336,7 @@ export function PatientTable() {
       <div className="table-footer">
         <span>
           {data.length} hồ sơ phù hợp ·{" "}
-          {sorting.length
-            ? "Đang sắp xếp theo cột"
-            : "Ưu tiên cảnh báo chờ xem xét"}
+          {sorting.length ? "Đang sắp xếp theo cột" : "Hồ sơ mới trước"}
         </span>
         <div className="pagination">
           <Button

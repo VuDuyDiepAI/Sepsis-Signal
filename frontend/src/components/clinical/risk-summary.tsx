@@ -1,12 +1,10 @@
 "use client";
-import { useClinicalDataset } from "@/lib/manual-store";
+import { useClinicalReader } from "@/lib/manual-store";
 import { Clock3 } from "lucide-react";
 import { Panel } from "@/components/layout/page-container";
 import { AlertStatus, Trend } from "./alert-status";
 import {
-  predictionAt,
   stateOf,
-  changeAt,
   formatTime,
   timeAt,
   percent,
@@ -20,10 +18,10 @@ export function RiskSummary({
   encounter: Encounter;
   hour: number;
 }) {
-  const dataset = useClinicalDataset();
-  const p = predictionAt(encounter.id, hour, dataset),
+  const reader = useClinicalReader();
+  const p = reader.getPrediction(encounter.id, hour),
     state = stateOf(p),
-    meta = dataset.models.sepsis;
+    meta = reader.getModelMetadata();
   return (
     <Panel
       title="Trạng thái nguy cơ"
@@ -33,7 +31,7 @@ export function RiskSummary({
       <div className="panel-body">
         <div className="risk-state-row">
           <AlertStatus state={state} />
-          {p && <Trend value={changeAt(encounter.id, hour, dataset)} />}
+          {p && <Trend value={reader.getChange(encounter.id, hour)} />}
         </div>
         <div className="risk-numbers">
           <div>

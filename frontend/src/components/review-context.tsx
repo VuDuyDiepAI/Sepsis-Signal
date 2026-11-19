@@ -1,5 +1,17 @@
 "use client";
-import { createContext, useContext, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useSyncExternalStore,
+  type ReactNode,
+} from "react";
+import {
+  getReviews,
+  serverReviews,
+  subscribeReviews,
+  recordSessionReview,
+  resetSessionReviews,
+} from "@/lib/review-store";
 import type { Prediction, Review } from "@/lib/clinical-types";
 const Context = createContext<{
   reviews: Record<string, Review>;
@@ -7,26 +19,18 @@ const Context = createContext<{
   reset: () => void;
 } | null>(null);
 export function ReviewProvider({ children }: { children: ReactNode }) {
-  const [reviews, setReviews] = useState<Record<string, Review>>({});
-  function recordReview(p: Prediction, reviewer: string, note: string) {
-    setReviews((old) => ({
-      ...old,
-      [p.id]:
-        old[p.id]?.revision === p.revision
-          ? old[p.id]
-          : {
-              predictionId: p.id,
-              revision: p.revision,
-              reviewer: reviewer.trim(),
-              note: note.trim(),
-              timestamp: new Date().toISOString(),
-              localOnly: true,
-            },
-    }));
-  }
+  const reviews = useSyncExternalStore(
+    subscribeReviews,
+    getReviews,
+    serverReviews,
+  );
   return (
     <Context.Provider
-      value={{ reviews, recordReview, reset: () => setReviews({}) }}
+      value={{
+        reviews,
+        recordReview: recordSessionReview,
+        reset: resetSessionReviews,
+      }}
     >
       {children}
     </Context.Provider>

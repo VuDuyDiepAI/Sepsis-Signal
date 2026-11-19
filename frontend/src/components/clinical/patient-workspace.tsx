@@ -1,17 +1,15 @@
 "use client";
-import { useClinicalDataset } from "@/lib/manual-store";
+import { useClinicalReader } from "@/lib/manual-store";
 import { useHydrated } from "@/lib/use-hydrated";
 import { UserRound, ChevronLeft, ChevronRight, Cpu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Panel } from "@/components/layout/page-container";
 import { ClinicalNote } from "@/components/shared/empty-state";
 import {
-  departmentAt,
   departments,
   formatTime,
   hourLabel,
   timeAt,
-  predictionAt,
   percent,
 } from "@/lib/clinical-data";
 import type { Encounter } from "@/lib/clinical-types";
@@ -26,17 +24,20 @@ export function PatientWorkspace({
   onHourChange,
   onset,
   entryForm,
+  navigationPending = false,
 }: {
   encounter: Encounter;
   hour: number;
   onHourChange: (h: number) => void;
   onset?: string | null;
   entryForm?: React.ReactNode;
+  navigationPending?: boolean;
 }) {
-  const dataset = useClinicalDataset();
+  const reader = useClinicalReader();
   const hydrated = useHydrated();
   const at = timeAt(encounter.t0, hour),
-    meta = dataset.models.sepsis;
+    meta = reader.getModelMetadata();
+  const updates = reader.getUpdates(encounter.id, hour);
   return (
     <>
       <section className="patient-bar" aria-label="Thông tin hồ sơ">
@@ -48,7 +49,7 @@ export function PatientWorkspace({
             <strong>{encounter.id}</strong>
             <p>
               {encounter.age} tuổi · {encounter.sex === "F" ? "Nữ" : "Nam"} ·{" "}
-              {departments[departmentAt(encounter.id, at, dataset)]}
+              {departments[reader.getDepartment(encounter.id, at)]}
             </p>
             <p className="secondary-text">
               T0 {formatTime(encounter.t0, true)} · Hoàn tất phân loại
@@ -61,14 +62,14 @@ export function PatientWorkspace({
             size="icon"
             aria-label="Mốc trước"
             onClick={() => onHourChange(hour - 1)}
-            disabled={!hydrated || hour === 0}
+            disabled={!hydrated || navigationPending || hour === 0}
           >
             <ChevronLeft />
           </Button>
           <label className="filter-label">
             Mốc giờ đang xem
             <select
-              disabled={!hydrated}
+              disabled={!hydrated || navigationPending}
               value={hour}
               onChange={(e) => onHourChange(Number(e.target.value))}
             >
@@ -84,13 +85,36 @@ export function PatientWorkspace({
             size="icon"
             aria-label="Mốc tiếp theo"
             onClick={() => onHourChange(hour + 1)}
-            disabled={!hydrated || hour === 36}
+            disabled={!hydrated || navigationPending || hour === 36}
           >
             <ChevronRight />
           </Button>
         </div>
       </section>
-      {entryForm}
+      <div className="snapshot-strip" role="status">
+        <span>
+          Mốc {hourLabel(hour)} · {formatTime(at, true)}
+        </span>
+        <strong>
+          {updates.vitals} bản đo · {updates.labs} kết quả xét nghiệm mới trong
+          giờ
+        </strong>
+        <span>Chỉ dùng thông tin đã có trên EMR.</span>
+      </div>
+      {navigationPending && (
+        <p role="status" className="secondary-text">
+          Đang chuyển mốc dữ liệu…
+        </p>
+      )}
+      {entryForm && (
+        <fieldset
+          className="entry-boundary"
+          disabled={navigationPending}
+          aria-busy={navigationPending}
+        >
+          {entryForm}
+        </fieldset>
+      )}
       <div className="workspace-grid">
         <div className="workspace-column">
           <RiskSummary encounter={encounter} hour={hour} />
@@ -102,7 +126,7 @@ export function PatientWorkspace({
           />
           <ReviewPanel
             key={`${encounter.id}:${hour}`}
-            prediction={predictionAt(encounter.id, hour, dataset)}
+            prediction={reader.getPrediction(encounter.id, hour)}
           />
           <Panel
             title="Mô hình đang sử dụng"

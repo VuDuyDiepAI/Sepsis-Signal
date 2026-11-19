@@ -4,6 +4,7 @@ import { dataProvider } from "@/lib/clinical-data";
 import { PatientScreen } from "@/components/clinical/patient-screen";
 import Loading from "@/app/loading";
 import { ManualCaseScreen } from "@/components/clinical/manual-case-screen";
+import { predictionHour } from "@/lib/clinical-time";
 type PatientProps = {
   params: Promise<{ id: string }>;
   searchParams: Promise<{ hour?: string }>;
@@ -18,19 +19,19 @@ export default function Patient(props: PatientProps) {
 async function PatientContent({ params, searchParams }: PatientProps) {
   const { id } = await params;
   if (id.startsWith("HS-")) {
-    const q = Number((await searchParams).hour);
+    const raw = (await searchParams).hour;
+    const q = predictionHour(raw, -1);
     return (
       <ManualCaseScreen
-        key={id}
+        key={`${id}:${q}`}
         id={id}
-        initialHour={Number.isInteger(q) && q >= 0 && q <= 36 ? q : 0}
+        initialHour={q >= 0 ? q : undefined}
       />
     );
   }
   const e = await dataProvider.getEncounter(id);
   if (!e) notFound();
-  const q = Number((await searchParams).hour);
-  const hour = Number.isInteger(q) && q >= 0 && q <= 36 ? q : e.currentHour;
+  const hour = predictionHour((await searchParams).hour, e.currentHour);
   return (
     <PatientScreen key={`${id}:${hour}`} encounter={e} initialHour={hour} />
   );

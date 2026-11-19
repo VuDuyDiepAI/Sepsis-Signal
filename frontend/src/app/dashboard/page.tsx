@@ -2,14 +2,14 @@ import Link from "next/link";
 import { FlaskConical, Plus } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-container";
 import { SummaryCards } from "@/components/dashboard/summary-cards";
-import { PatientTable } from "@/components/dashboard/patient-table";
+import { ClinicalOverview } from "@/components/dashboard/clinical-overview";
 import { ClinicalNote } from "@/components/shared/empty-state";
 export default function Dashboard() {
   return (
     <>
       <PageHeader
         title="Tổng quan lâm sàng"
-        description="Theo dõi diễn biến nguy cơ. Nhận diện hồ sơ cần xem xét sớm."
+        description="Ưu tiên hồ sơ cần xem xét, theo dõi việc còn lại và mở nhanh ca bệnh."
         action={
           <div className="flex gap-3 flex-wrap">
             <Link href="/sample-cases" className="link-button">
@@ -24,7 +24,7 @@ export default function Dashboard() {
         }
       />
       <SummaryCards />
-      <PatientTable />
+      <ClinicalOverview />
       <ClinicalNote />
     </>
   );

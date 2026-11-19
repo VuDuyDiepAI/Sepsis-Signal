@@ -173,8 +173,8 @@ export function AppShell({ children }: { children: ReactNode }) {
                   giờ tiếp theo, dùng dữ liệu đã có trên EMR từ T0.
                 </p>
                 <p className="secondary-text">
-                  Ghi nhận xem xét chỉ tồn tại trong phiên trình duyệt, mất khi
-                  tải lại trang. Chưa kết nối hệ thống bệnh viện.
+                  Ghi nhận xem xét được giữ khi tải lại trong cùng tab, tối đa 8
+                  giờ. Chưa kết nối hệ thống bệnh viện.
                 </p>
                 {Object.keys(reviews).length > 0 && (
                   <Button variant="outline" onClick={reset}>

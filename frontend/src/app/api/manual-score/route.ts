@@ -2,13 +2,26 @@ import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { scoreRequestSchema } from "@/lib/manual-schema";
+import { manualScoreGate } from "@/lib/manual-score-gate";
 export async function POST(request: Request) {
-  const origin = request.headers.get("origin");
-  if (origin && new URL(origin).host !== request.headers.get("host"))
+  const claim = manualScoreGate.claim(request);
+  if (!claim.ok)
     return Response.json(
-      { error: "Nguồn yêu cầu không hợp lệ." },
-      { status: 403 },
+      { error: claim.message },
+      {
+        status: claim.status,
+        headers: claim.retryAfter
+          ? { "Retry-After": String(claim.retryAfter) }
+          : undefined,
+      },
     );
+  try {
+    return await execute(request);
+  } finally {
+    claim.release();
+  }
+}
+async function execute(request: Request) {
   if (Number(request.headers.get("content-length") ?? 0) > 100000)
     return Response.json({ error: "Dữ liệu vượt giới hạn." }, { status: 413 });
   let raw: string;

@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { useReviews } from "@/components/review-context";
 import { formatTime, reviewFor } from "@/lib/clinical-data";
 import type { Prediction } from "@/lib/clinical-types";
+import { useState } from "react";
 const schema = z.object({
   reviewer: z
     .string()
@@ -20,6 +21,7 @@ const schema = z.object({
 type Values = z.infer<typeof schema>;
 export function ReviewPanel({ prediction }: { prediction?: Prediction }) {
   const { reviews, recordReview } = useReviews();
+  const [storageError, setStorageError] = useState("");
   const review = reviewFor(prediction, reviews);
   const {
     register,
@@ -55,9 +57,16 @@ export function ReviewPanel({ prediction }: { prediction?: Prediction }) {
         ) : (
           <form
             className="review-form"
-            onSubmit={handleSubmit((v) =>
-              recordReview(prediction, v.reviewer, v.note),
-            )}
+            onSubmit={handleSubmit((v) => {
+              try {
+                recordReview(prediction, v.reviewer, v.note);
+                setStorageError("");
+              } catch {
+                setStorageError(
+                  "Không lưu được ghi nhận trong phiên tab. Kiểm tra quyền lưu trữ trình duyệt rồi thử lại.",
+                );
+              }
+            })}
             noValidate
           >
             <p className="secondary-text">
@@ -100,9 +109,14 @@ export function ReviewPanel({ prediction }: { prediction?: Prediction }) {
             </Button>
           </form>
         )}
+        {storageError && (
+          <p role="alert" className="form-error">
+            {storageError}
+          </p>
+        )}
         <p className="clinical-note">
-          Chỉ lưu trong phiên trình duyệt; mất khi tải lại trang. Chưa gửi hoặc
-          lưu lên hệ thống bệnh viện.
+          Ghi nhận trải nghiệm được giữ khi tải lại trong cùng tab, tối đa 8
+          giờ. Chưa gửi hoặc lưu lên hệ thống bệnh viện.
         </p>
       </div>
     </Panel>

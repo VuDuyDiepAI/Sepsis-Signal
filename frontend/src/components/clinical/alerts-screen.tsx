@@ -1,5 +1,5 @@
 "use client";
-import { useClinicalDataset } from "@/lib/manual-store";
+import { useClinicalReader } from "@/lib/manual-store";
 import Link from "next/link";
 import { useState } from "react";
 import { Search, BellRing, ClipboardCheck, History } from "lucide-react";
@@ -17,21 +17,15 @@ import {
   reviewFor,
 } from "@/lib/clinical-data";
 export function AlertsScreen() {
-  const dataset = useClinicalDataset();
+  const reader = useClinicalReader();
   const { reviews } = useReviews();
   const [tab, setTab] = useState("active"),
     [search, setSearch] = useState(""),
     [department, setDepartment] = useState("all");
-  const alerts = dataset.predictions.filter(
-    (p) =>
-      p.score >= p.threshold &&
-      p.hour <=
-        dataset.encounters.find((e) => e.id === p.encounterId)!.currentHour,
-  );
+  const alerts = reader.getAlerts().map((a) => a.prediction);
   const active = alerts.filter(
     (p) =>
-      p.hour ===
-        dataset.encounters.find((e) => e.id === p.encounterId)!.currentHour &&
+      p.hour === reader.getEncounter(p.encounterId)!.currentHour &&
       !reviewFor(p, reviews),
   );
   const reviewed = alerts.filter((p) => !!reviewFor(p, reviews));
@@ -53,15 +47,15 @@ export function AlertsScreen() {
       <div className="stats-grid">
         {[
           {
-            label: "Bản dự báo vượt ngưỡng",
-            value: alerts.length,
-            icon: BellRing,
-          },
-          {
             label: "Cảnh báo hiện tại chờ xem xét",
             value: active.length,
             icon: BellRing,
             alert: true,
+          },
+          {
+            label: "Lịch sử bản vượt ngưỡng",
+            value: alerts.length,
+            icon: BellRing,
           },
           {
             label: "Bản dự báo đã xem xét",
@@ -173,6 +167,12 @@ export function AlertsScreen() {
                   </strong>
                 </div>
               </div>
+              <p className="priority-reason">
+                Điểm {percent(p.score)} vượt ngưỡng {percent(p.threshold)}.{" "}
+                {p.hour === reader.getEncounter(p.encounterId)?.currentHour
+                  ? "Đây là bản ở mốc hiện tại."
+                  : "Đây là bản trong lịch sử, không tính là cảnh báo hiện tại đang chờ."}
+              </p>
               <div className="alert-card-bottom">
                 <ReviewStatus reviewed={!!reviewFor(p, reviews)} />
                 <Link

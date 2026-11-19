@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { localTimestamp } from "./clinical-time";
 export const conditions = [
   ["diabetes", "Đái tháo đường"],
   ["cardiovascular_disease", "Tim mạch"],
@@ -18,10 +19,7 @@ export const symptomFields = [
 const localTime = z
   .string()
   .regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?$/)
-  .refine(
-    (s) => Number.isFinite(Date.parse(s + "+07:00")),
-    "Thời gian không hợp lệ",
-  );
+  .refine((s) => Number.isFinite(localTimestamp(s)), "Thời gian không hợp lệ");
 const optionalNumber = (min: number, max: number) =>
   z.number().finite().min(min).max(max).nullable();
 export const profileSchema = z.object({
@@ -72,16 +70,20 @@ export const scoreRequestSchema = z
   })
   .superRefine((v, ctx) => {
     for (const e of v.entries) {
+      const t0 = localTimestamp(v.profile.t0),
+        at = t0 + e.hour * 3600000;
       if (
-        e.measuredAt < v.profile.t0 ||
-        e.collectedAt < v.profile.t0 ||
-        e.availableAt < e.measuredAt ||
-        e.labAvailableAt < e.collectedAt
+        localTimestamp(e.measuredAt) < t0 ||
+        localTimestamp(e.measuredAt) > at ||
+        localTimestamp(e.collectedAt) < t0 ||
+        localTimestamp(e.collectedAt) > at ||
+        localTimestamp(e.availableAt) < localTimestamp(e.measuredAt) ||
+        localTimestamp(e.labAvailableAt) < localTimestamp(e.collectedAt)
       )
         ctx.addIssue({
           code: "custom",
           message:
-            "Giờ đo/lấy mẫu phải từ T0; giờ có dữ liệu không được trước giờ đo/lấy mẫu.",
+            "Giờ đo/lấy mẫu phải từ T0 đến mốc đang nhập; giờ có dữ liệu không được trước giờ đo/lấy mẫu.",
         });
     }
     if (new Set(v.entries.map((e) => e.hour)).size !== v.entries.length)

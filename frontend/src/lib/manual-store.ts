@@ -1,6 +1,6 @@
 "use client";
 import { useMemo, useSyncExternalStore } from "react";
-import { dataset, timeAt } from "./clinical-data";
+import { dataset, timeAt, createClinicalReader } from "./clinical-data";
 import type { ClinicalDataset, Prediction, VitalKey } from "./clinical-types";
 import type { ManualEntry, ManualProfile } from "./manual-schema";
 export interface ManualPrediction extends Prediction {
@@ -143,16 +143,17 @@ export function mergeManualCases(manual: ManualCase[]): ClinicalDataset {
       currentHour: c.currentHour,
     });
     data.predictions.push(...c.predictions);
-    const entries = c.entries.toSorted((a, b) =>
-      a.measuredAt.localeCompare(b.measuredAt),
-    );
-    entries.forEach((e, i) => {
+    // Mirror Python event identity replacement before availability filtering.
+    const vitals = new Map<string, ClinicalDataset["vitals"][number]>(),
+      labs = new Map<string, ClinicalDataset["labs"][number]>(),
+      locations = new Map<string, ClinicalDataset["locations"][number]>();
+    for (const e of c.entries.toSorted((a, b) => a.hour - b.hour)) {
       if (e.vitals) {
         const v = { ...e.vitals };
         if (v.map_mmhg === null && v.dbp_mmhg !== null)
           v.map_mmhg =
             Math.round(((v.sbp_mmhg + 2 * v.dbp_mmhg) / 3) * 10) / 10;
-        data.vitals.push({
+        vitals.set(e.measuredAt, {
           encounterId: id,
           measuredAt: iso(e.measuredAt),
           availableAt: iso(e.availableAt),
@@ -171,25 +172,33 @@ export function mergeManualCases(manual: ManualCase[]): ClinicalDataset {
           ) as Record<VitalKey, number | null>,
         });
       }
-      Object.entries(e.labs).forEach(([code, value]) =>
-        data.labs.push({
+      for (const [code, value] of Object.entries(e.labs))
+        labs.set(code + ":" + e.collectedAt, {
           encounterId: id,
           code,
           value: value ?? null,
           unit: units[code],
           collectedAt: iso(e.collectedAt),
           availableAt: iso(e.labAvailableAt),
-        }),
-      );
-      data.locations.push({
+        });
+      locations.set(e.measuredAt, {
         encounterId: id,
         department: e.department,
         startedAt: iso(e.measuredAt),
-        endedAt: entries[i + 1]?.measuredAt
-          ? iso(entries[i + 1].measuredAt)
-          : null,
+        endedAt: null,
       });
-    });
+    }
+    data.vitals.push(...vitals.values());
+    data.labs.push(...labs.values());
+    const ordered = [...locations.values()].sort((a, b) =>
+      a.startedAt.localeCompare(b.startedAt),
+    );
+    data.locations.push(
+      ...ordered.map((l, i) => ({
+        ...l,
+        endedAt: ordered[i + 1]?.startedAt ?? null,
+      })),
+    );
   }
   return data;
 }
@@ -199,4 +208,8 @@ export function useManualCases() {
 export function useClinicalDataset() {
   const manual = useManualCases();
   return useMemo(() => mergeManualCases(manual), [manual]);
+}
+export function useClinicalReader() {
+  const source = useClinicalDataset();
+  return useMemo(() => createClinicalReader(source), [source]);
 }

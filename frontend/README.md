@@ -35,8 +35,8 @@ npm run dev
 
 | Đường dẫn | Nội dung |
 | --- | --- |
-| `/dashboard` | Tổng hồ sơ, cảnh báo chờ xem xét, số hồ sơ đã xem xét và chưa có kết quả. Bảng có tìm kiếm, lọc khoa/cảnh báo/xem xét, sắp xếp, phân trang và mở hồ sơ. |
-| `/patients` | Danh sách hồ sơ với cùng bộ lọc và thứ tự ưu tiên. |
+| `/dashboard` | Hàng đợi công việc: 3 cảnh báo hiện tại chưa xem xét có điểm cao nhất, hồ sơ chưa có kết quả, các ghi nhận vừa xem xét và phạm vi theo dõi. Không lặp lại bảng danh sách. |
+| `/patients` | Danh sách đầy đủ, mặc định T0 mới nhất trước. Tìm mã, lọc nguồn nhập tay/mẫu, khoa, cảnh báo, xem xét; sắp xếp và phân trang. Liên kết mã hồ sơ hỗ trợ bàn phím. |
 | `/patients/new` | Tạo ca và nhập dữ liệu tại T0; theo dõi ở các mốc sau bằng mô hình Python đang lưu. |
 | `/patients/[id]?hour=8` | Điểm và ngưỡng nguồn, thay đổi điểm phần trăm, biểu đồ đến giờ chọn, sinh hiệu, xét nghiệm, ghi nhận xem xét theo phiên bản. |
 | `/alerts` | Cảnh báo hiện tại chưa xem xét, các bản đã xem xét và lịch sử vượt ngưỡng. Mỗi bản liên kết đến đúng hồ sơ/giờ. |
@@ -54,7 +54,9 @@ Sidebar thu gọn trên desktop; menu dialog trên tablet/mobile. Có trạng th
 - Sinh hiệu/xét nghiệm chỉ hiện nếu thời điểm đo/lấy mẫu từ T0 và `measured/collected_at <= available_at <= giờ đang xem`. Chọn giá trị theo thứ tự thời gian đo/lấy mẫu, rồi availability. Giữ nguyên null và đơn vị nguồn.
 - Múi giờ cố định `Asia/Ho_Chi_Minh` (+07:00), kể cả khi trình duyệt chạy múi giờ khác.
 - Ngưỡng hiện tại lấy từ metadata: khoảng **2,76%**; UI giữ nguyên độ chính xác số khi so sánh. Phần trăm hiển thị được làm tròn 2 chữ số.
-- Bảng tổng quan dùng một mốc hiện tại cố định cho từng hồ sơ, chọn trong các bản nguồn để trải nghiệm nhiều trạng thái. Cảnh báo lịch sử chỉ tính đến mốc đó.
+- Tổng quan dùng một mốc hiện tại cố định cho từng hồ sơ mẫu, chọn trong các bản nguồn để trải nghiệm nhiều trạng thái. Ca nhập tay dùng giờ đã lưu mới nhất. Cảnh báo lịch sử chỉ tính đến mốc đó.
+- Biểu mẫu chỉ nhận giờ đo/lấy mẫu trong `[T0, T0+N]`. Giờ có dữ liệu được phép muộn hơn giờ đang xem; UI thông báo kết quả đang chờ và không dùng sớm. Các bản sửa cùng giờ đo hoặc cùng xét nghiệm/giờ lấy mẫu thay thế bản cũ trước khi lọc availability, tương ứng với cầu nối Python.
+- Mốc giờ nằm trong URL `?hour=N`; đổi giờ, mở lại liên kết và tải lại đều giữ đúng mốc đang xem.
 - Kết cục tham chiếu tách riêng khỏi fixture lâm sàng và không được đưa vào đầu vào mô hình. Không có dữ liệu người bệnh thật trong frontend.
 
 Xuất lại fixtures từ thư mục repository, dùng Python đã cài requirements:
@@ -67,7 +69,11 @@ python scripts/export_frontend_demo.py
 
 **Đây là mô hình nghiên cứu trên dữ liệu EMR mô phỏng, chưa được xác thực lâm sàng trên người bệnh thực tế.** Điểm mô hình không phải xác suất lâm sàng đã được hiệu chỉnh hay chẩn đoán. Dưới ngưỡng không loại trừ sepsis.
 
-Ghi nhận xem xét chỉ giữ trong React Context của phiên trình duyệt, gắn `predictionId` và `revision`. Tải lại trang sẽ mất ghi nhận xem xét. Người nhập tên không được xác thực; không ghi vào cơ sở dữ liệu bệnh viện, không có cảnh báo hay escalation tự động. Bản Next.js đã có nhập ca/chấm trực tiếp qua cầu nối Python cục bộ, chưa có đăng nhập bệnh viện, đồng bộ EMR hoặc API ghi hồ sơ bệnh viện. Bản Streamlit vẫn giữ nguyên.
+Ghi nhận xem xét được giữ trong sessionStorage của cùng tab, tối đa 8 giờ, gắn `predictionId` và `revision`. Tải lại vẫn giữ; bản tính thay đổi không thừa hưởng ghi nhận của bản cũ. Người nhập tên không được xác thực; không ghi vào cơ sở dữ liệu bệnh viện, không có cảnh báo hay escalation tự động. Bản Next.js chưa có đăng nhập bệnh viện, đồng bộ EMR hoặc API ghi hồ sơ bệnh viện. Bản Streamlit vẫn giữ nguyên.
+
+`npm run dev` và `npm run start` mặc định chỉ lắng nghe `127.0.0.1`. API chấm điểm từ chối nguồn khác host và truy cập qua host từ xa khi chưa cấu hình token; giới hạn **2 yêu cầu đồng thời**, **20 yêu cầu/phút** trên mỗi tiến trình Next.js. Trả HTTP 429 kèm `Retry-After` khi đầy. Đây là biện pháp giới hạn cho demo cục bộ, chưa thay thế xác thực người dùng hoặc giới hạn phân tán. Không công khai server chỉ bằng cách đổi hostname.
+
+Tích hợp API do người vận hành kiểm soát có thể đặt `SEPSIS_API_TOKEN` và gửi `Authorization: Bearer ...` từ phía server được tin cậy. Không đưa token vào biến `NEXT_PUBLIC_*` hoặc trình duyệt. Biểu mẫu trình duyệt hiện không cấp token này. Triển khai cho nhiều người dùng cần lớp đăng nhập, phiên người dùng, phân quyền và rate limit dùng chung phía server.
 
 ## Cấu trúc triển khai
 
@@ -87,19 +93,22 @@ frontend/
 
 Next.js App Router, React, TypeScript strict, Tailwind, shadcn/ui, Lucide, Recharts, TanStack Table v8, React Hook Form và Zod. Font Inter được đóng gói cục bộ. Không phụ thuộc Google Fonts khi build/chạy.
 
-`ClinicalDataProvider` định nghĩa lớp đọc bất đồng bộ để thay bằng FastAPI về sau. Khi nối API cần bổ sung xác thực, quyền truy cập theo khoa, kiểm tra revision khi ghi review và audit phía server. Không coi state trình duyệt là hồ sơ bệnh viện.
+`createClinicalReader` là lớp đọc chung cho các màn hình: fixture và ca nhập tay được hợp nhất trước khi áp dụng cùng quy tắc as-of. `ClinicalDataProvider` bất đồng bộ dùng cùng lớp đọc, là ranh giới để nối FastAPI về sau. Khi nối API cần bổ sung xác thực, quyền truy cập theo khoa, kiểm tra revision khi ghi review và audit phía server. Không coi state trình duyệt là hồ sơ bệnh viện.
 
 ## Kiểm tra bản demo
 
-Bản giao diện thử nghiệm giữ các bước kiểm tra TypeScript, ESLint và build:
+Bộ kiểm tra gồm hợp đồng thời gian/dữ liệu, giới hạn API, luồng trình duyệt và chấm điểm Python thực:
 
 ```powershell
 npm run typecheck
 npm run lint
+npm test
 npm run build
+npx playwright install chromium
+npm run test:e2e
 ```
 
-Sau khi chạy `npm run dev`, kiểm tra thủ công các luồng chính: mở dashboard, lọc hồ sơ, xem chi tiết, chạy ca mẫu, tạo hồ sơ tại T0, chấm điểm từ T0+1h bằng Python, sửa dữ liệu cũ, xem cảnh báo và ghi nhận đã xem xét. Việc kiểm thử tự động của frontend đã được gỡ để tinh gọn bản demo; CI Python gốc trong repository vẫn được giữ nguyên.
+Playwright dùng production build trên cổng 3100, độc lập với server phát triển cổng 3000; cần Python đã cài requirements. Kiểm thử gồm Dashboard khác Registry, tìm/lọc/sắp xếp và bàn phím, URL mốc giờ, review qua tải lại, xét nghiệm trả muộn và sửa dữ liệu khiến giờ đã chấm không còn đủ điều kiện. Kiểm tra bố cục ở 1440, 1280, 1024, 768 và 390 px. GitHub Actions chạy các kiểm tra trên; CI Python gốc được giữ nguyên.
 
 ## Bàn giao Git
 
