@@ -6,12 +6,12 @@ import pandas as pd
 import streamlit as st
 
 from app.shared_ui import (
-    display_case_id, lab_markers, page_header, show_case_sidebar, show_changes,
+    display_case_id, lab_markers, page_header, show_changes,
     show_feature_details, show_result, show_review, show_timeline,
 )
 from src.manual_cases import (
     LAB_UNITS, LOCATIONS, build_features, create_case, event_rows, get_case,
-    case_overview, list_cases, prediction_history, recompute_scored_hours,
+    list_cases, prediction_history, recompute_scored_hours,
     review_history, save_entry, score_hour,
 )
 from src.mock_emr import load_bundle
@@ -77,6 +77,7 @@ def show_new_case():
                 triage_completed_at=t0, age_years=age, sex='F' if sex == 'Nữ' else 'M',
                 height_cm=height, weight_kg=weight, comorbidities=flags,
             )
+            st.session_state.manual_case_picker = st.session_state.manual_case_id
             st.rerun()
         except ValueError as exc:
             st.error(str(exc))
@@ -146,12 +147,19 @@ def change_hour(key, hour):
     st.session_state[key] = hour
 
 
-page_header('Theo dõi người bệnh', 'Cảnh báo, diễn biến và ghi nhận xem xét theo từng mốc giờ.')
-st.caption('Chỉ dùng thông tin từ hồ sơ mẫu khi trải nghiệm.')
-overview = case_overview()
-cases = list_cases()
-with st.expander('Tạo hồ sơ trải nghiệm', expanded=not cases):
+@st.dialog('Tạo hồ sơ theo dõi', width='large')
+def new_case_dialog():
     show_new_case()
+
+
+heading, create_action = st.columns([4, 1], vertical_alignment='center')
+with heading:
+    page_header('Theo dõi người bệnh', 'Hồ sơ / Cảnh báo và diễn biến theo giờ')
+if create_action.button('Tạo hồ sơ', icon=':material/add:', width='stretch'):
+    new_case_dialog()
+if st.session_state.pop('new_case_requested', False):
+    new_case_dialog()
+cases = list_cases()
 
 if not cases:
     st.info('Tạo lượt khám để bắt đầu ở T0+1h, hoặc mở trang Chạy ca mẫu.')
@@ -163,13 +171,12 @@ cols = st.columns([1.25, 0.75, 1], vertical_alignment='bottom')
 case_id = cols[0].selectbox('Hồ sơ', ids, index=ids.index(active) if active in ids else 0,
                             format_func=display_case_id, key='manual_case_picker')
 st.session_state.manual_case_id = case_id
-show_case_sidebar(overview, case_id)
 case = get_case(case_id)
 t0 = datetime.fromisoformat(case['triage_completed_at'])
 history = sepsis_history(case_id)
 last_hour = (datetime.fromisoformat(history[-1]['prediction_at']) - t0).total_seconds() // 3600 if history else 0
 hour_key = f'hour_{case_id}'
-hour = cols[1].number_input('Giờ sau T0', 1, 36, min(36, int(last_hour) + 1), key=hour_key)
+hour = cols[1].number_input('Giờ sau T0', 1, 36, max(1, min(36, int(last_hour))), key=hour_key)
 at = t0 + timedelta(hours=hour)
 cols[2].text_input('Mốc đang xem', value=f'{at:%d/%m/%Y · %H:%M}', disabled=True)
 sex = 'Nữ' if case['sex'] == 'F' else 'Nam'
@@ -190,20 +197,6 @@ if latest and at_key < latest['prediction_at']:
     st.info(f'Đang xem lịch sử T0+{hour}h · Kết quả mới nhất T0+{int(last_hour)}h '
             f'({datetime.fromisoformat(latest["prediction_at"]):%d/%m %H:%M}).')
 
-with st.container(border=True, key='manual_result'):
-    st.subheader('Trạng thái cảnh báo', anchor=False)
-    if current:
-        show_result(at, current['score'], current['threshold'], previous['score'] if previous else None)
-        reviews = {r['result_key']: r for r in review_history(case_id)}
-        review = reviews.get(f'manual:{current["id"]}')
-        st.caption(f'{"Đã xem xét" if review else "Chờ xem xét"} · '
-                   f'Bản tính {current["revision"]} · Chấm lúc '
-                   f'{datetime.fromisoformat(current["scored_at"]):%d/%m %H:%M}')
-    else:
-        show_result(at)
-        if pd.isna(features.iloc[0]['heart_rate_last_bpm']):
-            st.caption('Cần bản đo gồm nhịp tim, nhịp thở và HA tâm thu trong 6 giờ gần nhất.')
-
 vitals = pd.DataFrame(event_rows(case_id, 'vitals'))
 labs = pd.DataFrame(event_rows(case_id, 'labs'))
 for frame in (vitals, labs):
@@ -213,23 +206,7 @@ previous_at = pd.Timestamp(previous['prediction_at']) if previous else pd.Timest
 visible_vitals = vitals.loc[vitals['available_at'].le(at)].tail(1) if not vitals.empty else vitals
 previous_vitals = vitals.loc[vitals['available_at'].le(previous_at)].tail(1) if not vitals.empty else vitals
 visible_labs = labs.loc[labs['available_at'].le(at)] if not labs.empty else labs
-with st.container(border=True):
-    show_changes(previous_vitals, visible_vitals, visible_labs, previous_at, at)
-
-timeline = pd.DataFrame([
-    {'hour': (datetime.fromisoformat(row['prediction_at']) - t0).total_seconds() / 3600,
-     'score': row['score'], 'threshold': row['threshold']}
-    for row in history
-])
-with st.container(border=True, key='timeline_panel'):
-    st.subheader('Diễn biến nguy cơ', anchor=False)
-    show_timeline(timeline, hour, lab_events=lab_markers(visible_labs, t0))
-
-if current:
-    show_review(f'manual:{current["id"]}', case_id, at, current['model_version'],
-                prediction_id=current['id'])
-
-with st.container(border=True, key='entry_panel'):
+with st.expander('Nhập chỉ số và cập nhật kết quả', expanded=current is None):
     payload = show_entry_form(case_id, hour, at, features.iloc[0]['location_code'])
     if payload is not None:
         try:
@@ -244,9 +221,43 @@ with st.container(border=True, key='entry_panel'):
             st.rerun()
     if message := st.session_state.pop('entry_saved', None):
         st.success(message)
-    if hour < 36:
-        st.button(f'Cập nhật mốc T0+{hour+1}h', on_click=change_hour,
-                  args=(hour_key, hour+1), width='stretch')
+
+if hour < 36:
+    _, next_action = st.columns([2, 1])
+    next_action.button(f'Cập nhật mốc T0+{hour+1}h', on_click=change_hour,
+                       args=(hour_key, hour+1), width='stretch', icon=':material/arrow_forward:')
+
+timeline = pd.DataFrame([
+    {'hour': (datetime.fromisoformat(row['prediction_at']) - t0).total_seconds() / 3600,
+     'score': row['score'], 'threshold': row['threshold']}
+    for row in history
+])
+clinical, observations = st.columns([1.2, 1], gap='medium')
+with clinical:
+    with st.container(border=True, key='manual_result'):
+        st.subheader('Trạng thái cảnh báo', anchor=False)
+        if current:
+            show_result(at, current['score'], current['threshold'], previous['score'] if previous else None)
+            reviews = {r['result_key']: r for r in review_history(case_id)}
+            review = reviews.get(f'manual:{current["id"]}')
+            st.caption(f'{"Đã xem xét" if review else "Chờ xem xét"} · '
+                       f'Bản tính {current["revision"]} · Chấm lúc '
+                       f'{datetime.fromisoformat(current["scored_at"]):%d/%m %H:%M}')
+        else:
+            show_result(at)
+            if pd.isna(features.iloc[0]['heart_rate_last_bpm']):
+                st.caption('Cần bản đo gồm nhịp tim, nhịp thở và HA tâm thu trong 6 giờ gần nhất.')
+    with st.container(border=True, key='timeline_panel'):
+        st.subheader('Diễn biến nguy cơ', anchor=False)
+        show_timeline(timeline, hour, lab_events=lab_markers(visible_labs, t0))
+with observations:
+    with st.container(border=True, key='changes_panel'):
+        show_changes(previous_vitals, visible_vitals, visible_labs, previous_at, at)
+
+if current:
+    show_review(f'manual:{current["id"]}', case_id, at, current['model_version'],
+                prediction_id=current['id'])
+
 
 if current:
     snapshot = pd.DataFrame([json.loads(current['feature_json'])])

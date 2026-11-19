@@ -125,6 +125,9 @@ def init_db(path: Path | None = None) -> None:
         );
         CREATE INDEX IF NOT EXISTS reviews_case ON result_reviews(encounter_id);
         ''')
+        columns = {row[1] for row in con.execute('PRAGMA table_info(result_reviews)')}
+        if 'reviewed_by_user_id' not in columns:
+            con.execute('ALTER TABLE result_reviews ADD COLUMN reviewed_by_user_id TEXT')
 
 
 def _finite(value, field: str, bounds: tuple[float, float] | None = None):
@@ -221,7 +224,8 @@ def case_overview(path: Path | None = None) -> list[dict]:
 
 def record_review(*, result_key: str, encounter_id: str, prediction_at: str,
                   model_version: str, reviewed_by: str, note: str = '',
-                  prediction_id: int | None = None, path: Path | None = None) -> dict:
+                  prediction_id: int | None = None, path: Path | None = None,
+                  reviewed_by_user_id: str | None = None) -> dict:
     """Persist the first review of an exact result, rejecting stale manual revisions."""
     reviewer, note = reviewed_by.strip(), note.strip()
     if not reviewer or len(reviewer) > 120 or len(note) > 1000:
@@ -248,10 +252,10 @@ def record_review(*, result_key: str, encounter_id: str, prediction_at: str,
         reviewed_at = _stamp(datetime.now(timezone(timedelta(hours=7))).replace(tzinfo=None))
         con.execute('''INSERT INTO result_reviews
             (result_key,encounter_id,prediction_id,prediction_at,model_version,
-             reviewed_by,reviewed_at,note) VALUES(?,?,?,?,?,?,?,?)
+             reviewed_by,reviewed_at,note,reviewed_by_user_id) VALUES(?,?,?,?,?,?,?,?,?)
             ON CONFLICT(result_key) DO NOTHING''',
             (result_key, encounter_id, prediction_id, _stamp(prediction_at), model_version,
-             reviewer, reviewed_at, note))
+             reviewer, reviewed_at, note, reviewed_by_user_id))
         return dict(con.execute('SELECT * FROM result_reviews WHERE result_key=?',
                                 (result_key,)).fetchone())
 

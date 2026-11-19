@@ -97,37 +97,35 @@ sample_signature = '|'.join((case_id, at.isoformat(), meta['model_version'],
                              repr(float(meta['threshold']))))
 review_key = 'sample:' + hashlib.sha256(sample_signature.encode()).hexdigest()
 reviews = {r['result_key']: r for r in review_history(case_id)}
-with st.container(border=True, key='sample_result'):
-    st.subheader('Trạng thái cảnh báo', anchor=False)
-    show_result(at, row['risk_score'], meta['threshold'],
-                previous['risk_score'] if previous is not None else None)
-    st.caption('Đã xem xét' if review_key in reviews else 'Chờ xem xét')
+clinical, observations = st.columns([1.2, 1], gap='medium')
+with clinical:
+    with st.container(border=True, key='sample_result'):
+        st.subheader('Trạng thái cảnh báo', anchor=False)
+        show_result(at, row['risk_score'], meta['threshold'],
+                    previous['risk_score'] if previous is not None else None)
+        st.caption('Đã xem xét' if review_key in reviews else 'Chờ xem xét')
 
-with st.container(border=True):
-    show_changes(previous_vitals, vitals, labs, previous_at, at)
-
-with st.container(border=True, key='timeline_panel'):
-    st.subheader('Diễn biến nguy cơ', anchor=False)
-    chart_area = st.container()
-    reveal = st.toggle('Hiện mốc khởi phát tham chiếu')
-    onset = outcomes.loc[case_id, 'sepsis_onset_at']
-    onset_hour = (onset - t0).total_seconds() / 3600 if reveal and pd.notna(onset) else None
-    with chart_area:
-        show_timeline(points.iloc[:position+1].rename(columns={'risk_score': 'score'}),
-                      row['hour'], onset_hour, lab_events=lab_markers(labs, t0))
-    if reveal:
-        if pd.isna(onset):
-            st.caption('Theo hồ sơ mẫu, sepsis không khởi phát trong lượt khám này.')
-        else:
-            within = 0 < (onset - at).total_seconds() <= 6 * 3600
-            window = 'trong' if within else 'ngoài'
-            st.caption(f'Mốc khởi phát tham chiếu {onset:%d/%m %H:%M} nằm {window} cửa sổ 6 giờ của mốc đang xem.')
+    with st.container(border=True, key='timeline_panel'):
+        st.subheader('Diễn biến nguy cơ', anchor=False)
+        chart_area = st.container()
+        reveal = st.toggle('Hiện mốc khởi phát tham chiếu')
+        onset = outcomes.loc[case_id, 'sepsis_onset_at']
+        onset_hour = (onset - t0).total_seconds() / 3600 if reveal and pd.notna(onset) else None
+        with chart_area:
+            show_timeline(points.iloc[:position+1].rename(columns={'risk_score': 'score'}),
+                          row['hour'], onset_hour, lab_events=lab_markers(labs, t0))
+        if reveal:
+            if pd.isna(onset):
+                st.caption('Theo hồ sơ mẫu, sepsis không khởi phát trong lượt khám này.')
+            else:
+                within = 0 < (onset - at).total_seconds() <= 6 * 3600
+                window = 'trong' if within else 'ngoài'
+                st.caption(f'Mốc khởi phát tham chiếu {onset:%d/%m %H:%M} nằm {window} cửa sổ 6 giờ của mốc đang xem.')
+with observations:
+    with st.container(border=True, key='changes_panel'):
+        show_changes(previous_vitals, vitals, labs, previous_at, at)
 
 show_review(review_key, case_id, at, meta['model_version'])
-st.button('Xem mốc tiếp theo', disabled=position + 1 == len(times),
-          key='sample_next_bottom', on_click=step_to,
-          args=(time_key, times[min(position + 1, len(times)-1)]), width='stretch')
-
 with st.expander('Xem bản ghi EMR sẵn có'):
     a, b, c = st.tabs(['Sinh hiệu gần nhất', 'Xét nghiệm', 'Triệu chứng'])
     with a:

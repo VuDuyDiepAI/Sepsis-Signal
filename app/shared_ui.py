@@ -25,24 +25,6 @@ def select_manual_case(case_id, hour):
     st.session_state[f'hour_{case_id}'] = hour
 
 
-def show_case_sidebar(overview, current_id):
-    with st.sidebar:
-        with st.container(key='case_list'):
-            st.subheader('Hồ sơ theo dõi', anchor=False)
-            search = st.text_input('Tìm mã hồ sơ', key='case_search', placeholder='Nhập mã hồ sơ')
-            filtered = [r for r in overview if search.lower() in display_case_id(r['encounter_id']).lower()]
-            for item in filtered[:8]:
-                eid = item['encounter_id']
-                latest = item['latest']
-                score = f' · {percent(latest["score"])}' if latest else ''
-                st.button(display_case_id(eid) + score, key=f'case_button_{eid}',
-                          type='primary' if eid == current_id else 'secondary', width='stretch',
-                          on_click=select_manual_case, args=(eid, item['hour']))
-                st.caption(f'{item["status"]} · {item["review_status"]}')
-            if len(filtered) > 8:
-                st.caption('Tìm theo mã để mở các hồ sơ còn lại.')
-
-
 def percent(score):
     return f'{score:.2%}'
 
@@ -198,13 +180,13 @@ def show_changes(previous_vitals, current_vitals, labs, previous_at, at):
 
     def render(rows):
         body = ''.join(
-            '<tr>' + ''.join(f'<td>{escape(str(cell))}</td>' for cell in
-                            (f'{label} ({unit})', old, new, difference, time)) + '</tr>'
+            '<tr><td>' + escape(f'{label} ({unit})') + '<small>' + escape(time)
+            + '</small></td>' + ''.join(f'<td>{escape(str(cell))}</td>' for cell in
+                                       (old, new, difference)) + '</tr>'
             for label, unit, old, new, difference, time in rows
         )
         st.html('<div class="signal-table-scroll"><table class="signal-data-table signal-changes">'
-                '<thead><tr><th>Chỉ số</th><th>Mốc trước</th><th>Đang xem</th>'
-                '<th>Thay đổi</th><th>Thời điểm dữ liệu</th></tr></thead>'
+                '<thead><tr><th>Chỉ số</th><th>Trước</th><th>Hiện tại</th><th>Thay đổi</th></tr></thead>'
                 f'<tbody>{body}</tbody></table></div>')
 
     if current_vitals.empty:
@@ -239,22 +221,26 @@ def show_review(result_key, case_id, at, model_version, *, prediction_id=None):
                 st.text(review['note'])
         else:
             st.caption(f'Chờ xem xét kết quả tại {pd.Timestamp(at):%d/%m %H:%M}.')
+            from src.auth import session_user
+            user = session_user(st.session_state.get('auth_token'))
+            if not user:
+                st.error('Phiên làm việc đã hết hạn. Đăng nhập lại để ghi nhận xem xét.')
+                return
             with st.form(f'review_{result_key}'):
-                reviewer = st.text_input('Người ghi nhận',
-                                         value=st.session_state.get('reviewer_name', ''), max_chars=120)
+                st.caption(f'Người ghi nhận · {user["display_name"]}')
                 note = st.text_area('Ghi chú xem xét (tùy chọn)', max_chars=1000, height=90)
                 submitted = st.form_submit_button('Đã xem xét kết quả', type='primary', width='stretch')
             if submitted:
                 try:
                     record_review(result_key=result_key, encounter_id=case_id,
                                   prediction_at=pd.Timestamp(at).isoformat(), model_version=model_version,
-                                  reviewed_by=reviewer, note=note, prediction_id=prediction_id)
+                                  reviewed_by=user['display_name'], reviewed_by_user_id=user['id'],
+                                  note=note, prediction_id=prediction_id)
                 except ValueError as exc:
                     st.error(str(exc))
                 else:
-                    st.session_state.reviewer_name = reviewer.strip()
                     st.rerun()
-        st.caption('Người ghi nhận được nhập tại biểu mẫu. Giờ ghi nhận theo giờ Việt Nam.')
+        st.caption('Ghi nhận theo tài khoản đăng nhập · giờ Việt Nam.')
 
 
 def show_feature_details(snapshot, model=None):

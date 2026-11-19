@@ -5,7 +5,8 @@ from pathlib import Path
 import pytest
 from streamlit.testing.v1 import AppTest
 
-from src.manual_cases import create_case, prediction_history
+from src.manual_cases import create_case, prediction_history, review_history
+from src.auth import create_first_account, sign_in
 
 ROOT = Path(__file__).resolve().parents[1]
 pytestmark = pytest.mark.skipif(
@@ -16,11 +17,15 @@ pytestmark = pytest.mark.skipif(
 
 def test_manual_journey_and_other_pages(tmp_path, monkeypatch):
     monkeypatch.setenv('SEPSIS_MANUAL_DB', str(tmp_path / 'manual.sqlite3'))
+    monkeypatch.setenv('SEPSIS_AUTH_DB', str(tmp_path / 'accounts.sqlite3'))
+    create_first_account('test.doctor', 'Bác sĩ thử nghiệm', 'test-only-password-123')
     t0 = datetime(2026, 1, 1, 8)
     case_id = create_case(triage_completed_at=t0, age_years=60, sex='F')
-    app = AppTest.from_file(str(ROOT / 'app/streamlit_app.py'), default_timeout=90).run()
+    app = AppTest.from_file(str(ROOT / 'app/streamlit_app.py'), default_timeout=90)
+    app.session_state.auth_token = sign_in('test.doctor', 'test-only-password-123')
+    app = app.run()
     assert not app.exception
-    assert app.title[0].value == 'Chạy ca mẫu'
+    assert app.title[0].value == 'Danh sách theo dõi'
 
     app = app.switch_page('views/1_manual.py').run()
     assert not app.exception
@@ -33,11 +38,11 @@ def test_manual_journey_and_other_pages(tmp_path, monkeypatch):
     assert not app.exception
     assert any(m.label == 'Điểm sepsis' for m in app.metric)
     assert [p['target'] for p in prediction_history(case_id)] == ['sepsis']
-    next(n for n in app.text_input if n.label == 'Người ghi nhận').set_value('Bác sĩ thử nghiệm')
     next(b for b in app.button if b.label == 'Đã xem xét kết quả').click()
     app = app.run()
     assert not app.exception
     assert any('Đã xem xét' in message.value for message in app.success)
+    assert review_history(case_id)[0]['reviewed_by_user_id'] == app.session_state.auth_user['id']
     app = app.run()
     assert any('Bác sĩ thử nghiệm' in message.value for message in app.success)
     next(b for b in app.button if b.label == 'Cập nhật mốc T0+2h').click()
