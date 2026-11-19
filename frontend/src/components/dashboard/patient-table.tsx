@@ -1,4 +1,5 @@
 "use client";
+import { useClinicalDataset } from "@/lib/manual-store";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
@@ -116,6 +117,7 @@ const columns: ColumnDef<MonitoringRow>[] = [
 ];
 export function PatientTable() {
   "use no memo"; // TanStack's stateful table instance must not be compiler-memoized.
+  const dataset = useClinicalDataset();
   const { reviews } = useReviews();
   const router = useRouter();
   const [search, setSearch] = useState("");
@@ -125,7 +127,7 @@ export function PatientTable() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const data = useMemo(
     () =>
-      monitoringRows(reviews).filter(
+      monitoringRows(reviews, dataset).filter(
         (r) =>
           r.encounter.id.toLowerCase().includes(search.trim().toLowerCase()) &&
           (department === "all" || r.department === department) &&
@@ -133,7 +135,7 @@ export function PatientTable() {
           (review === "all" ||
             (review === "done" ? !!r.review : !!r.prediction && !r.review)),
       ),
-    [reviews, search, department, state, review],
+    [reviews, dataset, search, department, state, review],
   );
   // TanStack Table owns sorting and pagination; the adapter owns default clinical priority.
   // eslint-disable-next-line react-hooks/incompatible-library -- Stateful TanStack instance is intentionally outside compiler memoization (use no memo above).

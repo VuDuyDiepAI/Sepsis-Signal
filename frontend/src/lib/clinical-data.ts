@@ -64,11 +64,18 @@ export function formatTime(t: string, date = false) {
 }
 export const stateOf = (p?: Prediction): ClinicalState =>
   p ? (p.score >= p.threshold ? "above" : "below") : "unavailable";
-export const predictionAt = (id: string, h: number) =>
-  dataset.predictions.find((p) => p.encounterId === id && p.hour === h);
-export function departmentAt(id: string, t: string): Department {
+export const predictionAt = (
+  id: string,
+  h: number,
+  source: ClinicalDataset = dataset,
+) => source.predictions.find((p) => p.encounterId === id && p.hour === h);
+export function departmentAt(
+  id: string,
+  t: string,
+  source: ClinicalDataset = dataset,
+): Department {
   return (
-    dataset.locations
+    source.locations
       .filter(
         (l) =>
           l.encounterId === id &&
@@ -78,18 +85,26 @@ export function departmentAt(id: string, t: string): Department {
       .at(-1)?.department ?? "ED"
   );
 }
-export function changeAt(id: string, h: number) {
-  const p = predictionAt(id, h),
-    previous = predictionAt(id, h - 1);
+export function changeAt(
+  id: string,
+  h: number,
+  source: ClinicalDataset = dataset,
+) {
+  const p = predictionAt(id, h, source),
+    previous = predictionAt(id, h - 1, source);
   return p && previous && p.modelVersion === previous.modelVersion
     ? (p.score - previous.score) * 100
     : undefined;
 }
-export function availableVitals(id: string, h: number) {
-  const e = dataset.encounters.find((e) => e.id === id);
+export function availableVitals(
+  id: string,
+  h: number,
+  source: ClinicalDataset = dataset,
+) {
+  const e = source.encounters.find((e) => e.id === id);
   if (!e) return [];
   const at = timeAt(e.t0, h);
-  return dataset.vitals
+  return source.vitals
     .filter(
       (v) =>
         v.encounterId === id &&
@@ -103,11 +118,15 @@ export function availableVitals(id: string, h: number) {
         a.availableAt.localeCompare(b.availableAt),
     );
 }
-export function availableLabs(id: string, h: number) {
-  const e = dataset.encounters.find((e) => e.id === id);
+export function availableLabs(
+  id: string,
+  h: number,
+  source: ClinicalDataset = dataset,
+) {
+  const e = source.encounters.find((e) => e.id === id);
   if (!e) return [];
   const at = timeAt(e.t0, h);
-  return dataset.labs
+  return source.labs
     .filter(
       (l) =>
         l.encounterId === id &&
@@ -165,18 +184,23 @@ export function reviewFor(
 }
 export function monitoringRows(
   reviews: Record<string, Review> = {},
+  source: ClinicalDataset = dataset,
 ): MonitoringRow[] {
-  return dataset.encounters
+  return source.encounters
     .map((encounter) => {
-      const prediction = predictionAt(encounter.id, encounter.currentHour);
+      const prediction = predictionAt(
+        encounter.id,
+        encounter.currentHour,
+        source,
+      );
       const timestamp = timeAt(encounter.t0, encounter.currentHour);
       return {
         encounter,
         prediction,
         timestamp,
-        department: departmentAt(encounter.id, timestamp),
+        department: departmentAt(encounter.id, timestamp, source),
         state: stateOf(prediction),
-        change: changeAt(encounter.id, encounter.currentHour),
+        change: changeAt(encounter.id, encounter.currentHour, source),
         review: reviewFor(prediction, reviews),
       };
     })

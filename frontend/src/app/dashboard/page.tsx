@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FlaskConical } from "lucide-react";
+import { FlaskConical, Plus } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-container";
 import { SummaryCards } from "@/components/dashboard/summary-cards";
 import { PatientTable } from "@/components/dashboard/patient-table";
@@ -11,10 +11,16 @@ export default function Dashboard() {
         title="Tổng quan lâm sàng"
         description="Theo dõi diễn biến nguy cơ. Nhận diện hồ sơ cần xem xét sớm."
         action={
-          <Link href="/sample-cases" className="link-button">
-            <FlaskConical size={17} />
-            Mở ca mẫu
-          </Link>
+          <div className="flex gap-3 flex-wrap">
+            <Link href="/sample-cases" className="link-button">
+              <FlaskConical size={17} />
+              Mở ca mẫu
+            </Link>
+            <Link href="/patients/new" className="link-button primary">
+              <Plus size={17} />
+              Tạo ca mới
+            </Link>
+          </div>
         }
       />
       <SummaryCards />

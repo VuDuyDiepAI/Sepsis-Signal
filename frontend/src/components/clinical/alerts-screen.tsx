@@ -1,4 +1,5 @@
 "use client";
+import { useClinicalDataset } from "@/lib/manual-store";
 import Link from "next/link";
 import { useState } from "react";
 import { Search, BellRing, ClipboardCheck, History } from "lucide-react";
@@ -9,7 +10,6 @@ import { AlertStatus, ReviewStatus } from "./alert-status";
 import { useReviews } from "@/components/review-context";
 import { ClinicalNote, EmptyState } from "@/components/shared/empty-state";
 import {
-  dataset,
   departments,
   formatTime,
   hourLabel,
@@ -17,6 +17,7 @@ import {
   reviewFor,
 } from "@/lib/clinical-data";
 export function AlertsScreen() {
+  const dataset = useClinicalDataset();
   const { reviews } = useReviews();
   const [tab, setTab] = useState("active"),
     [search, setSearch] = useState(""),

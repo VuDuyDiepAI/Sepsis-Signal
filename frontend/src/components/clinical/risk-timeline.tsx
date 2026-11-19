@@ -1,4 +1,5 @@
 "use client";
+import { useClinicalDataset } from "@/lib/manual-store";
 import {
   LineChart,
   Line,
@@ -12,7 +13,6 @@ import {
 } from "recharts";
 import { Panel } from "@/components/layout/page-container";
 import {
-  dataset,
   availableLabs,
   hourLabel,
   percent,
@@ -31,6 +31,7 @@ export function RiskTimeline({
   onHourChange: (h: number) => void;
   onset?: string | null;
 }) {
+  const dataset = useClinicalDataset();
   const predictions = dataset.predictions.filter(
     (p) => p.encounterId === encounter.id && p.hour <= hour,
   );
@@ -44,7 +45,7 @@ export function RiskTimeline({
   const threshold = dataset.models.sepsis.threshold;
   const labHours = [
     ...new Set(
-      availableLabs(encounter.id, hour).map(
+      availableLabs(encounter.id, hour, dataset).map(
         (l) =>
           (new Date(l.availableAt).getTime() -
             new Date(encounter.t0).getTime()) /

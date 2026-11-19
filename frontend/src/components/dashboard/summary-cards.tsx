@@ -1,10 +1,12 @@
 "use client";
+import { useClinicalDataset } from "@/lib/manual-store";
 import { UsersRound, BellRing, ClipboardCheck, Clock3 } from "lucide-react";
 import { monitoringRows, summaryOf } from "@/lib/clinical-data";
 import { useReviews } from "@/components/review-context";
 export function SummaryCards() {
+  const dataset = useClinicalDataset();
   const { reviews } = useReviews();
-  const s = summaryOf(monitoringRows(reviews));
+  const s = summaryOf(monitoringRows(reviews, dataset));
   return (
     <div className="stats-grid">
       {[

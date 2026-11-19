@@ -6,6 +6,8 @@ Nhánh `feat/clinical-ui-refresh` bổ sung giao diện **Modern Clinical Intell
 
 Chạy giao diện mới bằng Node.js 22: `cd frontend`, `npm ci`, `npm run dev`, rồi mở [localhost:3000](http://localhost:3000). Giao diện dùng fixtures xuất từ workbook mô phỏng và mô hình đã lưu; chưa kết nối EMR, API ghi dữ liệu hay xác thực bệnh viện. Ghi nhận xem xét chỉ tồn tại trong phiên trình duyệt.
 
+Giao diện Next.js có nút **Tạo ca mới**, nhập sinh hiệu/xét nghiệm tại T0 và chấm từ T0+1h bằng mô hình Python hiện có. Ca nhập tay lưu trong phiên tab; cần môi trường Python theo [hướng dẫn frontend](frontend/README.md) để chấm điểm.
+
 **Theo dõi nguy cơ nhiễm khuẩn huyết theo giờ, hỗ trợ bác sĩ Khoa Cấp cứu nhận diện người bệnh cần đánh giá sớm.**
 
 Sepsis Signal là ứng dụng hỗ trợ theo dõi nguy cơ nhiễm khuẩn huyết, cho phép nhập sinh hiệu, kết quả xét nghiệm và triệu chứng của một ca bệnh qua nhiều thời điểm. Ở mỗi mốc giờ, hệ thống tổng hợp thông tin đã có, tính điểm nguy cơ sepsis trong **6 giờ tiếp theo** và hiển thị cảnh báo khi điểm vượt ngưỡng của mô hình.
