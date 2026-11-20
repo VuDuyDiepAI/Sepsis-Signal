@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { dataset, reviewFor } from "../src/lib/clinical-data";
-import type { ManualEntry, ManualProfile } from "../src/lib/manual-schema";
+import { dataset, reviewFor } from "@/lib/clinical/data";
+import type { ManualEntry, ManualProfile } from "@/lib/clinical/manual-schema";
 
-import { ClinicalDatabase } from "../src/lib/server/clinical-db";
-import { mergeManualCases } from "../src/lib/manual-store";
+import { ClinicalDatabase } from "@/lib/server/clinical-db";
+import { mergeManualCases } from "@/lib/client/manual-store";
 let db: ClinicalDatabase | undefined;
 afterEach(() => { db?.close(); db = undefined; vi.unstubAllGlobals(); });
 describe("decision-policy changes", () => {

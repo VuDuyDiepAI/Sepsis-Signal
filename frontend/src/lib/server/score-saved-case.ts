@@ -1,7 +1,7 @@
-import { scoreRequestSchema } from "../manual-schema";
-import type { ManualCase,ScoreResponse } from "../manual-types";
-import { ClinicalDatabase } from "./clinical-db";
-import { scoreCase } from "./score-case";
+import { scoreRequestSchema } from "@/lib/clinical/manual-schema";
+import type { ManualCase,ScoreResponse } from "@/lib/contracts/manual";
+import { ClinicalDatabase } from "@/lib/server/clinical-db";
+import { scoreCase } from "@/lib/server/score-case";
 type Runner=(input: Parameters<typeof scoreCase>[0])=>Promise<ScoreResponse>;
 /** Inputs have already committed. Python failure cannot roll them back or revive stale scores. */
 export async function scoreSavedCase(db: ClinicalDatabase,record: ManualCase,runner: Runner=scoreCase) {

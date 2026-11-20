@@ -1,7 +1,7 @@
 "use client";
-import { useClinicalReader } from "@/lib/manual-store";
+import { useClinicalReader } from "@/lib/client/manual-store";
 import { Panel } from "@/components/layout/page-container";
-import { labFields, formatTime } from "@/lib/clinical-data";
+import { labFields, formatTime } from "@/lib/clinical/data";
 export function LaboratoryPanel({ id, hour }: { id: string; hour: number }) {
   const reader = useClinicalReader();
   const labs = reader.getAvailableLabs(id, hour),

@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { dataProvider } from "@/lib/clinical-data";
+import { dataProvider } from "@/lib/clinical/data";
 import { PatientScreen } from "@/components/clinical/patient-screen";
 import Loading from "@/app/loading";
 import { ManualCaseScreen } from "@/components/clinical/manual-case-screen";
-import { predictionHour } from "@/lib/clinical-time";
-import { safeReturnTo } from "@/lib/clinical-navigation";
+import { predictionHour } from "@/lib/clinical/time";
+import { safeReturnTo } from "@/lib/clinical/navigation";
 type PatientProps = {
   params: Promise<{ id: string }>;
   searchParams: Promise<{ hour?: string; returnTo?: string }>;

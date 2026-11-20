@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
 import { PageHeader } from "@/components/layout/page-container";
-import { PatientWorkspace } from "./patient-workspace";
-import { createClinicalReader, percent, formatTime } from "@/lib/clinical-data";
+import { PatientWorkspace } from "@/components/clinical/patient-workspace";
+import { createClinicalReader, percent, formatTime } from "@/lib/clinical/data";
 export function ReplayScreen() {
   const reader = createClinicalReader();
   const encounters = reader.listEncounters();

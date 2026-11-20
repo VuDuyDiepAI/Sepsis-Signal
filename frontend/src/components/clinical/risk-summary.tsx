@@ -1,16 +1,16 @@
 "use client";
-import { useClinicalReader } from "@/lib/manual-store";
+import { useClinicalReader } from "@/lib/client/manual-store";
 import { Clock3 } from "lucide-react";
 import { Panel } from "@/components/layout/page-container";
-import { AlertStatus, Trend } from "./alert-status";
+import { AlertStatus, Trend } from "@/components/clinical/alert-status";
 import {
   stateOf,
   formatTime,
   timeAt,
   percent,
   hourLabel,
-} from "@/lib/clinical-data";
-import type { Encounter } from "@/lib/clinical-types";
+} from "@/lib/clinical/data";
+import type { Encounter } from "@/lib/contracts/clinical";
 export function RiskSummary({
   encounter,
   hour,

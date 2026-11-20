@@ -1,9 +1,9 @@
 import { z } from "zod";
-import { scoreRequestSchema } from "@/lib/manual-schema";
+import { scoreRequestSchema } from "@/lib/clinical/manual-schema";
 import { clinicalDb } from "@/lib/server/clinical-db";
 import { clinicalRequest,json,readBody } from "@/lib/server/clinical-http";
 import { scoreSavedCase } from "@/lib/server/score-saved-case";
-import { manualScoreGate } from "@/lib/manual-score-gate";
+import { manualScoreGate } from "@/lib/server/rate-limit";
 const schema = z.object({
   input:scoreRequestSchema,
   predictions:z.array(z.object({id:z.string().max(200),hour:z.number().int().min(1).max(36),revision:z.number().int().min(1),score:z.number().min(0).max(1),threshold:z.number().min(0).max(1),featureHash:z.string().max(200),modelVersion:z.string().max(200)})).max(36),

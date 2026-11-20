@@ -2,10 +2,10 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Search, ChevronLeft, ChevronRight } from "lucide-react";
-import { useClinicalReader } from "@/lib/manual-store";
-import { useHydrated } from "@/lib/use-hydrated";
-import { usePageCapacity } from "@/lib/use-page-capacity";
-import { useReviews } from "@/components/review-context";
+import { useClinicalReader } from "@/lib/client/manual-store";
+import { useHydrated } from "@/hooks/use-hydrated";
+import { usePageCapacity } from "@/hooks/use-page-capacity";
+import { useReviews } from "@/components/providers/review-provider";
 import { PageHeader } from "@/components/layout/page-container";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,14 +16,14 @@ import {
   hourLabel,
   percent,
   summaryOf,
-} from "@/lib/clinical-data";
+} from "@/lib/clinical/data";
 import {
   alertQueue,
   type AlertScope,
   type ObservationChange,
-} from "@/lib/monitoring-view";
-import { patientHref } from "@/lib/clinical-navigation";
-import { ReviewStatus, Trend } from "./alert-status";
+} from "@/lib/clinical/monitoring-view";
+import { patientHref } from "@/lib/clinical/navigation";
+import { ReviewStatus, Trend } from "@/components/clinical/alert-status";
 const number = (n: number) =>
   new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 3 }).format(n);
 function ChangedValue({ item }: { item: ObservationChange }) {

@@ -1,7 +1,7 @@
 "use client";
 import { useSyncExternalStore } from "react";
-import type { ClinicalSnapshot } from "./manual-types";
-import { currentActor } from "./client-identity";
+import type { ClinicalSnapshot } from "@/lib/contracts/manual";
+import { currentActor } from "@/lib/client/identity";
 const empty: ClinicalSnapshot = { cases:[],reviews:{},reviewHistory:[],fixturePredictions:[] };
 let snapshot = empty;
 let status = { loading:true,error:"" };

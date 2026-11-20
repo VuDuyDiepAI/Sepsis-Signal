@@ -1,6 +1,6 @@
 import { createHash,randomBytes,randomUUID,scryptSync,timingSafeEqual } from "node:crypto";
-import { clinicalDb,ClinicalDatabase,ClinicalError } from "./clinical-db";
-import type { SessionUser } from "../auth-types";
+import { clinicalDb,ClinicalDatabase,ClinicalError } from "@/lib/server/clinical-db";
+import type { SessionUser } from "@/lib/contracts/auth";
 
 export const sessionCookie = "sepsis_session";
 const sessionSeconds = 8*3600;

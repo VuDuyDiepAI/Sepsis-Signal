@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { entrySchema,scoreRequestSchema } from "@/lib/manual-schema";
+import { entrySchema,scoreRequestSchema } from "@/lib/clinical/manual-schema";
 import { clinicalDb,ClinicalError } from "@/lib/server/clinical-db";
 import { clinicalRequest,json,readBody } from "@/lib/server/clinical-http";
 const bodySchema=z.object({revision:z.number().int().min(0),entry:entrySchema});

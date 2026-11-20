@@ -8,7 +8,7 @@ from streamlit.testing.v1 import AppTest
 from src.manual_cases import create_case, event_rows, prediction_history, review_history
 from src.auth import create_first_account, sign_in
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 pytestmark = pytest.mark.skipif(
     not (ROOT / 'artifacts/mock_emr_hourly_lr/sepsis_model.joblib').exists(),
     reason='Run scripts/train_mock_emr.py first',

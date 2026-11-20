@@ -1,10 +1,10 @@
 "use client";
-import { useStorageStatus,refreshClinical } from "@/lib/clinical-storage";
-import { persistClinical } from "@/lib/clinical-storage";
+import { useStorageStatus,refreshClinical } from "@/lib/client/clinical-storage";
+import { persistClinical } from "@/lib/client/clinical-storage";
 import { useState } from "react";
-import { useHydrated } from "@/lib/use-hydrated";
-import { decodeReviews } from "@/lib/review-store";
-import type { ManualCase } from "@/lib/manual-types";
+import { useHydrated } from "@/hooks/use-hydrated";
+import { decodeReviews } from "@/lib/client/review-store";
+import type { ManualCase } from "@/lib/contracts/manual";
 export function StorageNotice() {
   const {error} = useStorageStatus();
   const hydrated = useHydrated();

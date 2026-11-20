@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import { percent } from "@/lib/clinical-data";
-import type { ModelMetadata, Metrics } from "@/lib/clinical-types";
+import { percent } from "@/lib/clinical/data";
+import type { ModelMetadata, Metrics } from "@/lib/contracts/clinical";
 
 type MetricKey = {
   [K in keyof Metrics]: Metrics[K] extends number | null ? K : never;

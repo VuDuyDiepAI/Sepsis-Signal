@@ -1,7 +1,7 @@
 "use client";
-import { useClinicalReader } from "@/lib/manual-store";
+import { useClinicalReader } from "@/lib/client/manual-store";
 import { Panel } from "@/components/layout/page-container";
-import { vitalFields, formatTime } from "@/lib/clinical-data";
+import { vitalFields, formatTime } from "@/lib/clinical/data";
 export function VitalSignsPanel({ id, hour }: { id: string; hour: number }) {
   const reader = useClinicalReader();
   const rows = reader.getAvailableVitals(id, hour);

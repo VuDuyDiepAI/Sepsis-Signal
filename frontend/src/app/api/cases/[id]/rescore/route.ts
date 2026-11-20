@@ -2,7 +2,7 @@ import { z } from "zod";
 import { clinicalDb,ClinicalError } from "@/lib/server/clinical-db";
 import { clinicalRequest,json,readBody } from "@/lib/server/clinical-http";
 import { scoreSavedCase } from "@/lib/server/score-saved-case";
-import { manualScoreGate } from "@/lib/manual-score-gate";
+import { manualScoreGate } from "@/lib/server/rate-limit";
 const schema=z.object({revision:z.number().int().min(0)});
 export async function POST(request: Request,context:{params:Promise<{id:string}>}) {
   return clinicalRequest(request,async()=>{

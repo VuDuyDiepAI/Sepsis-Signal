@@ -4,12 +4,11 @@ import "@fontsource/inter/400.css";
 import "@fontsource/inter/500.css";
 import "@fontsource/inter/600.css";
 import "@fontsource/inter/700.css";
-import "./globals.css";
-import "./clinical.css";
-import { ReviewProvider } from "@/components/review-context";
-import { AuthBoundary } from "@/components/auth-boundary";
-import { AuthProvider } from "@/components/auth-provider";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import "@/app/globals.css";
+import "@/app/clinical.css";
+import { ReviewProvider } from "@/components/providers/review-provider";
+import { AuthBoundary } from "@/components/auth/auth-boundary";
+import { AuthProvider } from "@/components/providers/auth-provider";
 
 export const metadata: Metadata = {
   title: {
@@ -28,8 +27,8 @@ export default function RootLayout({
   return (
     <html lang="vi">
       <body>
-        <AuthProvider><ReviewProvider>
-          <TooltipProvider>
+        <AuthProvider>
+          <ReviewProvider>
             <Suspense
               fallback={
                 <main className="page" role="status">
@@ -39,8 +38,8 @@ export default function RootLayout({
             >
               <AuthBoundary>{children}</AuthBoundary>
             </Suspense>
-          </TooltipProvider>
-        </ReviewProvider></AuthProvider>
+          </ReviewProvider>
+        </AuthProvider>
       </body>
     </html>
   );

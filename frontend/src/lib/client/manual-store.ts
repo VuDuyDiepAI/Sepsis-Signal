@@ -1,11 +1,11 @@
 "use client";
 import { useMemo, useSyncExternalStore } from "react";
-import { dataset, createClinicalReader } from "./clinical-data";
-import type { ClinicalDataset, VitalKey } from "./clinical-types";
-import type { ManualEntry, ManualProfile } from "./manual-schema";
-import type { ManualCase } from "./manual-types";
-export type { ManualCase, ManualPrediction, ScoreResponse } from "./manual-types";
-import { getClinicalSnapshot, getServerClinicalSnapshot, subscribeClinical, persistClinical } from "./clinical-storage";
+import { dataset, createClinicalReader } from "@/lib/clinical/data";
+import type { ClinicalDataset, VitalKey } from "@/lib/contracts/clinical";
+import type { ManualEntry, ManualProfile } from "@/lib/clinical/manual-schema";
+import type { ManualCase } from "@/lib/contracts/manual";
+export type { ManualCase, ManualPrediction, ScoreResponse } from "@/lib/contracts/manual";
+import { getClinicalSnapshot, getServerClinicalSnapshot, subscribeClinical, persistClinical } from "@/lib/client/clinical-storage";
 export async function createManualCase(profile: ManualProfile) {
   await persistClinical("/api/cases", "POST", profile);
 }

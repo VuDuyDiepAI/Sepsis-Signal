@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter,useSearchParams } from "next/navigation";
 import { Activity,LockKeyhole } from "lucide-react";
-import { useAuth } from "@/components/auth-provider";
+import { useAuth } from "@/components/providers/auth-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 function destination(value:string|null) {

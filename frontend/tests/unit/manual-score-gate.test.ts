@@ -1,5 +1,5 @@
 import { it, expect } from "vitest";
-import { ManualScoreGate } from "../src/lib/manual-score-gate";
+import { ManualScoreGate } from "@/lib/server/rate-limit";
 const local = () =>
   new Request("http://localhost:3100/api/manual-score", {
     method: "POST",

@@ -1,10 +1,10 @@
 "use client";
-import { useClinicalReader } from "@/lib/manual-store";
+import { useClinicalReader } from "@/lib/client/manual-store";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-import { usePageCapacity } from "@/lib/use-page-capacity";
-import { useHydrated } from "@/lib/use-hydrated";
+import { usePageCapacity } from "@/hooks/use-page-capacity";
+import { useHydrated } from "@/hooks/use-hydrated";
 import { useMemo, useState } from "react";
 import {
   useReactTable,
@@ -30,14 +30,14 @@ import {
   ReviewStatus,
   Trend,
 } from "@/components/clinical/alert-status";
-import { useReviews } from "@/components/review-context";
+import { useReviews } from "@/components/providers/review-provider";
 import {
   departments,
   hourLabel,
   formatTime,
   percent,
-} from "@/lib/clinical-data";
-import type { MonitoringRow } from "@/lib/clinical-types";
+} from "@/lib/clinical/data";
+import type { MonitoringRow } from "@/lib/contracts/clinical";
 const columns: ColumnDef<MonitoringRow>[] = [
   {
     id: "id",

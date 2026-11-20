@@ -1,8 +1,8 @@
 "use client";
 import { createContext,useContext,useEffect,useState,useRef,useCallback,type ReactNode } from "react";
-import type { SessionUser,DemoAccount } from "@/lib/auth-types";
-import { setCurrentActor } from "@/lib/client-identity";
-import { clearClinical } from "@/lib/clinical-storage";
+import type { SessionUser,DemoAccount } from "@/lib/contracts/auth";
+import { setCurrentActor } from "@/lib/client/identity";
+import { clearClinical } from "@/lib/client/clinical-storage";
 const Context=createContext<{
   user:SessionUser|null; loading:boolean; error:string; demoAccounts:DemoAccount[];
   login:(username:string,password:string)=>Promise<void>; logout:()=>Promise<void>;

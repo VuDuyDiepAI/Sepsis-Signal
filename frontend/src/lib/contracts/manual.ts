@@ -1,5 +1,5 @@
-import type { Prediction } from "./clinical-types";
-import type { ManualEntry, ManualProfile } from "./manual-schema";
+import type { Prediction } from "@/lib/contracts/clinical";
+import type { ManualEntry, ManualProfile } from "@/lib/clinical/manual-schema";
 export interface ManualPrediction extends Prediction { featureHash: string }
 export interface ManualCase {
   profile: ManualProfile;
@@ -21,7 +21,7 @@ export interface ScoreResponse {
 }
 export interface ClinicalSnapshot {
   cases: ManualCase[];
-  reviews: Record<string, import("./clinical-types").Review>;
-  reviewHistory?: import("./clinical-types").Review[];
+  reviews: Record<string, import("@/lib/contracts/clinical").Review>;
+  reviewHistory?: import("@/lib/contracts/clinical").Review[];
   fixturePredictions?: Prediction[];
 }

@@ -3,15 +3,15 @@ import {
   createClinicalReader,
   dataset,
   timeAt,
-} from "../src/lib/clinical-data";
-import { alertQueue, observationChanges } from "../src/lib/monitoring-view";
-import { patientHref, safeReturnTo } from "../src/lib/clinical-navigation";
+} from "@/lib/clinical/data";
+import { alertQueue, observationChanges } from "@/lib/clinical/monitoring-view";
+import { patientHref, safeReturnTo } from "@/lib/clinical/navigation";
 import type {
   ClinicalDataset,
   Prediction,
   Review,
   VitalObservation,
-} from "../src/lib/clinical-types";
+} from "@/lib/contracts/clinical";
 const t0 = "2026-11-20T08:00:00+07:00",
   id = "E0009";
 const p = (hour: number, revision = 1): Prediction => ({

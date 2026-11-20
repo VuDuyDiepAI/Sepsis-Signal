@@ -8,7 +8,7 @@ import type {
   Prediction,
   Review,
   VitalKey,
-} from "./clinical-types";
+} from "@/lib/contracts/clinical";
 
 export const dataset = fixture as ClinicalDataset;
 export const departments: Record<Department, string> = {

@@ -1,5 +1,5 @@
 "use client";
-import { useClinicalReader } from "@/lib/manual-store";
+import { useClinicalReader } from "@/lib/client/manual-store";
 import {
   LineChart,
   Line,
@@ -12,8 +12,8 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Panel } from "@/components/layout/page-container";
-import { hourLabel, percent, formatTime, timeAt } from "@/lib/clinical-data";
-import type { Encounter } from "@/lib/clinical-types";
+import { hourLabel, percent, formatTime, timeAt } from "@/lib/clinical/data";
+import type { Encounter } from "@/lib/contracts/clinical";
 export function RiskTimeline({
   encounter,
   hour,

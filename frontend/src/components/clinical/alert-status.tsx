@@ -7,8 +7,8 @@ import {
   TrendingDown,
   Minus,
 } from "lucide-react";
-import { stateLabels } from "@/lib/clinical-data";
-import type { ClinicalState } from "@/lib/clinical-types";
+import { stateLabels } from "@/lib/clinical/data";
+import type { ClinicalState } from "@/lib/contracts/clinical";
 export function AlertStatus({ state }: { state: ClinicalState }) {
   const Icon =
     state === "above"

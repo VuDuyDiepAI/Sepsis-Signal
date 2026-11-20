@@ -1,4 +1,4 @@
-import { allowedOrigins } from "./server/request-policy";
+import { allowedOrigins } from "@/lib/server/request-policy";
 type Claim =
   | { ok: true; release: () => void }
   | { ok: false; status: number; message: string; retryAfter?: number };

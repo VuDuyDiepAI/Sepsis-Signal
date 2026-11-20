@@ -13,10 +13,10 @@ import {
   recordSessionReview,
   getReviewHistory,
   serverReviewHistory,
-} from "@/lib/review-store";
-import type { Prediction, Review } from "@/lib/clinical-types";
-import { startClinicalSync } from "@/lib/clinical-storage";
-import { useAuth } from "./auth-provider";
+} from "@/lib/client/review-store";
+import type { Prediction, Review } from "@/lib/contracts/clinical";
+import { startClinicalSync } from "@/lib/client/clinical-storage";
+import { useAuth } from "@/components/providers/auth-provider";
 const Context = createContext<{
   reviews: Record<string, Review>;
   recordReview: (p: Prediction, note: string, requestId: string) => Promise<void>;

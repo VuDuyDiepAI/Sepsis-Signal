@@ -2,20 +2,20 @@
 import Link from "next/link";
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { useHydrated } from "@/lib/use-hydrated";
+import { useHydrated } from "@/hooks/use-hydrated";
 import { Plus, Save, LoaderCircle } from "lucide-react";
 import { PageHeader, Panel } from "@/components/layout/page-container";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PatientWorkspace } from "./patient-workspace";
-import { patientHref } from "@/lib/clinical-navigation";
+import { PatientWorkspace } from "@/components/clinical/patient-workspace";
+import { patientHref } from "@/lib/clinical/navigation";
 import {
   conditions,
   symptomFields,
   profileSchema,
   scoreRequestSchema,
   type ManualEntry,
-} from "@/lib/manual-schema";
+} from "@/lib/clinical/manual-schema";
 import {
   createManualCase,
   updateManualCase,
@@ -23,16 +23,16 @@ import {
   useManualCases,
   useClinicalReader,
   type ManualCase,
-} from "@/lib/manual-store";
-import { useAuth } from "@/components/auth-provider";
-import { useStorageStatus } from "@/lib/clinical-storage";
+} from "@/lib/client/manual-store";
+import { useAuth } from "@/components/providers/auth-provider";
+import { useStorageStatus } from "@/lib/client/clinical-storage";
 import {
   vitalFields,
   labFields,
   departments,
   timeAt,
   hourLabel,
-} from "@/lib/clinical-data";
+} from "@/lib/clinical/data";
 const numeric = (form: FormData, key: string) => {
   const s = String(form.get(key) ?? "").trim();
   return s === "" ? null : Number(s);

@@ -1,6 +1,6 @@
 import { afterEach,describe,it,expect,vi } from "vitest";
-import { ClinicalDatabase } from "../src/lib/server/clinical-db";
-import { WebAuth,requireUser,cookieHeader } from "../src/lib/server/auth";
+import { ClinicalDatabase } from "@/lib/server/clinical-db";
+import { WebAuth,requireUser,cookieHeader } from "@/lib/server/auth";
 import {execFileSync} from "node:child_process";
 import {mkdtempSync,rmSync} from "node:fs";
 import {tmpdir} from "node:os";

@@ -2,9 +2,9 @@ import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import type { z } from "zod";
-import { scoreRequestSchema } from "../manual-schema";
-import type { ScoreResponse } from "../manual-types";
-import { ClinicalError } from "./clinical-db";
+import { scoreRequestSchema } from "@/lib/clinical/manual-schema";
+import type { ScoreResponse } from "@/lib/contracts/manual";
+import { ClinicalError } from "@/lib/server/clinical-db";
 export async function scoreCase(input: z.infer<typeof scoreRequestSchema>): Promise<ScoreResponse> {
   const root = path.resolve(process.cwd(), "..");
   const candidates = [

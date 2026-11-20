@@ -1,7 +1,7 @@
 "use client";
 import { z } from "zod";
-import type { Prediction, Review } from "./clinical-types";
-import { getClinicalSnapshot,getServerClinicalSnapshot,subscribeClinical,persistClinical } from "./clinical-storage";
+import type { Prediction, Review } from "@/lib/contracts/clinical";
+import { getClinicalSnapshot,getServerClinicalSnapshot,subscribeClinical,persistClinical } from "@/lib/client/clinical-storage";
 export const REVIEW_STORAGE_KEY = "sepsis-reviews-v1";
 const reviewSchema = z.object({
   predictionId:z.string().min(1).max(200),revision:z.number().int().min(1),

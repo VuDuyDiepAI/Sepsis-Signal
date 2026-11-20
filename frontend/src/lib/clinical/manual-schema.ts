@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { localTimestamp } from "./clinical-time";
+import { localTimestamp } from "@/lib/clinical/time";
 export const conditions = [
   ["diabetes", "Đái tháo đường"],
   ["cardiovascular_disease", "Tim mạch"],

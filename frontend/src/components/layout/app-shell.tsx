@@ -23,8 +23,8 @@ import {
   DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { StorageNotice } from "@/components/storage-notice";
-import { useAuth } from "@/components/auth-provider";
+import { StorageNotice } from "@/components/shared/storage-notice";
+import { useAuth } from "@/components/providers/auth-provider";
 const links = [
   {
     href: "/dashboard",

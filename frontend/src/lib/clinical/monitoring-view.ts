@@ -4,8 +4,8 @@ import {
   reviewFor,
   timeAt,
   vitalFields,
-} from "./clinical-data";
-import type { Review } from "./clinical-types";
+} from "@/lib/clinical/data";
+import type { Review } from "@/lib/contracts/clinical";
 export type ClinicalReader = ReturnType<typeof createClinicalReader>;
 export type AlertScope = "current" | "history";
 export interface ObservationChange {

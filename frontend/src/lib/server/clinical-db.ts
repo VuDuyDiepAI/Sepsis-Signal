@@ -1,13 +1,13 @@
 import { createHash,randomUUID } from "node:crypto";
 import { isDeepStrictEqual } from "node:util";
-import { migrateDatabase } from "./migrations";
+import { migrateDatabase } from "@/lib/server/migrations";
 import { DatabaseSync } from "node:sqlite";
 import { mkdirSync } from "node:fs";
 import path from "node:path";
-import { dataset, timeAt } from "../clinical-data";
-import type { Prediction, Review, ClinicalDataset } from "../clinical-types";
-import type { ManualCase, ClinicalSnapshot, ScoreResponse, ManualPrediction } from "../manual-types";
-import type { ManualEntry, ManualProfile } from "../manual-schema";
+import { dataset, timeAt } from "@/lib/clinical/data";
+import type { Prediction, Review, ClinicalDataset } from "@/lib/contracts/clinical";
+import type { ManualCase, ClinicalSnapshot, ScoreResponse, ManualPrediction } from "@/lib/contracts/manual";
+import type { ManualEntry, ManualProfile } from "@/lib/clinical/manual-schema";
 
 export class ClinicalError extends Error {
   constructor(message: string, public status = 409) { super(message); }

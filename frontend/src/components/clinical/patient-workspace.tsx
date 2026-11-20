@@ -2,8 +2,8 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { useClinicalReader } from "@/lib/manual-store";
-import { useHydrated } from "@/lib/use-hydrated";
+import { useClinicalReader } from "@/lib/client/manual-store";
+import { useHydrated } from "@/hooks/use-hydrated";
 import { UserRound, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ClinicalNote } from "@/components/shared/empty-state";
@@ -12,13 +12,13 @@ import {
   formatTime,
   hourLabel,
   timeAt,
-} from "@/lib/clinical-data";
-import type { Encounter } from "@/lib/clinical-types";
-import { RiskSummary } from "./risk-summary";
-import { RiskTimeline } from "./risk-timeline";
-import { VitalSignsPanel } from "./vital-signs-panel";
-import { LaboratoryPanel } from "./laboratory-panel";
-import { ReviewPanel } from "./review-panel";
+} from "@/lib/clinical/data";
+import type { Encounter } from "@/lib/contracts/clinical";
+import { RiskSummary } from "@/components/clinical/risk-summary";
+import { RiskTimeline } from "@/components/clinical/risk-timeline";
+import { VitalSignsPanel } from "@/components/clinical/vital-signs-panel";
+import { LaboratoryPanel } from "@/components/clinical/laboratory-panel";
+import { ReviewPanel } from "@/components/clinical/review-panel";
 export function PatientWorkspace({
   encounter,
   hour,

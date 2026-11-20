@@ -1,8 +1,8 @@
 import { clinicalRequest } from "@/lib/server/clinical-http";
 import { scoreCase } from "@/lib/server/score-case";
 import { ClinicalError } from "@/lib/server/clinical-db";
-import { scoreRequestSchema } from "@/lib/manual-schema";
-import { manualScoreGate } from "@/lib/manual-score-gate";
+import { scoreRequestSchema } from "@/lib/clinical/manual-schema";
+import { manualScoreGate } from "@/lib/server/rate-limit";
 export async function POST(request: Request) {
   return clinicalRequest(request,async () => {
   const claim = manualScoreGate.claim(request);

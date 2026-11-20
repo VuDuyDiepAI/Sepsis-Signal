@@ -1,8 +1,8 @@
 "use client";
 import { useEffect,type ReactNode } from "react";
 import { usePathname,useRouter } from "next/navigation";
-import { useAuth } from "./auth-provider";
-import { AppShell } from "./layout/app-shell";
+import { useAuth } from "@/components/providers/auth-provider";
+import { AppShell } from "@/components/layout/app-shell";
 export function AuthBoundary({children}:{children:ReactNode}) {
   const {user,loading,error}=useAuth(),path=usePathname(),router=useRouter();
   useEffect(()=>{

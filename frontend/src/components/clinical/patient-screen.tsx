@@ -1,9 +1,9 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
-import { PatientWorkspace } from "./patient-workspace";
-import type { Encounter } from "@/lib/clinical-types";
-import { patientHref } from "@/lib/clinical-navigation";
+import { PatientWorkspace } from "@/components/clinical/patient-workspace";
+import type { Encounter } from "@/lib/contracts/clinical";
+import { patientHref } from "@/lib/clinical/navigation";
 export function PatientScreen({
   encounter,
   initialHour,

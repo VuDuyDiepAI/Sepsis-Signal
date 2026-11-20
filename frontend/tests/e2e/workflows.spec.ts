@@ -17,7 +17,7 @@ test.beforeEach(async ({request,context}) => {
       DELETE FROM legacy_imports; DELETE FROM predictions WHERE source='manual'; DELETE FROM manual_cases; COMMIT;`);
   } finally {db.close();}
 });
-import data from "../../src/data/clinical-demo.json" with { type: "json" };
+import data from "@/data/clinical-demo.json" with { type: "json" };
 async function openAssessment(page: Page) {
   const summary = page.getByRole("tab", { name: "Tổng hợp", exact: true });
   if(new URL(page.url()).pathname.startsWith("/patients/HS-"))await expect(summary).toBeVisible();

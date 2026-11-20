@@ -1,6 +1,6 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { PageHeader, Panel } from "@/components/layout/page-container";
-import { createClinicalReader, percent } from "@/lib/clinical-data";
+import { createClinicalReader, percent } from "@/lib/clinical/data";
 import { ModelEvaluation } from "@/components/clinical/model-evaluation";
 export default function Monitoring() {
   const reader = createClinicalReader(),

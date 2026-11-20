@@ -7,10 +7,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCheck,ClipboardCheck } from "lucide-react";
 import { Panel } from "@/components/layout/page-container";
 import { Button } from "@/components/ui/button";
-import { useReviews } from "@/components/review-context";
-import { useAuth } from "@/components/auth-provider";
-import { formatTime,reviewFor } from "@/lib/clinical-data";
-import type { Prediction } from "@/lib/clinical-types";
+import { useReviews } from "@/components/providers/review-provider";
+import { useAuth } from "@/components/providers/auth-provider";
+import { formatTime,reviewFor } from "@/lib/clinical/data";
+import type { Prediction } from "@/lib/contracts/clinical";
 const schema=z.object({note:z.string().trim().max(1000,"Ghi chú tối đa 1.000 ký tự.")});
 export function ReviewPanel({prediction,returnTo,compact=false,encounterId,hour}:{prediction?:Prediction;returnTo?:string;compact?:boolean;encounterId?:string;hour?:number}) {
   const {reviews,reviewHistory,recordReview}=useReviews(),{user}=useAuth();

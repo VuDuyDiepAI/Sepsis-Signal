@@ -5,12 +5,12 @@ import {
   reviewFor,
   summaryOf,
   timeAt,
-} from "../src/lib/clinical-data";
-import { localTimestamp, predictionHour } from "../src/lib/clinical-time";
-import { scoreRequestSchema } from "../src/lib/manual-schema";
-import { decodeReviews } from "../src/lib/review-store";
-import { mergeManualCases, type ManualCase } from "../src/lib/manual-store";
-import type { Review } from "../src/lib/clinical-types";
+} from "@/lib/clinical/data";
+import { localTimestamp, predictionHour } from "@/lib/clinical/time";
+import { scoreRequestSchema } from "@/lib/clinical/manual-schema";
+import { decodeReviews } from "@/lib/client/review-store";
+import { mergeManualCases, type ManualCase } from "@/lib/client/manual-store";
+import type { Review } from "@/lib/contracts/clinical";
 const profile = {
   id: "HS-ABCDEF12",
   t0: "2026-11-19T08:00",

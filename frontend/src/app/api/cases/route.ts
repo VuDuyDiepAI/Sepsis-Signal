@@ -1,4 +1,4 @@
-import { profileSchema } from "@/lib/manual-schema";
+import { profileSchema } from "@/lib/clinical/manual-schema";
 import { clinicalDb } from "@/lib/server/clinical-db";
 import { clinicalRequest,json,readBody } from "@/lib/server/clinical-http";
 export async function POST(request: Request) {

@@ -1,6 +1,6 @@
-import { ManualScoreGate } from "../manual-score-gate";
-import { ClinicalError } from "./clinical-db";
-import { json } from "./clinical-http";
+import { ManualScoreGate } from "@/lib/server/rate-limit";
+import { ClinicalError } from "@/lib/server/clinical-db";
+import { json } from "@/lib/server/clinical-http";
 import { ZodError } from "zod";
 const loginGate=new ManualScoreGate({maxConcurrent:4,maxPerMinute:30});
 const sessionGate=new ManualScoreGate({maxConcurrent:8,maxPerMinute:600});
