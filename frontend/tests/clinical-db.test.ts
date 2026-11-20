@@ -17,7 +17,7 @@ describe("durable clinical history",() => {
     const file=path.join(dir,"clinical.sqlite3"), db=open(file);
     db.create(profile); const c=db.saveEntry(profile.id,0,entry,result), p=c.predictions[0];
     db.recordReview(p.id,p.revision,"Bác sĩ A","Đã đối chiếu");
-    db.db.prepare("UPDATE reviews SET timestamp=?").run("2026-01-01T00:00:00.000Z");
+    db.db.prepare("UPDATE review_events SET timestamp=?").run("2026-01-01T00:00:00.000Z");
     db.close(); databases=[];
     const restored=open(file), state=restored.snapshot();
     expect(state.cases[0]).toEqual(c);
@@ -44,8 +44,11 @@ describe("durable clinical history",() => {
     const c=db.saveEntry(profile.id,0,entry,result),p=c.predictions[0];
     expect(() => db.saveEntry(profile.id,0,{...entry,labs:{CRP:200}},result)).toThrow(/tab khác/);
     expect(db.getCase(profile.id)).toEqual(c);
-    db.recordReview(p.id,p.revision,"Bác sĩ A","Ghi chú đầu");
-    db.recordReview(p.id,p.revision,"Bác sĩ B","Ghi đè");
+    db.recordReview(p.id,p.revision,"Bác sĩ A","Ghi chú đầu","request-a","user-a");
+    db.recordReview(p.id,p.revision,"Bác sĩ A","Ghi chú đầu","request-a","user-a");
+    db.recordReview(p.id,p.revision,"Bác sĩ B","Đánh giá bổ sung","request-b","user-b");
+    expect(db.snapshot().reviewHistory?.filter(r=>r.predictionId===p.id)).toHaveLength(2);
+    expect(()=>db.recordReview(p.id,p.revision,"Bác sĩ A","Đổi nội dung","request-a","user-a")).toThrow(/thao tác/);
     expect(db.snapshot().reviews[p.id].reviewer).toBe("Bác sĩ A");
     expect(db.snapshot().reviews[p.id].note).toBe("Ghi chú đầu");
   });
@@ -65,20 +68,20 @@ describe("durable clinical history",() => {
   });
   it("imports once, keeps original history and does not overwrite later server changes",() => {
     const db=open();
-    const first=db.importCase(profile,[entry],[1],result,{original:"preserved"});
+    const first=db.importCase(profile,[entry],[1],{original:"preserved"});
     db.saveEntry(profile.id,first.revision,{...entry,labs:{CRP:100}},result);
-    const again=db.importCase(profile,[entry],[1],result,{original:"preserved"});
+    const again=db.importCase(profile,[entry],[1],{original:"preserved"});
     expect(again.entries[0].labs.CRP).toBe(100);
     expect(db.db.prepare("SELECT data FROM legacy_imports").get()?.data).toContain("preserved");
   });
   it("archives obsolete browser reviews without applying them to a current prediction",() => {
-    const db=open(),p=dataset.predictions[0];
+    const db=open(),p=db.snapshot().fixturePredictions![0];
     const old={predictionId:`${p.encounterId}:${p.hour}:old`,revision:1,reviewer:"Bác sĩ cũ",timestamp:"2026-01-01T00:00:00.000Z",note:"Lịch sử",localOnly:true};
     db.archiveLegacyReviews([old]);
     const state=db.snapshot();
     expect(state.reviews[`legacy:${old.predictionId}`].reviewer).toBe(old.reviewer);
     expect(reviewFor(p,state.reviews)).toBeUndefined();
     db.archiveLegacyReviews([{...old,predictionId:p.id,revision:p.revision}]);
-    expect(reviewFor(p,db.snapshot().reviews)?.reviewer).toBe(old.reviewer);
+    expect(reviewFor(p,db.snapshot().reviews)).toBeUndefined();
   });
 });

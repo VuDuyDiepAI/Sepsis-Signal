@@ -7,7 +7,8 @@ import "@fontsource/inter/700.css";
 import "./globals.css";
 import "./clinical.css";
 import { ReviewProvider } from "@/components/review-context";
-import { AppShell } from "@/components/layout/app-shell";
+import { AuthBoundary } from "@/components/auth-boundary";
+import { AuthProvider } from "@/components/auth-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 export const metadata: Metadata = {
@@ -27,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="vi">
       <body>
-        <ReviewProvider>
+        <AuthProvider><ReviewProvider>
           <TooltipProvider>
             <Suspense
               fallback={
@@ -36,10 +37,10 @@ export default function RootLayout({
                 </main>
               }
             >
-              <AppShell>{children}</AppShell>
+              <AuthBoundary>{children}</AuthBoundary>
             </Suspense>
           </TooltipProvider>
-        </ReviewProvider>
+        </ReviewProvider></AuthProvider>
       </body>
     </html>
   );

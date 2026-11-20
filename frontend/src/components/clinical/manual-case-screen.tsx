@@ -19,10 +19,12 @@ import {
 import {
   createManualCase,
   updateManualCase,
+  rescoreManualCase,
   useManualCases,
   useClinicalReader,
   type ManualCase,
 } from "@/lib/manual-store";
+import { useAuth } from "@/components/auth-provider";
 import { useStorageStatus } from "@/lib/clinical-storage";
 import {
   vitalFields,
@@ -197,6 +199,7 @@ function ManualEntryForm({
 }) {
   const [category, setCategory] = useState("vitals");
   const [timingOpen, setTimingOpen] = useState(false);
+  const {user}=useAuth();
   // Polling must not silently give an old form permission to overwrite newer data.
   const [editRevision,setEditRevision] = useState(record.revision);
   const old = record.entries.find((e) => e.hour === hour);
@@ -264,10 +267,10 @@ function ManualEntryForm({
         Object.keys(entry.labs).length > 0 &&
         Date.parse(entry.labAvailableAt + "+07:00") > atMs;
       const savedMessage =
-        hour === 0
+        saved.scoringError || (hour === 0
           ? "Đã lưu dữ liệu T0. Chọn T0+1h để chấm lần đầu."
           : (saved.errors[String(hour)] ??
-            "Đã lưu dữ liệu và cập nhật kết quả.");
+            "Đã lưu dữ liệu và cập nhật kết quả."));
       const notice =
         savedMessage +
         (delayed
@@ -470,6 +473,15 @@ function ManualEntryForm({
           </div>
         </div>
         <div className="entry-actions">
+          {record.scoringStatus && ["pending","error","running"].includes(record.scoringStatus) && <div className="clinical-note" role="status">
+            {record.scoringError || "Dữ liệu đã lưu trên máy chủ; kết quả đang chờ cập nhật."}
+            <Button type="button" variant="outline" disabled={busy||user?.role==="viewer"} onClick={async()=>{
+              setBusy(true);setError("");
+              try {const saved=await rescoreManualCase(record.profile.id,record.revision);setMessage(saved.scoringError||"Đã chấm lại dữ liệu đã lưu.");if(saved.predictions.some(p=>p.hour===hour))onScored("Đã chấm lại dữ liệu đã lưu.");}
+              catch(e){setError(e instanceof Error?e.message:"Chưa chấm lại được.");}
+              finally{setBusy(false);}
+            }}>Chấm lại dữ liệu đã lưu</Button>
+          </div>}
           {error && (
             <p className="form-error" role="alert">
               {error}
@@ -480,7 +492,7 @@ function ManualEntryForm({
               {message}
             </p>
           )}
-          <Button type="submit" disabled={busy}>
+          <Button type="submit" disabled={busy||user?.role==="viewer"}>
             {busy ? <LoaderCircle size={17} /> : <Save size={17} />}{" "}
             {busy
               ? "Đang chấm bằng mô hình Python…"

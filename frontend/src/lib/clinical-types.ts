@@ -48,6 +48,9 @@ export interface Location {
   endedAt: string | null;
 }
 export interface Review {
+  id?: string;
+  reviewerId?: string;
+  provenance?: string;
   predictionId: string;
   revision: number;
   reviewer: string;

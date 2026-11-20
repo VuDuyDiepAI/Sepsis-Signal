@@ -12,7 +12,7 @@ npm ci
 npm run dev
 ```
 
-Mở **http://localhost:3000**. Các hồ sơ mẫu vẫn xem độc lập, không cần chạy Streamlit. Chạy production cục bộ: `npm run build`, sau đó `npm run start`.
+Mở **http://localhost:3000**, đăng nhập bằng tài khoản có sẵn dưới biểu mẫu (không có đăng ký). Các hồ sơ mẫu vẫn xem độc lập, không cần chạy Streamlit. Chạy production cục bộ: `npm run build`, sau đó `npm run start`.
 
 ### Tạo ca mới và chấm điểm nhập tay
 
@@ -20,7 +20,7 @@ Bấm **Tạo ca mới** ở Hồ sơ theo dõi. Tạo thông tin ban đầu, nh
 
 Hồ sơ nhập tay, các lần nhập, kết quả dự báo và ghi nhận xem xét được lưu trong **SQLite phía máy chủ** tại `data/frontend_clinical.sqlite3`. Có thể đóng tab, mở lại hoặc dùng tab khác trên cùng máy chủ mà vẫn xem được hồ sơ. Giao diện tải lại dữ liệu khi quay về tab và đồng bộ định kỳ 10 giây. Không nhập danh tính người bệnh thật.
 
-Chấm điểm nhập tay cần Python đã cài `requirements.txt` ở máy chạy Next.js. Route `PUT /api/cases/[id]/entries` gọi `scripts/score_frontend_case.py` và lưu dữ liệu cùng kết quả bằng một transaction. `/api/manual-score` vẫn hỗ trợ chấm không lưu. Cả hai tái sử dụng nguyên logic Python hiện có, tạo SQLite tạm riêng cho mỗi yêu cầu rồi xóa. Không thay đổi workbook, model hoặc SQLite cũ. Bộ chấm tính lại mọi giờ đã chấm khi sửa dữ liệu; giờ không đủ sinh hiệu sẽ không giữ điểm cũ. Ngưỡng và điểm được trả từ model, không sinh ngẫu nhiên.
+Chấm điểm nhập tay cần Python đã cài `requirements.txt` ở máy chạy Next.js. Route `PUT /api/cases/[id]/entries` ghi chỉ số và revision vào SQLite trước, đánh dấu dự báo cần tính lại rồi trả dữ liệu đã lưu. Giao diện gọi `POST /api/cases/[id]/rescore` để chạy `scripts/score_frontend_case.py`. Python lỗi không làm mất chỉ số; có nút **Chấm lại dữ liệu đã lưu**. `/api/manual-score` hỗ trợ chấm không lưu sau xác thực. Bộ chấm tái sử dụng logic Python hiện có, tạo SQLite tạm riêng cho mỗi yêu cầu rồi xóa. Không thay đổi workbook, model hoặc SQLite cũ. Bộ chấm tính lại mọi giờ đã chấm khi sửa dữ liệu; giờ không đủ sinh hiệu sẽ không giữ điểm cũ. Ngưỡng và điểm được trả từ model, không sinh ngẫu nhiên.
 
 Server tìm Python ở `.venv` của repository hoặc môi trường `sepsis-prototype` liền kề trên máy phát triển. Có thể đặt đường dẫn rõ ràng trước khi chạy Next.js:
 
@@ -79,11 +79,33 @@ python scripts/export_frontend_demo.py
 
 **Đây là mô hình nghiên cứu trên dữ liệu EMR mô phỏng, chưa được xác thực lâm sàng trên người bệnh thực tế.** Điểm mô hình không phải xác suất lâm sàng đã được hiệu chỉnh hay chẩn đoán. Dưới ngưỡng không loại trừ sepsis.
 
-Ghi nhận xem xét lưu trên máy chủ, không tự hết hạn sau 8 giờ, gắn `predictionId` và `revision`. Bản tính thay đổi hoặc không còn đủ dữ liệu không thừa hưởng ghi nhận cũ; lịch sử vẫn đọc được trong phần xem xét của mốc đó. Nhấn lưu chỉ báo thành công sau khi server ghi xong; yêu cầu cũ bị từ chối bằng HTTP 409 để tránh ghi đè giữa hai tab. Người nhập tên chưa được xác thực bằng tài khoản bệnh viện. Bản Next.js chưa có SSO, đồng bộ EMR hoặc API ghi hồ sơ bệnh viện; phạm vi truy cập vẫn là máy cục bộ. Bản Streamlit và các SQLite cũ giữ nguyên.
+Ghi nhận xem xét lưu trên máy chủ, không tự hết hạn sau 8 giờ, gắn với `predictionId` và `revision`. Mỗi lượt đánh giá có ID riêng. Xác nhận đầu tiên quyết định trạng thái hàng đợi; các lượt sau nằm trong **Các lượt đánh giá**, không ghi đè nhau. `requestId` giúp gửi lại cùng một thao tác mà không nhân đôi. API lấy danh tính từ session, từ chối trường `reviewer` do client gửi. Kết quả thay đổi không kế thừa xác nhận cũ; lịch sử vẫn được giữ.
 
-`npm run dev` và `npm run start` mặc định chỉ lắng nghe `127.0.0.1`. API chấm điểm từ chối nguồn khác host và truy cập qua host từ xa khi chưa cấu hình token; giới hạn **2 yêu cầu đồng thời**, **20 yêu cầu/phút** trên mỗi tiến trình Next.js. Trả HTTP 429 kèm `Retry-After` khi đầy. Đây là biện pháp giới hạn cho demo cục bộ, chưa thay thế xác thực người dùng hoặc giới hạn phân tán. Không công khai server chỉ bằng cách đổi hostname.
+### Đăng nhập và quyền truy cập
 
-Tích hợp API do người vận hành kiểm soát có thể đặt `SEPSIS_API_TOKEN` và gửi `Authorization: Bearer ...` từ phía server được tin cậy. Không đưa token vào biến `NEXT_PUBLIC_*` hoặc trình duyệt. Biểu mẫu trình duyệt hiện không cấp token này. Triển khai cho nhiều người dùng cần lớp đăng nhập, phiên người dùng, phân quyền và rate limit dùng chung phía server.
+Tất cả API đọc/ghi hồ sơ và chấm điểm đều kiểm tra session phía server. Token ngẫu nhiên 256 bit chỉ lưu bản băm trong SQLite; cookie `HttpOnly`, `SameSite=Strict`, hết hạn sau 8 giờ, có `Secure` khi cấu hình HTTPS. Đăng xuất thu hồi session trên server. Mật khẩu băm bằng scrypt với salt riêng. Sau 5 lần nhập sai, tài khoản tạm khóa 5 phút. Lịch sử xem xét không hết hạn cùng session.
+
+Vai trò `viewer` chỉ đọc; `doctor` và `admin` được nhập/chấm/xem xét. Đây là tài khoản của ứng dụng, chưa kết nối SSO bệnh viện hay phân quyền theo khoa. Các tài khoản trải nghiệm là tài khoản dùng chung, không chứng minh danh tính cá nhân của bác sĩ.
+
+`npm run dev`/`npm run start` dùng launcher chỉ bind `127.0.0.1` và bật hai tài khoản trải nghiệm. Chạy Next trực tiếp không mặc định bật demo. Khi có `SEPSIS_PUBLIC_ORIGIN`, tài khoản demo cùng các session demo cũ bị từ chối dù `SEPSIS_DEMO_ACCOUNTS=1`.
+
+Kiểm tra Host/Origin chỉ phục vụ định tuyến và chống yêu cầu khác nguồn, không chứng minh danh tính. Bộ chấm vẫn giới hạn 2 yêu cầu đồng thời, 20 yêu cầu/phút trên một tiến trình. `SEPSIS_API_TOKEN` không còn là cơ chế truy cập API; không đưa thông tin bí mật vào `NEXT_PUBLIC_*`.
+
+### Cấp tài khoản và cấu hình truy cập qua mạng
+
+Sau khi khởi động bản mới một lần để tạo/nâng cấp schema, từ `frontend/` có thể cấp hoặc đặt lại tài khoản bằng công cụ phía máy chủ:
+
+```powershell
+# Cấp qua biến môi trường bảo mật; không ghi mật khẩu thật vào Git hoặc tham số dòng lệnh.
+$env:SEPSIS_USER_PASSWORD = '<mat-khau-rieng-tu-12-ky-tu>'
+node scripts/manage-user.mjs --username doctor.a --name 'Bác sĩ A' --role doctor
+Remove-Item Env:SEPSIS_USER_PASSWORD
+# Chỉ đọc: --role viewer. Vô hiệu hóa: --username doctor.a --disable.
+```
+
+Cập nhật mật khẩu/quyền hoặc vô hiệu hóa sẽ thu hồi session cũ. Chọn đúng `SEPSIS_WEB_DB` khi thao tác nhiều bản cài đặt.
+
+Để truy cập qua mạng: dùng reverse proxy HTTPS tới server loopback và đặt `SEPSIS_PUBLIC_ORIGIN` bằng origin HTTPS chính xác (ví dụ `https://sepsis.example.org`, không có dấu `/` cuối). Proxy chuyển tiếp Host của tên miền đó. Khởi động lại ứng dụng sau khi cấu hình. Có thể cấp tài khoản quản trị đầu tiên bằng `SEPSIS_BOOTSTRAP_USERNAME`, `SEPSIS_BOOTSTRAP_PASSWORD`, `SEPSIS_BOOTSTRAP_NAME` từ nơi quản lý bí mật; chỉ tạo khi username chưa tồn tại, không tự đặt lại mật khẩu. Chưa triển khai truy cập mạng trong thay đổi này. Triển khai nhiều tiến trình/máy chủ cần giới hạn dùng chung và phương án cơ sở dữ liệu phù hợp.
 
 ## Cấu trúc triển khai
 
@@ -103,7 +125,7 @@ frontend/
 
 Next.js App Router, React, TypeScript strict, Tailwind, shadcn/ui, Lucide, Recharts, TanStack Table v8, React Hook Form và Zod. Font Inter được đóng gói cục bộ. Không phụ thuộc Google Fonts khi build/chạy.
 
-`createClinicalReader` là lớp đọc chung cho các màn hình: fixture và ca nhập tay được hợp nhất trước khi áp dụng cùng quy tắc as-of. `ClinicalDataProvider` bất đồng bộ dùng cùng lớp đọc, là ranh giới để nối FastAPI về sau. Khi nối API cần bổ sung xác thực, quyền truy cập theo khoa, kiểm tra revision khi ghi review và audit phía server. Không coi state trình duyệt là hồ sơ bệnh viện.
+`createClinicalReader` là lớp đọc chung cho các màn hình: fixture và ca nhập tay được hợp nhất trước khi áp dụng cùng quy tắc as-of. `ClinicalDataProvider` bất đồng bộ dùng cùng lớp đọc, là ranh giới để nối FastAPI về sau. Khi nối hệ thống bệnh viện cần SSO và quyền truy cập theo khoa; session, kiểm tra revision và lịch sử thao tác đã nằm phía server. Không coi state trình duyệt là hồ sơ bệnh viện.
 
 ## Kiểm tra bản demo
 
@@ -137,11 +159,11 @@ Trang Đánh giá mô hình ưu tiên độ nhạy người bệnh, PPV theo đ�
 ## Lưu trữ SQLite của bản web
 
 - `GET /api/clinical-state`: lấy hồ sơ và lịch sử xem xét; `Cache-Control: no-store`.
-- `POST /api/cases`: tạo hồ sơ; `PUT /api/cases/[id]/entries`: kiểm tra revision, tính lại bằng Python phía server rồi lưu nguyên tử.
+- `POST /api/cases`: tạo hồ sơ; `PUT /api/cases/[id]/entries`: kiểm tra revision, lưu chỉ số và vô hiệu hóa kết quả hiện hành trong cùng transaction; Python chạy riêng ở `POST /api/cases/[id]/rescore`.
 - `POST /api/reviews/import`: lưu bản gốc các ghi nhận cũ vào `legacy_reviews`; ghi nhận lỗi thời không tự áp dụng vào dự báo hiện tại.
-- `POST /api/reviews`: kiểm tra dự báo còn hiệu lực, lưu người nhập tên/ghi chú và giờ máy chủ. Gửi lại cùng yêu cầu không ghi đè người xem xét đầu tiên.
-- `POST /api/cases/import`: kiểm tra và chấm lại dữ liệu phiên tab cũ; lưu bản gốc trong `legacy_imports`. Chỉ chuyển trạng thái xem xét sang kết quả mới nếu feature hash, điểm, mô hình và ngưỡng đều khớp.
-- `manual_entries` là dữ liệu hiện hành; `entry_history` và các phiên bản `predictions` cũ giữ lịch sử. `reviews` tham chiếu trực tiếp bản dự báo đã xem. Không cung cấp nút xóa lịch sử từ giao diện.
+- `POST /api/reviews`: kiểm tra dự báo còn hiệu lực, lưu tài khoản từ session, ghi chú và giờ máy chủ. Nhiều bác sĩ được đánh giá cùng kết quả; gửi lại cùng `requestId` không tạo bản trùng.
+- `POST /api/cases/import`: lưu dữ liệu phiên tab cũ và bản gốc trong `legacy_imports` trước khi chấm lại. Ghi nhận cũ được lưu để truy vết, không mạo danh tài khoản đã xác thực.
+- `manual_entries` là dữ liệu hiện hành; `entry_history` và các phiên bản `predictions` cũ giữ lịch sử. `review_events` tham chiếu trực tiếp bản dự báo đã xem. `scoring_jobs` lưu revision/trạng thái mỗi lần chấm; kết quả chỉ commit khi revision và mã lần chạy còn khớp. Job hết lease sau 60 giây có thể chấm lại; worker cũ không được ghi đè worker mới. Không cung cấp nút xóa lịch sử từ giao diện.
 - Khi mở tab cũ, bấm **Chuyển dữ liệu lên máy chủ** ở thông báo đầu trang. Nếu chuyển thất bại, dữ liệu cũ vẫn được giữ. Sau khi thành công, tab giữ thêm bản sao `sepsis-legacy-backup`; các bản xem xét không khớp chỉ nằm trong bản gốc, không gắn vào dự báo mới.
 
 Đổi vị trí lưu trước khi khởi động Next.js (chọn một ổ lưu trữ bền vững trên cùng máy chủ):
@@ -151,7 +173,7 @@ $env:SEPSIS_WEB_DB = 'D:\SepsisStorage\frontend_clinical.sqlite3'
 npm run start
 ```
 
-SQLite dùng WAL, khóa ghi có thời gian chờ và transaction. Không đặt file trên thư mục public, ổ mạng hay filesystem tạm của serverless; không đưa file DB/WAL/SHM lên Git. Chạy nhiều máy chủ hoặc cần nhiều người ghi đồng thời thì chuyển adapter lưu trữ sang cơ sở dữ liệu máy chủ như PostgreSQL. API lưu trữ áp dụng giới hạn truy cập cục bộ/nguồn yêu cầu giống bộ chấm; đây chưa phải xác thực danh tính nhân viên bệnh viện.
+SQLite dùng WAL, khóa ghi có thời gian chờ và transaction. Không đặt file trên thư mục public, ổ mạng hay filesystem tạm của serverless; không đưa file DB/WAL/SHM lên Git. Chạy nhiều máy chủ hoặc cần nhiều người ghi đồng thời thì chuyển adapter lưu trữ sang cơ sở dữ liệu máy chủ như PostgreSQL. API lưu trữ yêu cầu session và quyền phù hợp; đây chưa phải SSO hay tài khoản nhân viên bệnh viện.
 
 ### Sao lưu và phục hồi
 
@@ -164,3 +186,10 @@ python scripts/backup_web_db.py data/frontend_clinical.sqlite3 backups/frontend_
 Script không ghi đè file sao lưu đã tồn tại. Giữ bản sao trên vị trí được kiểm soát truy cập; tự động hóa lịch sao lưu theo nhu cầu vận hành. Để phục hồi: dừng Next.js, đặt `SEPSIS_WEB_DB` tới **một bản sao làm việc** của file backup rồi khởi động lại. Giữ nguyên file gốc để có thể quay lại. Không chỉ chép file `.sqlite3` đang chạy vì có thể bỏ sót WAL.
 
 Kiểm thử Playwright dùng riêng `data/frontend_e2e.sqlite3`, luôn mở server riêng cổng 3100; không xóa dữ liệu web ở cổng 3000.
+
+
+### Migrations và phiên bản ca mẫu
+
+`src/lib/server/migrations.ts` chứa migration có thứ tự. Bản hiện tại nâng SQLite v1 lên v2: giữ chỉ số/dự báo cũ, chuyển từng dòng `reviews` thành sự kiện `legacy-v1`, thêm job chấm, actor nhập liệu và bảng tài khoản/session. Toàn bộ nâng cấp chạy trong transaction; lỗi sẽ rollback cả schema và `user_version`. Database mới hơn ứng dụng hoặc file không nhận diện được sẽ bị từ chối. Sao lưu trước khi nâng cấp; khôi phục phải dùng bản sao làm việc của backup, không hạ `user_version` bằng tay.
+
+ID fixture phía server băm cả ID nguồn, nội dung dự báo và SHA-256 dữ liệu đầu vào. Cùng ID nguồn nhưng dữ liệu/điểm thay đổi sẽ tạo phiên bản bất biến mới; bản cũ giữ nguyên để tra lịch sử. Frontend dùng ID phiên bản do API trả về cho các màn hình lâm sàng. Exporter cũng đổi fingerprint khi workbook thay đổi. Sau lần nâng cấp này, các ca mẫu cũ cần được xem xét lại; lịch sử gốc vẫn còn.

@@ -35,6 +35,7 @@ def export():
     policy_fingerprint = hashlib.sha256(json.dumps({
         'version': meta['model_version'], 'threshold': meta['threshold'],
         'weights_sha256': hashes[bundle_paths('sepsis')[0]],
+        'source_sha256': hashes[DATA_PATH],
     }, sort_keys=True).encode()).hexdigest()[:12]
     outcomes = tables['ReferenceOutcomes']
     selected = []

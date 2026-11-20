@@ -3,21 +3,103 @@ import { DatabaseSync } from "node:sqlite";
 import path from "node:path";
 import { existsSync } from "node:fs";
 const testDb = path.resolve("../data/frontend_e2e.sqlite3");
-test.beforeEach(async ({request}) => {
+const loginData={username:"bacsi.demo1",password:"SepsisDemo2026!"};
+test.beforeEach(async ({request,context}) => {
+  const login=await request.post("/api/auth/login",{data:loginData});
+  expect(login.ok(),await login.text()).toBe(true);
+  await context.addCookies((await request.storageState()).cookies);
   expect((await request.get("/api/clinical-state")).ok()).toBe(true);
   if (!existsSync(testDb)) return;
   const db = new DatabaseSync(testDb);
   try {
     db.exec(`PRAGMA busy_timeout=5000; BEGIN IMMEDIATE;
-      DELETE FROM reviews; DELETE FROM legacy_reviews; DELETE FROM manual_entries; DELETE FROM entry_history;
+      DELETE FROM review_events; DELETE FROM legacy_reviews; DELETE FROM manual_entries; DELETE FROM entry_history; DELETE FROM scoring_jobs;
       DELETE FROM legacy_imports; DELETE FROM predictions WHERE source='manual'; DELETE FROM manual_cases; COMMIT;`);
   } finally {db.close();}
 });
 import data from "../../src/data/clinical-demo.json" with { type: "json" };
 async function openAssessment(page: Page) {
   const summary = page.getByRole("tab", { name: "Tổng hợp", exact: true });
+  if(new URL(page.url()).pathname.startsWith("/patients/HS-"))await expect(summary).toBeVisible();
   if (await summary.count()) await summary.click();
 }
+
+test("data APIs reject anonymous or forged sessions and logout revokes the server session",async({page,browser})=>{
+  const anonymous=await browser.newContext();
+  try {
+    for(const endpoint of ["/api/clinical-state","/api/cases","/api/reviews"]){
+      const response=endpoint==="/api/clinical-state"
+        ?await anonymous.request.get("http://127.0.0.1:3100"+endpoint,{headers:{host:"localhost:3100"}})
+        :await anonymous.request.post("http://127.0.0.1:3100"+endpoint,{data:{},headers:{cookie:"sepsis_session="+"A".repeat(43)}});
+      expect(response.status()).toBe(401);
+    }
+    const other=await anonymous.newPage();
+    await other.goto("http://127.0.0.1:3100/patients");
+    await expect(other.getByRole("heading",{name:"Đăng nhập",exact:true})).toBeVisible();
+    await other.getByRole("button",{name:/Bác sĩ trải nghiệm 02/}).click();
+    await other.getByRole("button",{name:"Đăng nhập",exact:true}).click();
+    await expect(other.getByRole("heading",{name:"Danh sách hồ sơ",exact:true})).toBeVisible();
+    const cookie=(await anonymous.cookies()).find(c=>c.name==="sepsis_session")!;
+    expect(cookie.httpOnly).toBe(true);
+    await other.getByRole("button",{name:"Đăng xuất",exact:true}).click();
+    await expect(other.getByRole("heading",{name:"Đăng nhập",exact:true})).toBeVisible();
+    expect((await page.context().request.get("/api/clinical-state",{headers:{cookie:`sepsis_session=${cookie.value}`}})).status()).toBe(401);
+  } finally {await anonymous.close();}
+});
+
+test("two authenticated doctors can review the same result without overwriting or duplicating a retry",async({request,browser})=>{
+  const state=await (await request.get("/api/clinical-state")).json();
+  const p=state.fixturePredictions.find((v:{encounterId:string;hour:number})=>v.encounterId==="E0009"&&v.hour===11);
+  const first={predictionId:p.id,revision:p.revision,note:"Đánh giá của bác sĩ thứ nhất",requestId:crypto.randomUUID()};
+  expect((await request.post("/api/reviews",{data:first})).ok()).toBe(true);
+  const second=await browser.newContext();
+  try {
+    expect((await second.request.post("http://127.0.0.1:3100/api/auth/login",{data:{username:"bacsi.demo2",password:loginData.password}})).ok()).toBe(true);
+    const data={...first,note:"Đánh giá bổ sung của bác sĩ thứ hai",requestId:crypto.randomUUID()};
+    expect((await second.request.post("http://127.0.0.1:3100/api/reviews",{data})).ok()).toBe(true);
+    const retry=await (await second.request.post("http://127.0.0.1:3100/api/reviews",{data})).json();
+    expect(retry.reviewHistory.filter((r:{predictionId:string})=>r.predictionId===p.id)).toHaveLength(2);
+    expect(retry.reviews[p.id].reviewer).toBe("Bác sĩ trải nghiệm 01");
+    expect((await second.request.post("http://127.0.0.1:3100/api/reviews",{data:{...data,requestId:crypto.randomUUID(),reviewer:"Giả mạo bác sĩ khác"}})).status()).toBe(400);
+    const page=await second.newPage();await page.goto("http://127.0.0.1:3100/patients/E0009?hour=11");
+    await openAssessment(page);
+    await page.getByText("Các lượt đánh giá (2)",{exact:true}).click();
+    await expect(page.getByRole("region",{name:"Ghi nhận xem xét",exact:true})).toContainText("Đánh giá bổ sung của bác sĩ thứ hai");
+  } finally {await second.close();}
+});
+
+test("switching accounts synchronizes tabs and stale displayed identities cannot write",async({page,request})=>{
+  expect((await request.post("/api/reviews",{headers:{"X-Sepsis-User":"previous-user"},data:{}})).status()).toBe(409);
+  await page.goto("/dashboard");
+  await expect(page.locator(".header-user")).toContainText("Bác sĩ trải nghiệm 01");
+  const other=await page.context().newPage();
+  try {
+    await other.goto("/login");
+    await other.getByRole("button",{name:/Bác sĩ trải nghiệm 02/}).click();
+    await other.getByRole("button",{name:"Đăng nhập",exact:true}).click();
+    await expect(other.locator(".header-user")).toContainText("Bác sĩ trải nghiệm 02");
+    await expect(page.locator(".header-user")).toContainText("Bác sĩ trải nghiệm 02");
+  } finally {await other.close();}
+});
+
+test("saved observations survive a scoring outage and can be rescored without re-entry",async({request,page})=>{
+  test.setTimeout(90000);
+  const id="HS-CAFE1234",t0="2026-11-20T08:00";
+  expect((await request.post("/api/cases",{data:{id,t0,age:55,sex:"F",height:null,weight:null,comorbidities:{}}})).ok()).toBe(true);
+  const entry={hour:1,measuredAt:t0,availableAt:t0,collectedAt:t0,labAvailableAt:t0,department:"ED",labs:{},symptoms:null,
+    vitals:{heart_rate_bpm:90,respiratory_rate_per_min:18,sbp_mmhg:120,dbp_mmhg:75,map_mmhg:null,spo2_pct:97,temperature_c:37,gcs:15}};
+  expect((await request.put(`/api/cases/${id}/entries`,{data:{revision:0,entry}})).status()).toBe(202);
+  await page.route(`**/api/cases/${id}/rescore`,route=>route.fulfill({status:503,json:{error:"Bộ chấm tạm dừng"}}));
+  await page.goto(`/patients/${id}?hour=1`);
+  await page.getByRole("button",{name:"Chấm lại dữ liệu đã lưu",exact:true}).click();
+  await expect(page.getByRole("alert").filter({hasText:"Bộ chấm tạm dừng"})).toBeVisible();
+  await page.reload();
+  const saved=await (await request.get("/api/clinical-state")).json();
+  expect(saved.cases.find((c:{profile:{id:string}})=>c.profile.id===id).entries[0].vitals.heart_rate_bpm).toBe(90);
+  await page.unroute(`**/api/cases/${id}/rescore`);
+  await page.getByRole("button",{name:"Chấm lại dữ liệu đã lưu",exact:true}).click();
+  await expect(page.getByTestId("risk-score")).not.toHaveText("—",{timeout:60000});
+});
 test("one monitoring queue and a separate searchable patient registry", async ({
   page,
 }) => {
@@ -101,10 +183,6 @@ test("review returns to the same queue filters; changing hour does not inherit r
   expect(new URL(page.url()).searchParams.get("returnTo")).toBe(initial);
   await openAssessment(page);
   await page
-    .getByLabel("Người xem xét", { exact: true })
-    .filter({ visible: true })
-    .fill("Bác sĩ kiểm thử");
-  await page
     .getByRole("button", { name: "Ghi nhận đã xem xét", exact: true })
     .click();
   await page
@@ -120,7 +198,7 @@ test("review returns to the same queue filters; changing hour does not inherit r
     .getByRole("combobox", { name: "Trạng thái xem xét", exact: true })
     .selectOption("reviewed");
   await expect(queue.locator("tbody tr")).toHaveCount(1);
-  await expect(queue).toContainText("Bác sĩ kiểm thử");
+  await expect(queue).toContainText("Bác sĩ trải nghiệm 01");
   await queue.getByRole("link", { name: "E0009", exact: true }).click();
   await page
     .getByRole("combobox", { name: "Mốc giờ đang xem", exact: true })
@@ -276,10 +354,6 @@ test("manual late results, URL updates, review reload and invalidation use real 
   ).not.toContainText("180.00");
   await openAssessment(page);
   await page
-    .getByLabel("Người xem xét", { exact: true })
-    .filter({ visible: true })
-    .fill("Người xem ca nhập tay");
-  await page
     .getByRole("button", { name: "Ghi nhận đã xem xét", exact: true })
     .click();
   await page.reload();
@@ -342,13 +416,12 @@ test("manual late results, URL updates, review reload and invalidation use real 
     page.getByText("Đã ghi nhận xem xét", { exact: true }),
   ).toHaveCount(0);
   await page.getByText("Lịch sử xem xét các phiên bản trước",{exact:true}).click();
-  await expect(page.getByRole("region",{name:"Ghi nhận xem xét",exact:true})).toContainText("Người xem ca nhập tay");
+  await expect(page.getByRole("region",{name:"Ghi nhận xem xét",exact:true})).toContainText("Bác sĩ trải nghiệm 01");
 });
 
 test("a failed review save shows an error and does not claim success",async ({page}) => {
   await page.goto("/patients/E0009?hour=11");
   await openAssessment(page);
-  await page.getByLabel("Người xem xét",{exact:true}).filter({visible:true}).fill("Bác sĩ thử lỗi");
   await page.route("**/api/reviews",route=>route.fulfill({status:503,json:{error:"Máy chủ chưa lưu được"}}));
   await page.getByRole("button",{name:"Ghi nhận đã xem xét",exact:true}).click();
   await expect(page.getByRole("alert").filter({hasText:"Máy chủ chưa lưu được"})).toBeVisible();
@@ -367,6 +440,7 @@ test("old tab cases migrate to SQLite and reopen in a new browser context",async
   expect(await page.evaluate(()=>sessionStorage.getItem("sepsis-manual-cases-v1"))).toBeNull();
   const context=await browser.newContext();
   try {
+    expect((await context.request.post("http://127.0.0.1:3100/api/auth/login",{data:loginData})).ok()).toBe(true);
     const other=await context.newPage();
     await other.goto("http://127.0.0.1:3100/patients/HS-AABB0011?hour=0");
     await expect(other.getByRole("heading",{name:"HS-AABB0011",exact:true})).toBeVisible();
@@ -389,7 +463,7 @@ test("API refuses a foreign origin and malformed observations before spawning Py
   for (const endpoint of ["/api/cases","/api/reviews","/api/cases/import","/api/reviews/import"])
     expect((await request.post(endpoint,{headers:{origin:"https://foreign.example"},data:{}})).status()).toBe(403);
   expect((await request.get("/api/clinical-state",{headers:{origin:"https://foreign.example"}})).status()).toBe(403);
-  expect((await request.post("/api/reviews",{data:{predictionId:"invented",revision:1,reviewer:"Bác sĩ A",note:""}})).status()).toBe(409);
+  expect((await request.post("/api/reviews",{data:{predictionId:"invented",revision:1,requestId:"d971f576-e7cf-47e3-8129-aaec17fa5e4f",note:""}})).status()).toBe(409);
 });
 for (const width of [1440, 1280, 1024, 768, 390])
   test(`responsive ${width}px`, async ({ page }) => {

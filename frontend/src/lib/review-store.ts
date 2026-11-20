@@ -17,6 +17,9 @@ export function decodeReviews(raw: string | null, now = Date.now()): Record<stri
 export const getReviews = () => getClinicalSnapshot().reviews;
 export const serverReviews = () => getServerClinicalSnapshot().reviews;
 export const subscribeReviews = subscribeClinical;
-export async function recordSessionReview(p: Prediction, reviewer: string, note: string) {
-  await persistClinical("/api/reviews","POST",{predictionId:p.id,revision:p.revision,reviewer,note});
+const emptyHistory: Review[]=[];
+export const getReviewHistory=()=>getClinicalSnapshot().reviewHistory??emptyHistory;
+export const serverReviewHistory=()=>emptyHistory;
+export async function recordSessionReview(p: Prediction, note: string,requestId: string) {
+  await persistClinical("/api/reviews","POST",{predictionId:p.id,revision:p.revision,note,requestId});
 }

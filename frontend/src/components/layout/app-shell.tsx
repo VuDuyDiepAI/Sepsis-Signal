@@ -12,7 +12,7 @@ import {
   PanelLeftOpen,
   Menu,
   CircleHelp,
-  Stethoscope,
+  LogOut,
   Database,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { StorageNotice } from "@/components/storage-notice";
+import { useAuth } from "@/components/auth-provider";
 const links = [
   {
     href: "/dashboard",
@@ -48,6 +49,8 @@ export function AppShell({ children }: { children: ReactNode }) {
   const path = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [mobile, setMobile] = useState(false);
+  const {user,logout}=useAuth();
+  const [logoutError,setLogoutError]=useState("");
   const nav = (
     <nav aria-label="Điều hướng chính">
       {links.map(({ href, label, icon: Icon, group }) => (
@@ -172,12 +175,9 @@ export function AppShell({ children }: { children: ReactNode }) {
                 </p>
               </DialogContent>
             </Dialog>
-            <span
-              className="user-avatar"
-              title="Không gian trải nghiệm, chưa kết nối đăng nhập bệnh viện"
-            >
-              <Stethoscope size={21} />
-            </span>
+            <span className="header-user"><strong>{user?.displayName}</strong><small>{user?.username}</small></span>
+            <Button variant="ghost" aria-label="Đăng xuất" onClick={async()=>{try{await logout();}catch(e){setLogoutError(e instanceof Error?e.message:"Không đăng xuất được.");}}}><LogOut size={18}/></Button>
+            {logoutError&&<span role="alert">{logoutError}</span>}
           </div>
         </header>
         <main id="main-content" className="page">

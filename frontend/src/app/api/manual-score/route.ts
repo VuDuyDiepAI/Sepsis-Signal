@@ -1,8 +1,10 @@
+import { clinicalRequest } from "@/lib/server/clinical-http";
 import { scoreCase } from "@/lib/server/score-case";
 import { ClinicalError } from "@/lib/server/clinical-db";
 import { scoreRequestSchema } from "@/lib/manual-schema";
 import { manualScoreGate } from "@/lib/manual-score-gate";
 export async function POST(request: Request) {
+  return clinicalRequest(request,async () => {
   const claim = manualScoreGate.claim(request);
   if (!claim.ok)
     return Response.json(
@@ -19,6 +21,7 @@ export async function POST(request: Request) {
   } finally {
     claim.release();
   }
+  });
 }
 async function execute(request: Request) {
   if (Number(request.headers.get("content-length") ?? 0) > 100000)

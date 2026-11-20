@@ -8,7 +8,7 @@ Sepsis Signal là ứng dụng hỗ trợ theo dõi nguy cơ nhiễm khuẩn huy
 
 ## Bản web Next.js
 
-Bản web mới nằm trong `frontend/`. Hồ sơ nhập tay, kết quả dự báo và ghi nhận xem xét được lưu trên máy chủ bằng SQLite tại `data/frontend_clinical.sqlite3` (đổi bằng `SEPSIS_WEB_DB`), giữ lại khi đóng tab và không tự xóa ghi nhận sau 8 giờ. Hướng dẫn chạy, chuyển dữ liệu tab cũ và sao lưu nằm trong [frontend/README.md](frontend/README.md). Các mô tả đăng nhập/SQLite Streamlit ở phần dưới áp dụng cho bản Streamlit.
+Bản web mới nằm trong `frontend/`. Hồ sơ nhập tay, kết quả dự báo và ghi nhận xem xét được lưu trên máy chủ bằng SQLite tại `data/frontend_clinical.sqlite3` (đổi bằng `SEPSIS_WEB_DB`), giữ lại khi đóng tab và không tự xóa ghi nhận sau 8 giờ. Hướng dẫn chạy, chuyển dữ liệu tab cũ và sao lưu nằm trong [frontend/README.md](frontend/README.md). Bản web có đăng nhập/session phía server, vai trò chỉ xem hoặc nhập/xem xét và nhiều lượt đánh giá theo tài khoản. Lưu chỉ số tách khỏi chấm điểm: Python lỗi vẫn giữ dữ liệu để chấm lại. Các mô tả đăng nhập/SQLite Streamlit ở phần dưới áp dụng cho bản Streamlit.
 
 ## Hỗ trợ nhận diện nguy cơ qua diễn biến người bệnh
 

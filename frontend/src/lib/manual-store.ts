@@ -11,7 +11,14 @@ export async function createManualCase(profile: ManualProfile) {
 }
 export async function updateManualCase(id: string, revision: number, entry: ManualEntry) {
   const state = await persistClinical(`/api/cases/${id}/entries`, "PUT", { revision, entry });
-  return state.cases.find(c => c.profile.id === id)!;
+  const saved=state.cases.find(c=>c.profile.id===id)!;
+  if(!saved.attemptedHours.length)return saved;
+  try {return await rescoreManualCase(id,saved.revision);}
+  catch(error){return {...saved,scoringError:`Đã lưu dữ liệu. ${error instanceof Error?error.message:"Chưa chấm được; vui lòng chấm lại dữ liệu đã lưu."}`};}
+}
+export async function rescoreManualCase(id: string,revision: number) {
+  const state=await persistClinical(`/api/cases/${id}/rescore`,"POST",{revision});
+  return state.cases.find(c=>c.profile.id===id)!;
 }
 const iso = (s: string) => (s.length === 16 ? s + ":00" : s) + "+07:00";
 const units: Record<string, string> = {
@@ -22,11 +29,11 @@ const units: Record<string, string> = {
   CRP: "mg/L",
   procalcitonin: "ng/mL",
 };
-export function mergeManualCases(manual: ManualCase[]): ClinicalDataset {
+export function mergeManualCases(manual: ManualCase[],fixturePredictions=dataset.predictions): ClinicalDataset {
   const data: ClinicalDataset = {
     ...dataset,
     encounters: [...dataset.encounters],
-    predictions: [...dataset.predictions],
+    predictions: [...fixturePredictions],
     vitals: [...dataset.vitals],
     labs: [...dataset.labs],
     locations: [...dataset.locations],
@@ -111,8 +118,8 @@ export function useManualCases() {
   return useSyncExternalStore(subscribeClinical, () => getClinicalSnapshot().cases, () => getServerClinicalSnapshot().cases);
 }
 export function useClinicalDataset() {
-  const manual = useManualCases();
-  return useMemo(() => mergeManualCases(manual), [manual]);
+  const state=useSyncExternalStore(subscribeClinical,getClinicalSnapshot,getServerClinicalSnapshot);
+  return useMemo(() => mergeManualCases(state.cases,state.fixturePredictions??[]), [state]);
 }
 export function useClinicalReader() {
   const source = useClinicalDataset();

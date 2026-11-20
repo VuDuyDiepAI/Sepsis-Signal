@@ -11,15 +11,21 @@ import {
   serverReviews,
   subscribeReviews,
   recordSessionReview,
+  getReviewHistory,
+  serverReviewHistory,
 } from "@/lib/review-store";
 import type { Prediction, Review } from "@/lib/clinical-types";
 import { startClinicalSync } from "@/lib/clinical-storage";
+import { useAuth } from "./auth-provider";
 const Context = createContext<{
   reviews: Record<string, Review>;
-  recordReview: (p: Prediction, reviewer: string, note: string) => Promise<void>;
+  recordReview: (p: Prediction, note: string, requestId: string) => Promise<void>;
+  reviewHistory: Review[];
 } | null>(null);
 export function ReviewProvider({ children }: { children: ReactNode }) {
-  useEffect(startClinicalSync, []);
+  const {user}=useAuth();
+  useEffect(()=>{if(user)return startClinicalSync();}, [user]);
+  const reviewHistory=useSyncExternalStore(subscribeReviews,getReviewHistory,serverReviewHistory);
   const reviews = useSyncExternalStore(
     subscribeReviews,
     getReviews,
@@ -29,6 +35,7 @@ export function ReviewProvider({ children }: { children: ReactNode }) {
     <Context.Provider
       value={{
         reviews,
+        reviewHistory,
         recordReview: recordSessionReview,
       }}
     >

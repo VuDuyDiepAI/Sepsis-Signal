@@ -27,7 +27,7 @@ export function StorageNotice() {
       // Keep a recoverable browser backup; server also archives each original manual payload.
       sessionStorage.setItem("sepsis-legacy-backup",JSON.stringify({cases,reviews}));
       sessionStorage.removeItem("sepsis-manual-cases-v1"); sessionStorage.removeItem("sepsis-reviews-v1");
-      setDone(true); setMessage("Đã chuyển hồ sơ lên máy chủ và chấm lại. Ghi nhận chỉ áp dụng khi kết quả khớp; bản gốc giữ trong bản sao lưu.");
+      setDone(true); setMessage("Đã chuyển hồ sơ lên máy chủ. Ghi nhận phiên cũ giữ trong lịch sử; kết quả mới cần được xem xét bằng tài khoản đăng nhập.");
     } catch (e) { setMessage(e instanceof Error ? e.message : "Chưa chuyển được dữ liệu; dữ liệu cũ vẫn được giữ."); }
     finally { setBusy(false); }
   }

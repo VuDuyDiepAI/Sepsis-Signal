@@ -9,6 +9,8 @@ export interface ManualCase {
   revision: number;
   currentHour: number;
   errors: Record<string, string>;
+  scoringStatus?: "idle" | "pending" | "running" | "ready" | "error";
+  scoringError?: string;
 }
 export interface ScoreResponse {
   predictions: {
@@ -20,4 +22,6 @@ export interface ScoreResponse {
 export interface ClinicalSnapshot {
   cases: ManualCase[];
   reviews: Record<string, import("./clinical-types").Review>;
+  reviewHistory?: import("./clinical-types").Review[];
+  fixturePredictions?: Prediction[];
 }

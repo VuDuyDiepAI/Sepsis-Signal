@@ -43,17 +43,9 @@ it("rejects foreign and malformed origins", () => {
     ).toMatchObject({ ok: false, status: 403 });
   }
 });
-it("locks remote access unless an explicitly configured token is supplied", () => {
-  const request = (token?: string) =>
-    new Request("https://clinical.example/api/manual-score", {
-      headers: token ? { authorization: "Bearer " + token } : {},
-    });
-  expect(new ManualScoreGate().claim(request())).toMatchObject({
-    ok: false,
-    status: 403,
-  });
-  const gate = new ManualScoreGate({ token: "test-only-local-token" });
-  expect(gate.claim(request()).ok).toBe(false);
-  expect(gate.claim(request("wrong")).ok).toBe(false);
-  expect(gate.claim(request("test-only-local-token")).ok).toBe(true);
+it("requires configured origins; the separate session guard checks identity",()=>{
+  expect(new ManualScoreGate().claim(new Request("https://public.example/api/clinical-state"))).toMatchObject({ok:false,status:403});
+  const gate=new ManualScoreGate({origins:["https://clinical.example"]});
+  expect(gate.claim(new Request("https://clinical.example/api/clinical-state")).ok).toBe(true);
+  // Authorization is enforced separately by requireUser, even for an allowed origin.
 });
