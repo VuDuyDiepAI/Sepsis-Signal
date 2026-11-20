@@ -51,7 +51,13 @@ jobs:
           python-version: '3.11'
       - run: python -m pip install -r ../requirements.txt
       - run: npx playwright install --with-deps chromium
-      - run: npm run test:e2e
+      - name: Run production Playwright E2E
+        id: e2e
+        run: npm run test:e2e
+      - name: Diagnose hydration with development React build
+        if: failure() && steps.e2e.outcome == 'failure'
+        continue-on-error: true
+        run: SEPSIS_E2E_DEV=1 npx playwright test --grep "responsive 1440px" --retries=0
 
       - name: Upload Playwright diagnostics on failure
         if: failure()

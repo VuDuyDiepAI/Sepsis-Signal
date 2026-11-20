@@ -19,7 +19,9 @@ export default defineConfig({
   webServer: {
     env: { SEPSIS_DEMO_ACCOUNTS:"1", SEPSIS_WEB_DB: path.resolve("../data/frontend_e2e.sqlite3") },
     command:
-      "node node_modules/next/dist/bin/next start --hostname 127.0.0.1 --port 3100",
+      process.env.SEPSIS_E2E_DEV === "1"
+        ? "node node_modules/next/dist/bin/next dev --hostname 127.0.0.1 --port 3100"
+        : "node node_modules/next/dist/bin/next start --hostname 127.0.0.1 --port 3100",
     url: "http://127.0.0.1:3100/login",
     reuseExistingServer: false,
     timeout: 90000,
