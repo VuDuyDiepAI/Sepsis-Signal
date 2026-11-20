@@ -50,13 +50,17 @@ test("fixture URL hour and review remain correct across reload and navigation", 
   await expect(
     page.getByText("Đã xem xét trong phiên trải nghiệm", { exact: true }),
   ).toBeVisible();
-  await page.getByLabel("Mốc giờ đang xem").selectOption("8");
+  await page
+    .getByRole("combobox", { name: "Mốc giờ đang xem", exact: true })
+    .selectOption("8");
   await expect(page).toHaveURL(/hour=8/);
   await expect(page.getByTestId("risk-score")).toHaveText("33.88%");
   await expect(
     page.getByRole("button", { name: "Ghi nhận đã xem xét", exact: true }),
   ).toBeVisible();
-  await page.getByLabel("Mốc giờ đang xem").selectOption("7");
+  await page
+    .getByRole("combobox", { name: "Mốc giờ đang xem", exact: true })
+    .selectOption("7");
   await expect(
     page.getByText("Đã xem xét trong phiên trải nghiệm", { exact: true }),
   ).toBeVisible();
@@ -66,6 +70,27 @@ test("fixture URL hour and review remain correct across reload and navigation", 
   await expect(page.getByRole("region", { name: "Vừa xem xét" })).toContainText(
     "Bác sĩ kiểm thử",
   );
+  await page
+    .getByRole("link", { name: "Trung tâm cảnh báo", exact: true })
+    .click();
+  const alertTable = page.getByRole("region", {
+    name: "Bảng cảnh báo có thể cuộn ngang",
+    exact: true,
+  });
+  await expect(alertTable.locator("tbody tr")).toHaveCount(3);
+  await page
+    .getByRole("button", { name: "Đã xem xét (1)", exact: true })
+    .click();
+  await expect(alertTable.locator("tbody tr")).toHaveCount(1);
+  await expect(alertTable.locator("tbody")).toContainText("E0009");
+  await page.getByRole("button", { name: "Lịch sử (4)", exact: true }).click();
+  await expect(alertTable.locator("tbody tr")).toHaveCount(4);
+  await page
+    .getByLabel("Tìm mã hồ sơ cảnh báo", { exact: true })
+    .fill("absent");
+  await expect(
+    page.getByText("Không có cảnh báo phù hợp", { exact: true }),
+  ).toBeVisible();
 });
 test("manual late results, URL updates, review reload and invalidation use real Python", async ({
   page,
@@ -91,7 +116,9 @@ test("manual late results, URL updates, review reload and invalidation use real 
   await expect(
     page.getByText("Xét nghiệm trả sau mốc này:", { exact: false }),
   ).toBeVisible();
-  await page.getByLabel("Mốc giờ đang xem").selectOption("1");
+  await page
+    .getByRole("combobox", { name: "Mốc giờ đang xem", exact: true })
+    .selectOption("1");
   await expect(page).toHaveURL(/hour=1/);
   await page
     .getByLabel("Có sinh hiệu mới tại mốc này", { exact: true })
@@ -112,11 +139,15 @@ test("manual late results, URL updates, review reload and invalidation use real 
     .getByRole("button", { name: "Ghi nhận đã xem xét", exact: true })
     .click();
   await page.reload();
-  await expect(page.getByLabel("Mốc giờ đang xem")).toHaveValue("1");
+  await expect(
+    page.getByRole("combobox", { name: "Mốc giờ đang xem", exact: true }),
+  ).toHaveValue("1");
   await expect(
     page.getByText("Đã xem xét trong phiên trải nghiệm", { exact: true }),
   ).toBeVisible();
-  await page.getByLabel("Mốc giờ đang xem").selectOption("2");
+  await page
+    .getByRole("combobox", { name: "Mốc giờ đang xem", exact: true })
+    .selectOption("2");
   await expect(
     page.getByRole("region", { name: "Kết quả xét nghiệm" }),
   ).toContainText("180.00");
@@ -129,8 +160,12 @@ test("manual late results, URL updates, review reload and invalidation use real 
   await expect(page.getByTestId("risk-score")).not.toHaveText("—", {
     timeout: 60000,
   });
-  await page.getByLabel("Mốc giờ đang xem").selectOption("0");
-  await expect(page.getByLabel("Mốc giờ đang xem")).toHaveValue("0");
+  await page
+    .getByRole("combobox", { name: "Mốc giờ đang xem", exact: true })
+    .selectOption("0");
+  await expect(
+    page.getByRole("combobox", { name: "Mốc giờ đang xem", exact: true }),
+  ).toHaveValue("0");
   await page
     .getByLabel("Giờ sinh hiệu có trên EMR", { exact: true })
     .fill("2026-11-19T09:30");
@@ -140,8 +175,12 @@ test("manual late results, URL updates, review reload and invalidation use real 
   await expect(
     page.getByText("Đã lưu dữ liệu T0.", { exact: false }),
   ).toBeVisible({ timeout: 60000 });
-  await page.getByLabel("Mốc giờ đang xem").selectOption("1");
-  await expect(page.getByLabel("Mốc giờ đang xem")).toHaveValue("1");
+  await page
+    .getByRole("combobox", { name: "Mốc giờ đang xem", exact: true })
+    .selectOption("1");
+  await expect(
+    page.getByRole("combobox", { name: "Mốc giờ đang xem", exact: true }),
+  ).toHaveValue("1");
   await expect(page.getByTestId("risk-score")).toHaveText("—");
   await expect(
     page.getByRole("region", { name: "Sinh hiệu gần nhất" }),
@@ -179,7 +218,32 @@ for (const width of [1440, 1280, 1024, 768, 390])
       "/patients/new",
     ]) {
       await page.goto(route);
-      await expect(page.locator("h1")).toBeVisible();
+      await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+      if (route.startsWith("/patients/E0009")) {
+        await expect(
+          page.getByRole("heading", {
+            name: "Mô hình đang sử dụng",
+            exact: true,
+          }),
+        ).toHaveCount(0);
+      }
+      if (route === "/dashboard" || route === "/alerts") {
+        await expect(page.locator(".stats-grid")).toHaveCount(0);
+      }
+      if (width === 1440) {
+        const mainData =
+          route === "/dashboard"
+            ? ".priority-case"
+            : route === "/patients" || route === "/alerts"
+              ? "table"
+              : route.startsWith("/patients/E0009")
+                ? ".risk-panel"
+                : null;
+        if (mainData)
+          expect(
+            (await page.locator(mainData).first().boundingBox())!.y,
+          ).toBeLessThan(400);
+      }
       await expect
         .poll(() =>
           page.evaluate(

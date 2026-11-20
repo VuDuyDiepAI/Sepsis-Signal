@@ -2,11 +2,11 @@
 import { useClinicalReader } from "@/lib/manual-store";
 import Link from "next/link";
 import { useState } from "react";
-import { Search, BellRing, ClipboardCheck, History } from "lucide-react";
+import { Search } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-container";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { AlertStatus, ReviewStatus } from "./alert-status";
+import { ReviewStatus } from "./alert-status";
 import { useReviews } from "@/components/review-context";
 import { ClinicalNote, EmptyState } from "@/components/shared/empty-state";
 import {
@@ -44,46 +44,25 @@ export function AlertsScreen() {
         title="Trung tâm cảnh báo"
         description="Theo dõi các kết quả vượt ngưỡng và trạng thái xem xét của từng bản dự báo."
       />
-      <div className="stats-grid">
-        {[
-          {
-            label: "Cảnh báo hiện tại chờ xem xét",
-            value: active.length,
-            icon: BellRing,
-            alert: true,
-          },
-          {
-            label: "Lịch sử bản vượt ngưỡng",
-            value: alerts.length,
-            icon: BellRing,
-          },
-          {
-            label: "Bản dự báo đã xem xét",
-            value: reviewed.length,
-            icon: ClipboardCheck,
-          },
-          {
-            label: "Hồ sơ có cảnh báo",
-            value: new Set(alerts.map((p) => p.encounterId)).size,
-            icon: History,
-          },
-        ].map(({ label, value, icon: Icon, alert }) => (
-          <div key={label} className={`stat ${alert ? "alert" : ""}`}>
-            <div className="stat-top">
+      <section className="panel alerts-panel" aria-label="Danh sách cảnh báo">
+        <div className="alert-toolbar" role="group" aria-label="Lọc cảnh báo">
+          {[
+            ["active", `Chưa xem xét (${active.length})`],
+            ["reviewed", `Đã xem xét (${reviewed.length})`],
+            ["history", `Lịch sử (${alerts.length})`],
+          ].map(([key, label]) => (
+            <Button
+              key={key}
+              variant="ghost"
+              className={tab === key ? "selected" : ""}
+              aria-pressed={tab === key}
+              onClick={() => setTab(key)}
+            >
               {label}
-              <span className="stat-icon">
-                <Icon size={18} />
-              </span>
-            </div>
-            <div className="stat-value">{value}</div>
-          </div>
-        ))}
-      </div>
-      <div className="panel mb-5">
-        <div
-          className="filters"
-          style={{ gridTemplateColumns: "repeat(2,minmax(0,1fr))" }}
-        >
+            </Button>
+          ))}
+        </div>
+        <div className="filters alert-filters">
           <label className="filter-label">
             Tìm hồ sơ
             <span className="search-field">
@@ -111,81 +90,105 @@ export function AlertsScreen() {
             </select>
           </label>
         </div>
-      </div>
-      <div className="alert-toolbar" role="group" aria-label="Lọc cảnh báo">
-        {[
-          ["active", `Chưa xem xét (${active.length})`],
-          ["reviewed", `Đã xem xét (${reviewed.length})`],
-          ["history", `Lịch sử (${alerts.length})`],
-        ].map(([key, label]) => (
-          <Button
-            key={key}
-            variant="outline"
-            className={tab === key ? "selected" : ""}
-            aria-pressed={tab === key}
-            onClick={() => setTab(key)}
+        {shown.length === 0 ? (
+          <div className="panel">
+            <EmptyState
+              title="Không có cảnh báo phù hợp"
+              description="Thử chuyển trạng thái hoặc điều chỉnh bộ lọc."
+            />
+          </div>
+        ) : (
+          <div
+            className="table-scroll"
+            role="region"
+            aria-label="Bảng cảnh báo có thể cuộn ngang"
+            tabIndex={0}
           >
-            {label}
-          </Button>
-        ))}
-      </div>
-      {shown.length === 0 ? (
-        <div className="panel">
-          <EmptyState
-            title="Không có cảnh báo phù hợp"
-            description="Thử chuyển trạng thái hoặc điều chỉnh bộ lọc."
-          />
+            <table className="clinical-table alert-table">
+              <caption className="sr-only">
+                {tab === "active"
+                  ? "Cảnh báo hiện tại chưa xem xét"
+                  : tab === "reviewed"
+                    ? "Cảnh báo đã xem xét"
+                    : "Lịch sử các bản vượt ngưỡng"}
+              </caption>
+              <thead>
+                <tr>
+                  <th>Hồ sơ · Khoa</th>
+                  <th>Mốc cảnh báo</th>
+                  <th>Điểm / Ngưỡng</th>
+                  <th>Cần xem xét</th>
+                  <th>Trạng thái</th>
+                  <th>Thao tác</th>
+                </tr>
+              </thead>
+              <tbody>
+                {shown.map((p) => {
+                  const current =
+                    p.hour === reader.getEncounter(p.encounterId)?.currentHour;
+                  return (
+                    <tr key={p.id}>
+                      <td>
+                        <Link
+                          className="encounter-id"
+                          href={`/patients/${p.encounterId}?hour=${p.hour}`}
+                        >
+                          {p.encounterId}
+                        </Link>
+                        <span className="alert-cell-note">
+                          {departments[p.department]}
+                        </span>
+                      </td>
+                      <td>
+                        <span>{hourLabel(p.hour)}</span>
+                        <span className="alert-cell-note">
+                          {formatTime(p.timestamp, true)}
+                        </span>
+                      </td>
+                      <td>
+                        <strong className="score-value above">
+                          {percent(p.score)}
+                        </strong>
+                        <span className="alert-cell-note">
+                          Ngưỡng {percent(p.threshold)}
+                        </span>
+                      </td>
+                      <td>
+                        <span>Điểm vượt ngưỡng</span>
+                        <span className="alert-cell-note">
+                          {current ? "Mốc hiện tại" : "Bản lịch sử"} · Bản #
+                          {p.revision}
+                        </span>
+                      </td>
+                      <td>
+                        <ReviewStatus reviewed={!!reviewFor(p, reviews)} />
+                      </td>
+                      <td>
+                        <Link
+                          className="link-button"
+                          href={`/patients/${p.encounterId}?hour=${p.hour}`}
+                        >
+                          {reviewFor(p, reviews) ? "Mở hồ sơ" : "Xem xét"}
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+        <div className="table-footer">
+          <span>
+            {shown.length} bản dự báo phù hợp ·{" "}
+            {tab === "active"
+              ? "Chỉ mốc hiện tại chưa xem xét"
+              : tab === "reviewed"
+                ? "Đúng phiên bản đã ghi nhận"
+                : "Gồm các mốc lịch sử"}
+          </span>
         </div>
-      ) : (
-        <div className="alerts-grid">
-          {shown.map((p) => (
-            <article key={p.id} className="panel alert-card">
-              <div className="alert-card-top">
-                <div>
-                  <h2>{p.encounterId}</h2>
-                  <p className="secondary-text">
-                    {departments[p.department]} · {hourLabel(p.hour)} ·{" "}
-                    {formatTime(p.timestamp, true)}
-                  </p>
-                </div>
-                <AlertStatus state="above" />
-              </div>
-              <div className="risk-numbers" style={{ paddingBottom: 0 }}>
-                <div>
-                  <p className="value-label">Điểm sepsis</p>
-                  <strong className="risk-main alert" style={{ fontSize: 33 }}>
-                    {percent(p.score)}
-                  </strong>
-                </div>
-                <div>
-                  <p className="value-label">Ngưỡng cảnh báo</p>
-                  <strong
-                    className="risk-main threshold"
-                    style={{ fontSize: 24 }}
-                  >
-                    {percent(p.threshold)}
-                  </strong>
-                </div>
-              </div>
-              <p className="priority-reason">
-                Điểm {percent(p.score)} vượt ngưỡng {percent(p.threshold)}.{" "}
-                {p.hour === reader.getEncounter(p.encounterId)?.currentHour
-                  ? "Đây là bản ở mốc hiện tại."
-                  : "Đây là bản trong lịch sử, không tính là cảnh báo hiện tại đang chờ."}
-              </p>
-              <div className="alert-card-bottom">
-                <ReviewStatus reviewed={!!reviewFor(p, reviews)} />
-                <Link
-                  className="link-button"
-                  href={`/patients/${p.encounterId}?hour=${p.hour}`}
-                >
-                  Xem hồ sơ · Bản #{p.revision}
-                </Link>
-              </div>
-            </article>
-          ))}
-        </div>
-      )}
+      </section>
       <ClinicalNote>
         Cảnh báo hiện tại chỉ tính bản dự báo đúng mốc đang theo dõi của mỗi hồ
         sơ. Lịch sử giữ từng bản vượt ngưỡng; không gộp thành các đợt cảnh báo

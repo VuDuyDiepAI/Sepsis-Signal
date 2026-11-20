@@ -39,11 +39,13 @@ npm run dev
 | `/patients` | Danh sách đầy đủ, mặc định T0 mới nhất trước. Tìm mã, lọc nguồn nhập tay/mẫu, khoa, cảnh báo, xem xét; sắp xếp và phân trang. Liên kết mã hồ sơ hỗ trợ bàn phím. |
 | `/patients/new` | Tạo ca và nhập dữ liệu tại T0; theo dõi ở các mốc sau bằng mô hình Python đang lưu. |
 | `/patients/[id]?hour=8` | Điểm và ngưỡng nguồn, thay đổi điểm phần trăm, biểu đồ đến giờ chọn, sinh hiệu, xét nghiệm, ghi nhận xem xét theo phiên bản. |
-| `/alerts` | Cảnh báo hiện tại chưa xem xét, các bản đã xem xét và lịch sử vượt ngưỡng. Mỗi bản liên kết đến đúng hồ sơ/giờ. |
+| `/alerts` | Bảng kết quả vượt ngưỡng với các nhóm chưa xem xét, đã xem xét và lịch sử; số đếm nằm ngay trên bộ lọc. Mỗi bản liên kết đến đúng hồ sơ/giờ. |
 | `/sample-cases` | Chọn hồ sơ, đi qua T0–T0+36, hiển thị dữ liệu theo availability. Mốc khởi phát chỉ tải/hiện khi bật tùy chọn tham chiếu. |
 | `/model-monitoring` | Metadata và chỉ số validation/temporal holdout sepsis. Mô hình shock nằm trong phần mở rộng riêng. |
 
 Sidebar thu gọn trên desktop; menu dialog trên tablet/mobile. Có trạng thái tải, không tìm thấy, dữ liệu thiếu và lỗi có nút thử lại. Biểu đồ có tooltip và chọn điểm để quay về giờ cũ; bộ chọn giờ cho phép đi tiếp.
+
+Các màn hình lâm sàng ưu tiên nội dung trong vùng nhìn đầu tiên: Tổng quan dùng dòng số liệu gọn thay thẻ KPI; Hồ sơ dùng thanh công cụ chung cho nguồn dữ liệu và danh sách; Trung tâm cảnh báo tập trung vào bảng xử lý. Hồ sơ chi tiết đi thẳng vào thanh người bệnh, mốc giờ và dữ liệu lâm sàng, không có khối thuật toán/đặc trưng/phiên bản mô hình. Thông tin kỹ thuật nằm ở trang Đánh giá mô hình.
 
 ## Dữ liệu và quy tắc
 

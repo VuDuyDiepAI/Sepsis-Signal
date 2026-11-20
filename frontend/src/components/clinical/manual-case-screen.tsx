@@ -481,22 +481,17 @@ export function ManualCaseScreen({
   const encounter = reader.getEncounter(id)!;
   return (
     <>
-      <PageHeader
-        title="Hồ sơ và chỉ số"
-        description="Nhập dữ liệu tại T0, theo dõi và cập nhật điểm sepsis ở từng giờ."
-        section="Hồ sơ người bệnh"
+      <PatientWorkspace
+        encounter={encounter}
+        hour={hour}
+        onHourChange={setHour}
+        navigationPending={navigationPending}
         action={
           <Link href="/patients/new" className="link-button">
             <Plus size={16} />
             Tạo ca mới
           </Link>
         }
-      />
-      <PatientWorkspace
-        encounter={encounter}
-        hour={hour}
-        onHourChange={setHour}
-        navigationPending={navigationPending}
         entryForm={
           <ManualEntryForm key={`${id}:${hour}`} record={record} hour={hour} />
         }

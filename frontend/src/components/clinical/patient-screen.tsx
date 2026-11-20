@@ -1,7 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
-import { PageHeader } from "@/components/layout/page-container";
 import { PatientWorkspace } from "./patient-workspace";
 import type { Encounter } from "@/lib/clinical-types";
 export function PatientScreen({
@@ -22,11 +21,6 @@ export function PatientScreen({
     );
   return (
     <>
-      <PageHeader
-        title="Không gian đánh giá người bệnh"
-        description="Đối chiếu cảnh báo, diễn biến và dữ kiện tại từng thời điểm."
-        section="Hồ sơ người bệnh"
-      />
       <PatientWorkspace
         encounter={encounter}
         hour={hour}

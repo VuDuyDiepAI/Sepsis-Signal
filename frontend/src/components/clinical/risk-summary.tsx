@@ -57,7 +57,7 @@ export function RiskSummary({
         </div>
         <p className="risk-info">
           {p
-            ? `${p.availableFeatures}/36 đặc trưng có dữ liệu trước tiền xử lý. Điểm mô hình không phải chẩn đoán sepsis.`
+            ? "Điểm nguy cơ hỗ trợ đánh giá, không xác định chẩn đoán sepsis."
             : hour === 0
               ? "T0 là mốc dữ liệu ban đầu. Lần dự báo đầu tiên từ T0+1h."
               : "Không có bản dự báo nguồn tại mốc này. Không suy diễn kết quả thành điểm 0 hoặc trạng thái an toàn."}

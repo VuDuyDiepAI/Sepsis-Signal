@@ -1,6 +1,6 @@
 "use client";
 import { useClinicalReader } from "@/lib/manual-store";
-import { UsersRound, BellRing, ClipboardCheck, Clock3 } from "lucide-react";
+import Link from "next/link";
 import { summaryOf } from "@/lib/clinical-data";
 import { useReviews } from "@/components/review-context";
 export function SummaryCards() {
@@ -8,45 +8,30 @@ export function SummaryCards() {
   const { reviews } = useReviews();
   const s = summaryOf(reader.getMonitoringRows(reviews));
   return (
-    <div className="stats-grid">
+    <nav className="overview-summary" aria-label="Tóm tắt theo dõi">
       {[
         {
-          label: "Hồ sơ theo dõi",
+          label: "Hồ sơ",
           value: s.total,
-          caption: "Trong tập hồ sơ trải nghiệm",
-          icon: UsersRound,
+          href: "/patients",
         },
         {
-          label: "Cảnh báo chờ xem xét",
+          label: "Chờ xem xét",
           value: s.pending,
-          caption: "Vượt ngưỡng tại mốc hiện tại",
-          icon: BellRing,
+          href: "/alerts",
           alert: true,
-        },
-        {
-          label: "Đã xem xét",
-          value: s.reviewed,
-          caption: "Đúng phiên bản kết quả mới nhất",
-          icon: ClipboardCheck,
         },
         {
           label: "Chưa có kết quả",
           value: s.unavailable,
-          caption: "Chưa có điểm tại mốc hiện tại",
-          icon: Clock3,
+          href: "/patients?state=unavailable",
         },
-      ].map(({ label, value, caption, icon: Icon, alert }) => (
-        <div className={`stat ${alert ? "alert" : ""}`} key={label}>
-          <div className="stat-top">
-            <span>{label}</span>
-            <span className="stat-icon">
-              <Icon size={18} />
-            </span>
-          </div>
-          <div className="stat-value">{value}</div>
-          <small>{caption}</small>
-        </div>
+      ].map(({ label, value, href, alert }) => (
+        <Link className={alert ? "summary-alert" : ""} key={label} href={href}>
+          <span>{label}</span>
+          <strong>{value}</strong>
+        </Link>
       ))}
-    </div>
+    </nav>
   );
 }

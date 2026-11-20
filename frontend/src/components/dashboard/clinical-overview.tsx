@@ -1,18 +1,11 @@
 "use client";
 import Link from "next/link";
-import {
-  BellRing,
-  Clock3,
-  ClipboardCheck,
-  UserRound,
-  FolderOpen,
-  Layers,
-} from "lucide-react";
+import { Clock3, ClipboardCheck, FolderOpen, Layers } from "lucide-react";
 import { useClinicalReader } from "@/lib/manual-store";
 import { useReviews } from "@/components/review-context";
 import { Panel } from "@/components/layout/page-container";
 import { EmptyState } from "@/components/shared/empty-state";
-import { AlertStatus, Trend } from "@/components/clinical/alert-status";
+import { Trend } from "@/components/clinical/alert-status";
 import {
   percent,
   formatTime,
@@ -59,62 +52,43 @@ export function ClinicalOverview() {
             <div className="priority-list">
               {pending.slice(0, 3).map((r) => (
                 <article className="priority-case" key={r.encounter.id}>
-                  <div className="priority-case-head">
-                    <div className="flex items-center gap-3">
-                      <span className="patient-icon">
-                        <UserRound size={21} />
-                      </span>
-                      <div>
-                        <Link
-                          className="case-title"
-                          href={`/patients/${r.encounter.id}?hour=${r.encounter.currentHour}`}
-                        >
-                          {r.encounter.id}
-                        </Link>
-                        <p className="secondary-text">
-                          {r.encounter.age} tuổi ·{" "}
-                          {r.encounter.sex === "F" ? "Nữ" : "Nam"} ·{" "}
-                          {departments[r.department]}
-                        </p>
-                      </div>
+                  <div className="priority-case-main">
+                    <div className="priority-identity">
+                      <Link
+                        className="case-title"
+                        href={`/patients/${r.encounter.id}?hour=${r.encounter.currentHour}`}
+                      >
+                        {r.encounter.id}
+                      </Link>
+                      <p className="secondary-text">
+                        {r.encounter.age} tuổi ·{" "}
+                        {r.encounter.sex === "F" ? "Nữ" : "Nam"} ·{" "}
+                        {departments[r.department]}
+                      </p>
                     </div>
-                    <AlertStatus state="above" />
-                  </div>
-                  <div className="priority-reading">
-                    <div>
-                      <p className="value-label">Điểm sepsis</p>
+                    <div className="priority-score">
                       <strong>{percent(r.prediction!.score)}</strong>
+                      <span className="secondary-text">
+                        Ngưỡng {percent(r.prediction!.threshold)}
+                      </span>
                     </div>
-                    <div>
-                      <p className="value-label">So giờ trước</p>
+                    <div className="priority-trend">
+                      <span className="secondary-text">So giờ trước</span>
                       <Trend value={r.change} />
                     </div>
-                    <div>
-                      <p className="value-label">Mốc dữ liệu</p>
-                      <span>
-                        {hourLabel(r.encounter.currentHour)} ·{" "}
-                        {formatTime(r.timestamp, true)}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="priority-reason">
-                    <BellRing size={15} />
-                    <span>
-                      Cần xem xét: điểm vượt ngưỡng{" "}
-                      {percent(r.prediction!.threshold)}. Chưa có ghi nhận cho
-                      bản tính #{r.prediction!.revision}.
-                    </span>
-                  </div>
-                  <div className="priority-case-foot">
-                    <span className="secondary-text">
-                      Cửa sổ dự báo 6 giờ tiếp theo
-                    </span>
                     <Link
-                      className="link-button primary"
+                      className="link-button"
                       href={`/patients/${r.encounter.id}?hour=${r.encounter.currentHour}`}
                     >
-                      Xem xét hồ sơ
+                      Xem xét
                     </Link>
+                  </div>
+                  <div className="priority-context">
+                    <span>
+                      {hourLabel(r.encounter.currentHour)} ·{" "}
+                      {formatTime(r.timestamp, true)}
+                    </span>
+                    <span>Chưa xem xét · Bản #{r.prediction!.revision}</span>
                   </div>
                 </article>
               ))}

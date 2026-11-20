@@ -1,10 +1,7 @@
-import Link from "next/link";
-import { ChevronRight } from "lucide-react";
 import type { ReactNode } from "react";
 export function PageHeader({
   title,
   description,
-  section = "Lâm sàng",
   action,
 }: {
   title: string;
@@ -13,20 +10,13 @@ export function PageHeader({
   action?: ReactNode;
 }) {
   return (
-    <>
-      <div className="breadcrumb">
-        <Link href="/dashboard">Sepsis Signal</Link>
-        <ChevronRight size={13} />
-        <span>{section}</span>
+    <div className="page-heading">
+      <div>
+        <h1>{title}</h1>
+        <p>{description}</p>
       </div>
-      <div className="page-heading">
-        <div>
-          <h1>{title}</h1>
-          <p>{description}</p>
-        </div>
-        {action}
-      </div>
-    </>
+      {action}
+    </div>
   );
 }
 export function Panel({

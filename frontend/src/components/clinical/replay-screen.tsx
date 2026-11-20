@@ -91,6 +91,7 @@ export function ReplayScreen() {
         </div>
       </section>
       <PatientWorkspace
+        embedded
         encounter={encounter}
         hour={hour}
         onHourChange={setHour}

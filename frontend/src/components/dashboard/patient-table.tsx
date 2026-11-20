@@ -23,7 +23,6 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Panel } from "@/components/layout/page-container";
 import { EmptyState } from "@/components/shared/empty-state";
 import {
   AlertStatus,
@@ -178,38 +177,40 @@ export function PatientTable() {
     setSource("all");
   }
   return (
-    <Panel
-      title="Danh sách hồ sơ"
-      description="Tìm kiếm và lọc hồ sơ; mặc định hiển thị hồ sơ có T0 mới nhất trước."
-      meta={`${data.length} hồ sơ`}
-    >
-      <div className="source-switch" role="group" aria-label="Nguồn hồ sơ">
-        {[
-          ["all", "Tất cả"],
-          ["manual", "Nhập tay"],
-          ["sample", "Hồ sơ mẫu"],
-        ].map(([key, label]) => (
-          <Button
-            key={key}
-            variant="ghost"
-            disabled={!hydrated}
-            aria-pressed={source === key}
-            onClick={() => setSource(key)}
-          >
-            {label}
-            <span>
-              {
-                reader
-                  .listEncounters()
-                  .filter(
-                    (e) =>
-                      key === "all" ||
-                      (key === "manual") === e.id.startsWith("HS-"),
-                  ).length
-              }
-            </span>
-          </Button>
-        ))}
+    <section className="panel registry-panel" aria-label="Danh sách hồ sơ">
+      <div className="registry-toolbar">
+        <h2>Danh sách hồ sơ</h2>
+        <div className="source-switch" role="group" aria-label="Nguồn hồ sơ">
+          {[
+            ["all", "Tất cả"],
+            ["manual", "Nhập tay"],
+            ["sample", "Hồ sơ mẫu"],
+          ].map(([key, label]) => (
+            <Button
+              key={key}
+              variant="ghost"
+              disabled={!hydrated}
+              aria-pressed={source === key}
+              onClick={() => setSource(key)}
+            >
+              {label}
+              <span>
+                {
+                  reader
+                    .listEncounters()
+                    .filter(
+                      (e) =>
+                        key === "all" ||
+                        (key === "manual") === e.id.startsWith("HS-"),
+                    ).length
+                }
+              </span>
+            </Button>
+          ))}
+        </div>
+        <span className="secondary-text registry-count">
+          {data.length} hồ sơ
+        </span>
       </div>
       <div className="filters">
         <label className="filter-label">
@@ -363,6 +364,6 @@ export function PatientTable() {
           </Button>
         </div>
       </div>
-    </Panel>
+    </section>
   );
 }

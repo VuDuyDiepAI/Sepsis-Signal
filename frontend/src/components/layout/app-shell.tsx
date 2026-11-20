@@ -140,10 +140,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               </DialogContent>
             </Dialog>
             <div className="topbar-brand">
-              <strong>Không gian hỗ trợ lâm sàng</strong>
-              <small>
-                Hệ thống AI hỗ trợ cảnh báo sớm nguy cơ nhiễm khuẩn huyết
-              </small>
+              <strong>Khoa Cấp cứu · Vinmec</strong>
             </div>
           </div>
           <div className="topbar-actions">

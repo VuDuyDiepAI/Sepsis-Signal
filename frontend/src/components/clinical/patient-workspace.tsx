@@ -1,16 +1,14 @@
 "use client";
 import { useClinicalReader } from "@/lib/manual-store";
 import { useHydrated } from "@/lib/use-hydrated";
-import { UserRound, ChevronLeft, ChevronRight, Cpu } from "lucide-react";
+import { UserRound, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Panel } from "@/components/layout/page-container";
 import { ClinicalNote } from "@/components/shared/empty-state";
 import {
   departments,
   formatTime,
   hourLabel,
   timeAt,
-  percent,
 } from "@/lib/clinical-data";
 import type { Encounter } from "@/lib/clinical-types";
 import { RiskSummary } from "./risk-summary";
@@ -25,6 +23,8 @@ export function PatientWorkspace({
   onset,
   entryForm,
   navigationPending = false,
+  action,
+  embedded = false,
 }: {
   encounter: Encounter;
   hour: number;
@@ -32,11 +32,13 @@ export function PatientWorkspace({
   onset?: string | null;
   entryForm?: React.ReactNode;
   navigationPending?: boolean;
+  action?: React.ReactNode;
+  embedded?: boolean;
 }) {
   const reader = useClinicalReader();
   const hydrated = useHydrated();
-  const at = timeAt(encounter.t0, hour),
-    meta = reader.getModelMetadata();
+  const at = timeAt(encounter.t0, hour);
+  const IdentityHeading = embedded ? "strong" : "h1";
   const updates = reader.getUpdates(encounter.id, hour);
   return (
     <>
@@ -46,17 +48,18 @@ export function PatientWorkspace({
             <UserRound size={25} />
           </span>
           <div>
-            <strong>{encounter.id}</strong>
+            <IdentityHeading>{encounter.id}</IdentityHeading>
             <p>
               {encounter.age} tuổi · {encounter.sex === "F" ? "Nữ" : "Nam"} ·{" "}
               {departments[reader.getDepartment(encounter.id, at)]}
             </p>
             <p className="secondary-text">
-              T0 {formatTime(encounter.t0, true)} · Hoàn tất phân loại
+              T0 {formatTime(encounter.t0, true)}
             </p>
           </div>
         </div>
         <div className="patient-controls">
+          {action}
           <Button
             variant="outline"
             size="icon"
@@ -90,17 +93,14 @@ export function PatientWorkspace({
             <ChevronRight />
           </Button>
         </div>
+        <p className="patient-updates" role="status">
+          <span>Đang xem {formatTime(at, true)}</span>
+          <span>
+            {updates.vitals} bản đo mới · {updates.labs} kết quả xét nghiệm mới
+            trong giờ
+          </span>
+        </p>
       </section>
-      <div className="snapshot-strip" role="status">
-        <span>
-          Mốc {hourLabel(hour)} · {formatTime(at, true)}
-        </span>
-        <strong>
-          {updates.vitals} bản đo · {updates.labs} kết quả xét nghiệm mới trong
-          giờ
-        </strong>
-        <span>Chỉ dùng thông tin đã có trên EMR.</span>
-      </div>
       {navigationPending && (
         <p role="status" className="secondary-text">
           Đang chuyển mốc dữ liệu…
@@ -128,27 +128,6 @@ export function PatientWorkspace({
             key={`${encounter.id}:${hour}`}
             prediction={reader.getPrediction(encounter.id, hour)}
           />
-          <Panel
-            title="Mô hình đang sử dụng"
-            meta={<Cpu size={14} />}
-            className="model-panel"
-          >
-            <div className="panel-body model-details">
-              <dl>
-                <dt>Thuật toán</dt>
-                <dd>Logistic Regression</dd>
-                <dt>Đầu vào</dt>
-                <dd>{meta.features.length} đặc trưng</dd>
-                <dt>Cửa sổ quan sát</dt>
-                <dd>T0 đến giờ dự báo</dd>
-                <dt>Dự báo tương lai</dt>
-                <dd>{meta.horizon_hours} giờ</dd>
-                <dt>Ngưỡng</dt>
-                <dd>{percent(meta.threshold)}</dd>
-              </dl>
-              <p className="model-version mt-4">{meta.model_version}</p>
-            </div>
-          </Panel>
         </div>
         <div className="workspace-column">
           <VitalSignsPanel id={encounter.id} hour={hour} />
