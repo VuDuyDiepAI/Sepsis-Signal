@@ -13,7 +13,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from src.mock_emr import DATA_PATH, FEATURES, load_bundle, load_tables, training_frame
+from src.mock_emr import DATA_PATH, FEATURES, bundle_paths, load_bundle, load_tables, training_frame
 
 
 def stamp(value):
@@ -30,6 +30,12 @@ def export():
     tables = load_tables()
     model, meta = load_bundle('sepsis')
     _, shock = load_bundle('shock')
+    # Prediction identity changes with weights or decision policy so a prior review
+    # cannot silently attach to a newly evaluated result after a fixture refresh.
+    policy_fingerprint = hashlib.sha256(json.dumps({
+        'version': meta['model_version'], 'threshold': meta['threshold'],
+        'weights_sha256': hashes[bundle_paths('sepsis')[0]],
+    }, sort_keys=True).encode()).hexdigest()[:12]
     outcomes = tables['ReferenceOutcomes']
     selected = []
     for _, group in outcomes.groupby('scenario_scripted', sort=True):
@@ -58,7 +64,7 @@ def export():
                                      't0': stamp(t0), 'currentHour': 0 if i == 0 else current})
         for _, row in rows.iterrows():
             hour = int((row.prediction_at-t0).total_seconds()/3600)
-            result['predictions'].append({'id': f'{eid}:{hour}:1', 'encounterId': eid,
+            result['predictions'].append({'id': f'{eid}:{hour}:1:{policy_fingerprint}', 'encounterId': eid,
                 'hour': hour, 'timestamp': stamp(row.prediction_at), 'score': float(row.score),
                 'threshold': meta['threshold'], 'revision': 1, 'modelVersion': meta['model_version'],
                 'department': row.location_code, 'availableFeatures': int(row[FEATURES].notna().sum())})

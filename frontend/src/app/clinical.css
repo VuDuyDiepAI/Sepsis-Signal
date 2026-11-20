@@ -937,6 +937,121 @@ textarea {
   font-variant-numeric: tabular-nums;
   font-weight: 550;
 }
+.metric-ci {
+  display: block;
+  margin-top: 3px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #526779;
+}
+.evaluation-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 16px;
+  border-bottom: 1px solid #e6edf3;
+}
+.evaluation-toolbar label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  font-size: 14px;
+}
+.evaluation-toolbar select {
+  min-height: 38px;
+  padding: 6px 10px;
+}
+.evaluation-toolbar p {
+  font-size: 13px;
+  color: #526779;
+}
+.evaluation-content.with-calibration {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(280px, 1fr);
+}
+.research-screen .evaluation-content .metric-table td,
+.research-screen .evaluation-content .metric-table th {
+  padding: 4px 16px;
+  font-size: 14px;
+}
+.research-screen .panel:has(.evaluation-toolbar) > .panel-heading {
+  padding: 8px 16px;
+}
+.evaluation-method {
+  border-top: 1px solid #e6edf3;
+  padding: 6px 16px;
+  font-size: 12px;
+  color: #526779;
+}
+.evaluation-method summary {
+  cursor: pointer;
+}
+.evaluation-toolbar {
+  padding-block: 6px;
+}
+.evaluation-toolbar label {
+  white-space: nowrap;
+}
+.evaluation-content .metric-ci {
+  font-size: 11px;
+  line-height: 1.35;
+}
+.evaluation-sample {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 24px;
+  padding: 6px 16px;
+  color: #526779;
+  font-size: 12px;
+  border-bottom: 1px solid #e6edf3;
+}
+.calibration-chart {
+  padding: 12px 16px;
+  border-left: 1px solid #e6edf3;
+  margin: 0;
+}
+.calibration-chart figcaption {
+  font-size: 15px;
+  font-weight: 600;
+}
+.calibration-chart svg {
+  width: 100%;
+  max-height: 300px;
+  font-size: 11px;
+  fill: #526779;
+}
+.calibration-legend {
+  display: flex;
+  gap: 8px 16px;
+  flex-wrap: wrap;
+  font-size: 12px;
+}
+.calibration-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.calibration-legend i {
+  width: 14px;
+  height: 3px;
+}
+@media (max-width: 1100px) {
+  .evaluation-toolbar {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .evaluation-content.with-calibration {
+    grid-template-columns: 1fr;
+  }
+  .evaluation-toolbar label {
+    flex-wrap: wrap;
+    flex-shrink: 1;
+  }
+  .evaluation-toolbar select {
+    max-width: 100%;
+  }
+}
 .section-stack {
   display: grid;
   gap: 22px;
@@ -1894,3 +2009,312 @@ textarea {
     padding-inline: 10px;
   }
 }
+
+/* One clinical view: risk and observations stay visible together. */
+.clinical-board {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  min-height: 0;
+}
+.clinical-board-data {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
+  gap: 12px;
+}
+.clinical-board-column {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.review-compact .panel-heading {
+  padding: 4px 14px;
+}
+.review-compact .panel-body {
+  padding: 6px 14px;
+}
+.review-compact .review-form {
+  grid-template-columns: minmax(180px, 0.7fr) minmax(200px, 1.6fr) auto;
+  align-items: end;
+  gap: 6px 12px;
+}
+.review-compact .review-form label {
+  gap: 2px;
+}
+.review-compact input {
+  height: 38px;
+  min-height: 38px;
+}
+.review-compact textarea {
+  min-height: 38px;
+  height: 38px;
+  resize: none;
+  padding: 8px 12px;
+}
+.review-compact .clinical-note {
+  margin-top: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 12px;
+}
+.review-compact .review-form .form-error {
+  grid-column: 1/-1;
+}
+.review-compact .review-success {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  padding: 8px 12px;
+}
+.review-compact .review-success p {
+  max-height: 48px;
+  overflow: auto;
+}
+@media (min-width: 1024px) {
+  .patient-workspace > .clinical-board,
+  .board-pane > .clinical-board {
+    flex: 1;
+    height: 100%;
+  }
+  .board-pane {
+    display: flex;
+    overflow: auto;
+  }
+  .board-pane > .clinical-board {
+    min-height: 560px;
+  }
+  .replay-screen > .patient-workspace {
+    overflow: auto;
+  }
+  .replay-screen .clinical-board {
+    flex: none;
+    min-height: 560px;
+  }
+  .clinical-board-data {
+    flex: 1;
+    min-height: 0;
+    grid-template-rows: 210px minmax(190px, 1fr);
+  }
+  .clinical-board-column {
+    display: contents;
+  }
+  .clinical-board .panel {
+    min-width: 0;
+    min-height: 0;
+    order: 0;
+  }
+  .clinical-board .risk-panel {
+    grid-area: 1 / 1;
+  }
+  .clinical-board .vitals-panel {
+    grid-area: 1 / 2;
+  }
+  .clinical-board .timeline-panel {
+    grid-area: 2 / 1;
+  }
+  .clinical-board .labs-panel {
+    grid-area: 2 / 2;
+  }
+  .clinical-board .panel-heading {
+    padding: 4px 14px;
+    gap: 8px;
+  }
+  .clinical-board .panel-heading h2 {
+    font-size: 16px;
+  }
+  .clinical-board .panel-heading p {
+    display: none;
+  }
+  .clinical-board .panel-meta {
+    font-size: 12px;
+    padding: 3px 6px;
+  }
+  .clinical-board .risk-panel > .panel-body {
+    padding: 8px 14px;
+  }
+  .clinical-board .risk-state-row {
+    padding-bottom: 4px;
+  }
+  .clinical-board .risk-numbers {
+    padding-bottom: 4px;
+  }
+  .clinical-board .risk-main {
+    font-size: 34px;
+  }
+  .clinical-board .risk-main.threshold {
+    font-size: 24px;
+  }
+  .clinical-board .value-label {
+    margin-bottom: 2px;
+    font-size: 14px;
+  }
+  .clinical-board .risk-time {
+    padding: 5px 0;
+    font-size: 12px;
+  }
+  .clinical-board .risk-info {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  .clinical-board .vitals-panel {
+    display: flex;
+    flex-direction: column;
+  }
+  .clinical-board .vital-grid {
+    flex: 1;
+    min-height: 0;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .clinical-board .vital-cell {
+    padding: 3px 10px;
+  }
+  .clinical-board .vital-cell strong {
+    font-size: 23px;
+    line-height: 1.2;
+  }
+  .clinical-board .vital-cell strong small {
+    font-size: 10px;
+  }
+  .clinical-board .vital-cell .value-label {
+    font-size: 12px;
+  }
+  .clinical-board .vital-cell .secondary-text {
+    font-size: 11px;
+    margin-top: 2px;
+    line-height: 1.25;
+  }
+  .patient-workspace .clinical-board .timeline-panel {
+    display: flex;
+    flex-direction: column;
+  }
+  .patient-workspace .clinical-board .timeline-panel > .panel-body {
+    flex: 1;
+    min-height: 0;
+    padding-block: 0;
+  }
+  .patient-workspace .clinical-board .timeline-panel .chart-wrap {
+    height: 100%;
+    min-height: 0;
+  }
+  .clinical-board .chart-key {
+    padding: 0 14px 8px;
+    gap: 6px 14px;
+    font-size: 11px;
+  }
+  .clinical-board .labs-panel {
+    display: flex;
+    flex-direction: column;
+  }
+  .clinical-board .labs-table {
+    display: block;
+    flex: 1;
+    min-height: 0;
+  }
+  .clinical-board .labs-table tbody {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 100%;
+  }
+  .clinical-board .labs-table tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    border-bottom: 1px solid #e6edf3;
+  }
+  .clinical-board .labs-table tr:nth-child(odd) {
+    border-right: 1px solid #e6edf3;
+  }
+  .clinical-board .labs-table tr:nth-last-child(-n + 2) {
+    border-bottom: 0;
+  }
+  .clinical-board .labs-table td {
+    padding: 3px 10px;
+    border: 0;
+    font-size: 14px;
+    line-height: 18px;
+  }
+  .clinical-board .labs-table td:last-child {
+    padding-left: 0;
+  }
+  .clinical-board .lab-value {
+    font-size: 18px;
+    white-space: normal;
+  }
+  .clinical-board .lab-value small {
+    display: block;
+    font-size: 11px;
+  }
+  .clinical-board .lab-time {
+    font-size: 11px;
+    margin-top: 2px;
+    line-height: 12px;
+  }
+  .clinical-board > .review-panel {
+    flex: none;
+  }
+  .clinical-board > .review-panel .panel-heading {
+    padding-block: 4px;
+  }
+  .patient-workspace .patient-bar {
+    padding: 6px 14px;
+    gap: 2px 16px;
+  }
+  .patient-workspace .patient-icon {
+    height: 38px;
+    width: 38px;
+  }
+  .patient-workspace .patient-updates {
+    padding-top: 3px;
+    font-size: 12px;
+  }
+  .patient-workspace > .workspace-notice {
+    flex: none;
+    margin-bottom: 8px;
+  }
+}
+@media (min-width: 1200px) and (min-height: 850px) {
+  .clinical-board-data {
+    grid-template-rows: 254px minmax(190px, 1fr);
+  }
+  .clinical-board .risk-main {
+    font-size: 40px;
+  }
+  .clinical-board .risk-time,
+  .clinical-board .risk-info {
+    font-size: 13px;
+  }
+  .clinical-board .vital-cell {
+    padding: 6px 12px;
+  }
+  .clinical-board .vital-cell .value-label {
+    font-size: 14px;
+  }
+  .clinical-board .vital-cell strong {
+    font-size: 28px;
+  }
+  .clinical-board .vital-cell .secondary-text,
+  .clinical-board .lab-time,
+  .clinical-board .chart-key {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  .clinical-board .lab-value {
+    font-size: 21px;
+  }
+}
+@media (max-width: 1023px) {
+  .clinical-board-data {
+    grid-template-columns: 1fr;
+  }
+  .review-compact .review-form {
+    grid-template-columns: 1fr;
+  }
+  .clinical-board .timeline-panel {
+    order: 0;
+  }
+}
+.storage-notice { position: fixed; z-index: 60; top: 64px; right: 20px; max-width: min(640px, calc(100vw - 32px)); padding: 10px 14px; background: #fff8e8; color: #573c11; border: 1px solid #d5b778; box-shadow: 0 3px 12px #15324b20; font-size: 14px; }
+.storage-notice span { display: block; }

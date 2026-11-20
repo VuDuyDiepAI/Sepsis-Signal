@@ -53,18 +53,54 @@ export interface Review {
   reviewer: string;
   timestamp: string;
   note: string;
-  localOnly: true;
+  localOnly: boolean;
+  encounterId?: string;
+  hour?: number;
+  prediction?: Prediction;
 }
 export interface Metrics {
   auroc: number | null;
   auprc: number | null;
-  precision: number;
-  recall: number;
+  precision: number | null;
+  recall: number | null;
+  specificity: number | null;
+  npv: number | null;
+  f1: number | null;
   brier: number;
   median_lead_hours: number | null;
   snapshots: number;
   positive_snapshots: number;
-  encounter_early_recall: number;
+  encounter_early_recall: number | null;
+  encounters: number;
+  positive_encounters: number;
+  timely_alert_encounters: number;
+  episode_ppv: number | null;
+  alert_episodes: number;
+  true_alert_episodes: number;
+  false_alert_episodes: number;
+  false_alert_episodes_per_100: number | null;
+  false_episodes_per_true_episode: number | null;
+  repeated_alert_fraction: number | null;
+  observed_prevalence: number;
+  calibration_intercept: number | null;
+  calibration_slope: number | null;
+  iqr_lead_hours: number[] | null;
+  calibration_curve: {
+    mean_probability: number;
+    observed_fraction: number;
+    snapshots: number;
+  }[];
+  confidence_intervals: Record<
+    string,
+    { lower: number | null; upper: number | null; valid_resamples: number }
+  >;
+  bootstrap: {
+    unit: string;
+    resamples: number;
+    level: number;
+    seed: number;
+    fixed_model_and_threshold: boolean;
+  };
 }
 export interface ModelMetadata {
   model_name: string;
@@ -78,6 +114,19 @@ export interface ModelMetadata {
   train_positive_encounters: number;
   validation_positive_encounters: number;
   temporal_holdout_positive_encounters: number;
+  evaluation_version: string;
+  decision_policy_version: string;
+  evaluation_limitations: string[];
+  threshold_selection: {
+    branch: string;
+    minimum_recall: number;
+    validation_encounter_recall: number;
+    validation_snapshot_recall: number;
+    hourly_recall_constraint: boolean;
+    selection_data: string;
+    probability_calibration: string;
+    cooldown_hours: number;
+  };
   validation_synthetic_metrics: Metrics;
   temporal_holdout_synthetic_metrics: Metrics;
 }

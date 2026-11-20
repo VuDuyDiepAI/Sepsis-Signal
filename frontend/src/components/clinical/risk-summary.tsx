@@ -46,7 +46,7 @@ export function RiskSummary({
           <div>
             <div className="value-label">Ngưỡng cảnh báo</div>
             <div className="risk-main threshold" data-testid="risk-threshold">
-              {percent(meta.threshold)}
+              {percent(p?.threshold ?? meta.threshold)}
             </div>
           </div>
         </div>

@@ -351,8 +351,7 @@ export function MonitoringScreen() {
         <ClinicalNote>
           Dữ liệu vừa thay đổi là giá trị mới có trên EMR trong giờ dự báo,
           không phải giải thích nguyên nhân làm tăng điểm. Đã xem xét không có
-          nghĩa đã hoàn tất xử trí. Các ghi nhận gắn với đúng bản dự báo trong
-          phiên tab.
+          nghĩa đã hoàn tất xử trí. Các ghi nhận lưu trên máy chủ, gắn với đúng phiên bản dự báo.
         </ClinicalNote>
       </details>
     </div>

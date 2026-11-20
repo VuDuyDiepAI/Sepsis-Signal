@@ -4,21 +4,22 @@ import {
   useContext,
   useSyncExternalStore,
   type ReactNode,
+  useEffect,
 } from "react";
 import {
   getReviews,
   serverReviews,
   subscribeReviews,
   recordSessionReview,
-  resetSessionReviews,
 } from "@/lib/review-store";
 import type { Prediction, Review } from "@/lib/clinical-types";
+import { startClinicalSync } from "@/lib/clinical-storage";
 const Context = createContext<{
   reviews: Record<string, Review>;
-  recordReview: (p: Prediction, reviewer: string, note: string) => void;
-  reset: () => void;
+  recordReview: (p: Prediction, reviewer: string, note: string) => Promise<void>;
 } | null>(null);
 export function ReviewProvider({ children }: { children: ReactNode }) {
+  useEffect(startClinicalSync, []);
   const reviews = useSyncExternalStore(
     subscribeReviews,
     getReviews,
@@ -29,7 +30,6 @@ export function ReviewProvider({ children }: { children: ReactNode }) {
       value={{
         reviews,
         recordReview: recordSessionReview,
-        reset: resetSessionReviews,
       }}
     >
       {children}

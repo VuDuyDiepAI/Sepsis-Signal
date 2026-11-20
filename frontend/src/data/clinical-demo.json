@@ -47,14 +47,14 @@
       "age": 55,
       "sex": "F",
       "t0": "2026-02-14T16:00:00+07:00",
-      "currentHour": 7
+      "currentHour": 11
     },
     {
       "id": "E0015",
       "age": 74,
       "sex": "F",
       "t0": "2026-02-24T16:00:00+07:00",
-      "currentHour": 7
+      "currentHour": 8
     },
     {
       "id": "E0020",
@@ -66,2138 +66,2138 @@
   ],
   "predictions": [
     {
-      "id": "E0001:1:1",
+      "id": "E0001:1:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 1,
       "timestamp": "2026-02-01T09:00:00+07:00",
       "score": 2.8847990222163317e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:2:1",
+      "id": "E0001:2:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 2,
       "timestamp": "2026-02-01T10:00:00+07:00",
       "score": 4.3235584814461264e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:3:1",
+      "id": "E0001:3:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 3,
       "timestamp": "2026-02-01T11:00:00+07:00",
       "score": 0.09796732688383492,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:4:1",
+      "id": "E0001:4:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 4,
       "timestamp": "2026-02-01T12:00:00+07:00",
       "score": 0.11603689309704725,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:5:1",
+      "id": "E0001:5:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 5,
       "timestamp": "2026-02-01T13:00:00+07:00",
       "score": 0.14186753597871485,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:6:1",
+      "id": "E0001:6:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 6,
       "timestamp": "2026-02-01T14:00:00+07:00",
       "score": 0.1865651787483795,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:7:1",
+      "id": "E0001:7:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 7,
       "timestamp": "2026-02-01T15:00:00+07:00",
       "score": 8.586926502167933e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:8:1",
+      "id": "E0001:8:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 8,
       "timestamp": "2026-02-01T16:00:00+07:00",
       "score": 0.000131232968346275,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:9:1",
+      "id": "E0001:9:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 9,
       "timestamp": "2026-02-01T17:00:00+07:00",
       "score": 0.00017369579043617582,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:10:1",
+      "id": "E0001:10:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 10,
       "timestamp": "2026-02-01T18:00:00+07:00",
       "score": 0.00021079138128320525,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:11:1",
+      "id": "E0001:11:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 11,
       "timestamp": "2026-02-01T19:00:00+07:00",
       "score": 0.0021466813115320975,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:12:1",
+      "id": "E0001:12:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 12,
       "timestamp": "2026-02-01T20:00:00+07:00",
       "score": 0.002433821177888189,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:13:1",
+      "id": "E0001:13:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 13,
       "timestamp": "2026-02-01T21:00:00+07:00",
       "score": 8.766868510117005e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:14:1",
+      "id": "E0001:14:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 14,
       "timestamp": "2026-02-01T22:00:00+07:00",
       "score": 9.623620560830427e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:15:1",
+      "id": "E0001:15:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 15,
       "timestamp": "2026-02-01T23:00:00+07:00",
       "score": 0.0002815381067952578,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:16:1",
+      "id": "E0001:16:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 16,
       "timestamp": "2026-02-02T00:00:00+07:00",
       "score": 0.00030318086716638374,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:17:1",
+      "id": "E0001:17:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 17,
       "timestamp": "2026-02-02T01:00:00+07:00",
       "score": 0.00013877470874589851,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:18:1",
+      "id": "E0001:18:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 18,
       "timestamp": "2026-02-02T02:00:00+07:00",
       "score": 0.0002167126182661613,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:19:1",
+      "id": "E0001:19:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 19,
       "timestamp": "2026-02-02T03:00:00+07:00",
       "score": 2.91294531263357e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:20:1",
+      "id": "E0001:20:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 20,
       "timestamp": "2026-02-02T04:00:00+07:00",
       "score": 3.550298200331914e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:21:1",
+      "id": "E0001:21:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 21,
       "timestamp": "2026-02-02T05:00:00+07:00",
       "score": 5.116995370985043e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:22:1",
+      "id": "E0001:22:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 22,
       "timestamp": "2026-02-02T06:00:00+07:00",
       "score": 5.813438677956978e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:23:1",
+      "id": "E0001:23:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 23,
       "timestamp": "2026-02-02T07:00:00+07:00",
       "score": 0.0004175343438930029,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:24:1",
+      "id": "E0001:24:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 24,
       "timestamp": "2026-02-02T08:00:00+07:00",
       "score": 0.00045877062577098484,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:25:1",
+      "id": "E0001:25:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 25,
       "timestamp": "2026-02-02T09:00:00+07:00",
       "score": 4.5847891767020366e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:26:1",
+      "id": "E0001:26:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 26,
       "timestamp": "2026-02-02T10:00:00+07:00",
       "score": 4.940358698661763e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:27:1",
+      "id": "E0001:27:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 27,
       "timestamp": "2026-02-02T11:00:00+07:00",
       "score": 8.297273101584342e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:28:1",
+      "id": "E0001:28:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 28,
       "timestamp": "2026-02-02T12:00:00+07:00",
       "score": 8.82686639706113e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:29:1",
+      "id": "E0001:29:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 29,
       "timestamp": "2026-02-02T13:00:00+07:00",
       "score": 3.672715033625794e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0001:30:1",
+      "id": "E0001:30:1:20fd5baa9c1d",
       "encounterId": "E0001",
       "hour": 30,
       "timestamp": "2026-02-02T14:00:00+07:00",
       "score": 3.8719013192499705e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0002:1:1",
+      "id": "E0002:1:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 1,
       "timestamp": "2026-02-03T01:00:00+07:00",
       "score": 2.4594417720390264e-07,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:2:1",
+      "id": "E0002:2:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 2,
       "timestamp": "2026-02-03T02:00:00+07:00",
       "score": 3.686111907453148e-07,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:3:1",
+      "id": "E0002:3:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 3,
       "timestamp": "2026-02-03T03:00:00+07:00",
       "score": 8.024841684790772e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:4:1",
+      "id": "E0002:4:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 4,
       "timestamp": "2026-02-03T04:00:00+07:00",
       "score": 9.69911624178727e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:5:1",
+      "id": "E0002:5:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 5,
       "timestamp": "2026-02-03T05:00:00+07:00",
       "score": 5.3016150746027784e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:6:1",
+      "id": "E0002:6:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 6,
       "timestamp": "2026-02-03T06:00:00+07:00",
       "score": 7.354927731002647e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:7:1",
+      "id": "E0002:7:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 7,
       "timestamp": "2026-02-03T07:00:00+07:00",
       "score": 0.00016058247383214362,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:8:1",
+      "id": "E0002:8:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 8,
       "timestamp": "2026-02-03T08:00:00+07:00",
       "score": 0.00025076487203056245,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:9:1",
+      "id": "E0002:9:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 9,
       "timestamp": "2026-02-03T09:00:00+07:00",
       "score": 0.0001244442785991867,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:10:1",
+      "id": "E0002:10:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 10,
       "timestamp": "2026-02-03T10:00:00+07:00",
       "score": 0.00015166954297683315,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:11:1",
+      "id": "E0002:11:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 11,
       "timestamp": "2026-02-03T11:00:00+07:00",
       "score": 1.1889937834916626e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:12:1",
+      "id": "E0002:12:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 12,
       "timestamp": "2026-02-03T12:00:00+07:00",
       "score": 1.3508277618426572e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:13:1",
+      "id": "E0002:13:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 13,
       "timestamp": "2026-02-03T13:00:00+07:00",
       "score": 6.857748887940566e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:14:1",
+      "id": "E0002:14:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 14,
       "timestamp": "2026-02-03T14:00:00+07:00",
       "score": 7.535289660461269e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:15:1",
+      "id": "E0002:15:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 15,
       "timestamp": "2026-02-03T15:00:00+07:00",
       "score": 5.1473421072767765e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:16:1",
+      "id": "E0002:16:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 16,
       "timestamp": "2026-02-03T16:00:00+07:00",
       "score": 5.546537535211529e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:17:1",
+      "id": "E0002:17:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 17,
       "timestamp": "2026-02-03T17:00:00+07:00",
       "score": 3.1127174847378345e-06,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:18:1",
+      "id": "E0002:18:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 18,
       "timestamp": "2026-02-03T18:00:00+07:00",
       "score": 4.757336822448225e-06,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:19:1",
+      "id": "E0002:19:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 19,
       "timestamp": "2026-02-03T19:00:00+07:00",
       "score": 1.9256881563467164e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:20:1",
+      "id": "E0002:20:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 20,
       "timestamp": "2026-02-03T20:00:00+07:00",
       "score": 2.3370276075248974e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:21:1",
+      "id": "E0002:21:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 21,
       "timestamp": "2026-02-03T21:00:00+07:00",
       "score": 1.879728604541407e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:22:1",
+      "id": "E0002:22:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 22,
       "timestamp": "2026-02-03T22:00:00+07:00",
       "score": 2.1317689661131944e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:23:1",
+      "id": "E0002:23:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 23,
       "timestamp": "2026-02-03T23:00:00+07:00",
       "score": 8.061035992991261e-06,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:24:1",
+      "id": "E0002:24:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 24,
       "timestamp": "2026-02-04T00:00:00+07:00",
       "score": 8.848878617969479e-06,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:25:1",
+      "id": "E0002:25:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 25,
       "timestamp": "2026-02-04T01:00:00+07:00",
       "score": 9.904987666099463e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:26:1",
+      "id": "E0002:26:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 26,
       "timestamp": "2026-02-04T02:00:00+07:00",
       "score": 0.00010666566327573677,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:27:1",
+      "id": "E0002:27:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 27,
       "timestamp": "2026-02-04T03:00:00+07:00",
       "score": 6.735092273626557e-07,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:28:1",
+      "id": "E0002:28:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 28,
       "timestamp": "2026-02-04T04:00:00+07:00",
       "score": 7.161991639545014e-07,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:29:1",
+      "id": "E0002:29:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 29,
       "timestamp": "2026-02-04T05:00:00+07:00",
       "score": 1.381450524537216e-06,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0002:30:1",
+      "id": "E0002:30:1:20fd5baa9c1d",
       "encounterId": "E0002",
       "hour": 30,
       "timestamp": "2026-02-04T06:00:00+07:00",
       "score": 1.4559271366222294e-06,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0003:1:1",
+      "id": "E0003:1:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 1,
       "timestamp": "2026-02-04T17:00:00+07:00",
       "score": 2.883564592577108e-09,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:2:1",
+      "id": "E0003:2:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 2,
       "timestamp": "2026-02-04T18:00:00+07:00",
       "score": 4.321770570057139e-09,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:3:1",
+      "id": "E0003:3:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 3,
       "timestamp": "2026-02-04T19:00:00+07:00",
       "score": 8.629935851068152e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:4:1",
+      "id": "E0003:4:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 4,
       "timestamp": "2026-02-04T20:00:00+07:00",
       "score": 1.043062976208588e-09,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:5:1",
+      "id": "E0003:5:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 5,
       "timestamp": "2026-02-04T21:00:00+07:00",
       "score": 8.187249950868606e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:6:1",
+      "id": "E0003:6:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 6,
       "timestamp": "2026-02-04T22:00:00+07:00",
       "score": 1.135840066932341e-09,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:7:1",
+      "id": "E0003:7:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 7,
       "timestamp": "2026-02-04T23:00:00+07:00",
       "score": 5.18657793249125e-08,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:8:1",
+      "id": "E0003:8:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 8,
       "timestamp": "2026-02-05T00:00:00+07:00",
       "score": 5.6880541334045986e-08,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:9:1",
+      "id": "E0003:9:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 9,
       "timestamp": "2026-02-05T01:00:00+07:00",
       "score": 2.2561394605059859e-07,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:10:1",
+      "id": "E0003:10:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 10,
       "timestamp": "2026-02-05T02:00:00+07:00",
       "score": 2.428161915667783e-07,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:11:1",
+      "id": "E0003:11:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 11,
       "timestamp": "2026-02-05T03:00:00+07:00",
       "score": 3.153019940995368e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:12:1",
+      "id": "E0003:12:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 12,
       "timestamp": "2026-02-05T04:00:00+07:00",
       "score": 3.3514773397541973e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:13:1",
+      "id": "E0003:13:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 13,
       "timestamp": "2026-02-05T05:00:00+07:00",
       "score": 4.887478080065391e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:14:1",
+      "id": "E0003:14:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 14,
       "timestamp": "2026-02-05T06:00:00+07:00",
       "score": 5.149405972854502e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:15:1",
+      "id": "E0003:15:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 15,
       "timestamp": "2026-02-05T07:00:00+07:00",
       "score": 1.442035682832197e-09,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:16:1",
+      "id": "E0003:16:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 16,
       "timestamp": "2026-02-05T08:00:00+07:00",
       "score": 1.5093216378178183e-09,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:17:1",
+      "id": "E0003:17:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 17,
       "timestamp": "2026-02-05T09:00:00+07:00",
       "score": 5.156994573725199e-09,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:18:1",
+      "id": "E0003:18:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 18,
       "timestamp": "2026-02-05T10:00:00+07:00",
       "score": 5.370065721582765e-09,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:19:1",
+      "id": "E0003:19:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 19,
       "timestamp": "2026-02-05T11:00:00+07:00",
       "score": 4.4540822631786195e-09,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:20:1",
+      "id": "E0003:20:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 20,
       "timestamp": "2026-02-05T12:00:00+07:00",
       "score": 4.619202480454717e-09,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:21:1",
+      "id": "E0003:21:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 21,
       "timestamp": "2026-02-05T13:00:00+07:00",
       "score": 7.717997114928442e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:22:1",
+      "id": "E0003:22:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 22,
       "timestamp": "2026-02-05T14:00:00+07:00",
       "score": 7.977457389894917e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:23:1",
+      "id": "E0003:23:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 23,
       "timestamp": "2026-02-05T15:00:00+07:00",
       "score": 1.8342061936228658e-09,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:24:1",
+      "id": "E0003:24:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 24,
       "timestamp": "2026-02-05T16:00:00+07:00",
       "score": 1.8906122748683346e-09,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:25:1",
+      "id": "E0003:25:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 25,
       "timestamp": "2026-02-05T17:00:00+07:00",
       "score": 5.0747666617681414e-09,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:26:1",
+      "id": "E0003:26:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 26,
       "timestamp": "2026-02-05T18:00:00+07:00",
       "score": 5.218571045609662e-09,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:27:1",
+      "id": "E0003:27:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 27,
       "timestamp": "2026-02-05T19:00:00+07:00",
       "score": 5.701680028956303e-11,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:28:1",
+      "id": "E0003:28:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 28,
       "timestamp": "2026-02-05T20:00:00+07:00",
       "score": 5.851484390417281e-11,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:29:1",
+      "id": "E0003:29:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 29,
       "timestamp": "2026-02-05T21:00:00+07:00",
       "score": 7.334772248004771e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 34
     },
     {
-      "id": "E0003:30:1",
+      "id": "E0003:30:1:20fd5baa9c1d",
       "encounterId": "E0003",
       "hour": 30,
       "timestamp": "2026-02-05T22:00:00+07:00",
       "score": 7.514403920575562e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 34
     },
     {
-      "id": "E0005:1:1",
+      "id": "E0005:1:1:20fd5baa9c1d",
       "encounterId": "E0005",
       "hour": 1,
       "timestamp": "2026-02-08T01:00:00+07:00",
       "score": 1.959024421163668e-08,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 35
     },
     {
-      "id": "E0005:2:1",
+      "id": "E0005:2:1:20fd5baa9c1d",
       "encounterId": "E0005",
       "hour": 2,
       "timestamp": "2026-02-08T02:00:00+07:00",
       "score": 2.9361069423084983e-08,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 35
     },
     {
-      "id": "E0005:3:1",
+      "id": "E0005:3:1:20fd5baa9c1d",
       "encounterId": "E0005",
       "hour": 3,
       "timestamp": "2026-02-08T03:00:00+07:00",
       "score": 4.343453651565075e-06,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 35
     },
     {
-      "id": "E0005:4:1",
+      "id": "E0005:4:1:20fd5baa9c1d",
       "encounterId": "E0005",
       "hour": 4,
       "timestamp": "2026-02-08T04:00:00+07:00",
       "score": 5.24973958773773e-06,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 35
     },
     {
-      "id": "E0005:5:1",
+      "id": "E0005:5:1:20fd5baa9c1d",
       "encounterId": "E0005",
       "hour": 5,
       "timestamp": "2026-02-08T05:00:00+07:00",
       "score": 6.444527634456671e-07,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 35
     },
     {
-      "id": "E0005:6:1",
+      "id": "E0005:6:1:20fd5baa9c1d",
       "encounterId": "E0005",
       "hour": 6,
       "timestamp": "2026-02-08T06:00:00+07:00",
       "score": 8.940671066292408e-07,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0005:7:1",
+      "id": "E0005:7:1:20fd5baa9c1d",
       "encounterId": "E0005",
       "hour": 7,
       "timestamp": "2026-02-08T07:00:00+07:00",
       "score": 9.854855744316267e-07,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0005:8:1",
+      "id": "E0005:8:1:20fd5baa9c1d",
       "encounterId": "E0005",
       "hour": 8,
       "timestamp": "2026-02-08T08:00:00+07:00",
       "score": 1.0807694132845218e-06,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0005:9:1",
+      "id": "E0005:9:1:20fd5baa9c1d",
       "encounterId": "E0005",
       "hour": 9,
       "timestamp": "2026-02-08T09:00:00+07:00",
       "score": 1.744640846260798e-07,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0005:10:1",
+      "id": "E0005:10:1:20fd5baa9c1d",
       "encounterId": "E0005",
       "hour": 10,
       "timestamp": "2026-02-08T10:00:00+07:00",
       "score": 1.877663393636246e-07,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0005:11:1",
+      "id": "E0005:11:1:20fd5baa9c1d",
       "encounterId": "E0005",
       "hour": 11,
       "timestamp": "2026-02-08T11:00:00+07:00",
       "score": 1.9146582098753029e-07,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0005:12:1",
+      "id": "E0005:12:1:20fd5baa9c1d",
       "encounterId": "E0005",
       "hour": 12,
       "timestamp": "2026-02-08T12:00:00+07:00",
       "score": 2.035170613142711e-07,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0005:13:1",
+      "id": "E0005:13:1:20fd5baa9c1d",
       "encounterId": "E0005",
       "hour": 13,
       "timestamp": "2026-02-08T13:00:00+07:00",
       "score": 2.5021437719967474e-07,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0005:14:1",
+      "id": "E0005:14:1:20fd5baa9c1d",
       "encounterId": "E0005",
       "hour": 14,
       "timestamp": "2026-02-08T14:00:00+07:00",
       "score": 2.636237687607546e-07,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0005:15:1",
+      "id": "E0005:15:1:20fd5baa9c1d",
       "encounterId": "E0005",
       "hour": 15,
       "timestamp": "2026-02-08T15:00:00+07:00",
       "score": 6.529071802610791e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0005:16:1",
+      "id": "E0005:16:1:20fd5baa9c1d",
       "encounterId": "E0005",
       "hour": 16,
       "timestamp": "2026-02-08T16:00:00+07:00",
       "score": 0.0002689473497451293,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0005:17:1",
+      "id": "E0005:17:1:20fd5baa9c1d",
       "encounterId": "E0005",
       "hour": 17,
       "timestamp": "2026-02-08T17:00:00+07:00",
       "score": 0.0012958256547200213,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0005:18:1",
+      "id": "E0005:18:1:20fd5baa9c1d",
       "encounterId": "E0005",
       "hour": 18,
       "timestamp": "2026-02-08T18:00:00+07:00",
       "score": 0.0016889950499929382,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0005:19:1",
+      "id": "E0005:19:1:20fd5baa9c1d",
       "encounterId": "E0005",
       "hour": 19,
       "timestamp": "2026-02-08T19:00:00+07:00",
       "score": 0.007561771647104373,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0005:20:1",
+      "id": "E0005:20:1:20fd5baa9c1d",
       "encounterId": "E0005",
       "hour": 20,
       "timestamp": "2026-02-08T20:00:00+07:00",
       "score": 0.00879653577386633,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0006:1:1",
+      "id": "E0006:1:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 1,
       "timestamp": "2026-02-09T17:00:00+07:00",
       "score": 1.331700639645967e-09,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:2:1",
+      "id": "E0006:2:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 2,
       "timestamp": "2026-02-09T18:00:00+07:00",
       "score": 1.6522464170450183e-08,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:3:1",
+      "id": "E0006:3:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 3,
       "timestamp": "2026-02-09T19:00:00+07:00",
       "score": 9.155296922094925e-11,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:4:1",
+      "id": "E0006:4:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 4,
       "timestamp": "2026-02-09T20:00:00+07:00",
       "score": 1.1065610940768239e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:5:1",
+      "id": "E0006:5:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 5,
       "timestamp": "2026-02-09T21:00:00+07:00",
       "score": 2.520260244756109e-09,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:6:1",
+      "id": "E0006:6:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 6,
       "timestamp": "2026-02-09T22:00:00+07:00",
       "score": 3.4964274700082704e-09,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:7:1",
+      "id": "E0006:7:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 7,
       "timestamp": "2026-02-09T23:00:00+07:00",
       "score": 6.9099454381441116e-09,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:8:1",
+      "id": "E0006:8:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 8,
       "timestamp": "2026-02-10T00:00:00+07:00",
       "score": 7.578049417836228e-09,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:9:1",
+      "id": "E0006:9:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 9,
       "timestamp": "2026-02-10T01:00:00+07:00",
       "score": 7.790751608072324e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:10:1",
+      "id": "E0006:10:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 10,
       "timestamp": "2026-02-10T02:00:00+07:00",
       "score": 8.384768319774453e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:11:1",
+      "id": "E0006:11:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 11,
       "timestamp": "2026-02-10T03:00:00+07:00",
       "score": 2.6524791585775947e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:12:1",
+      "id": "E0006:12:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 12,
       "timestamp": "2026-02-10T04:00:00+07:00",
       "score": 2.819431516619182e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:13:1",
+      "id": "E0006:13:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 13,
       "timestamp": "2026-02-10T05:00:00+07:00",
       "score": 2.001078550665113e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:14:1",
+      "id": "E0006:14:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 14,
       "timestamp": "2026-02-10T06:00:00+07:00",
       "score": 3.058363110655085e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:15:1",
+      "id": "E0006:15:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 15,
       "timestamp": "2026-02-10T07:00:00+07:00",
       "score": 6.556132427920216e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:16:1",
+      "id": "E0006:16:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 16,
       "timestamp": "2026-02-10T08:00:00+07:00",
       "score": 7.956597466901751e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:17:1",
+      "id": "E0006:17:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 17,
       "timestamp": "2026-02-10T09:00:00+07:00",
       "score": 2.1092654539413927e-09,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:18:1",
+      "id": "E0006:18:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 18,
       "timestamp": "2026-02-10T10:00:00+07:00",
       "score": 2.392088920189928e-09,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:19:1",
+      "id": "E0006:19:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 19,
       "timestamp": "2026-02-10T11:00:00+07:00",
       "score": 3.519343534523532e-09,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:20:1",
+      "id": "E0006:20:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 20,
       "timestamp": "2026-02-10T12:00:00+07:00",
       "score": 3.8633084263243094e-09,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:21:1",
+      "id": "E0006:21:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 21,
       "timestamp": "2026-02-10T13:00:00+07:00",
       "score": 4.393224648469316e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:22:1",
+      "id": "E0006:22:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 22,
       "timestamp": "2026-02-10T14:00:00+07:00",
       "score": 4.731048700060558e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:23:1",
+      "id": "E0006:23:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 23,
       "timestamp": "2026-02-10T15:00:00+07:00",
       "score": 2.5994783267187353e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:24:1",
+      "id": "E0006:24:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 24,
       "timestamp": "2026-02-10T16:00:00+07:00",
       "score": 2.764244657866357e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:25:1",
+      "id": "E0006:25:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 25,
       "timestamp": "2026-02-10T17:00:00+07:00",
       "score": 3.721270394653499e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:26:1",
+      "id": "E0006:26:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 26,
       "timestamp": "2026-02-10T18:00:00+07:00",
       "score": 3.921891415907589e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:27:1",
+      "id": "E0006:27:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 27,
       "timestamp": "2026-02-10T19:00:00+07:00",
       "score": 8.311680182093821e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:28:1",
+      "id": "E0006:28:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 28,
       "timestamp": "2026-02-10T20:00:00+07:00",
       "score": 8.701523221712618e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:29:1",
+      "id": "E0006:29:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 29,
       "timestamp": "2026-02-10T21:00:00+07:00",
       "score": 3.098036744706524e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0006:30:1",
+      "id": "E0006:30:1:20fd5baa9c1d",
       "encounterId": "E0006",
       "hour": 30,
       "timestamp": "2026-02-10T22:00:00+07:00",
       "score": 3.226627120422312e-10,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0007:1:1",
+      "id": "E0007:1:1:20fd5baa9c1d",
       "encounterId": "E0007",
       "hour": 1,
       "timestamp": "2026-02-11T09:00:00+07:00",
       "score": 0.9815651242629251,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 36
     },
     {
-      "id": "E0007:2:1",
+      "id": "E0007:2:1:20fd5baa9c1d",
       "encounterId": "E0007",
       "hour": 2,
       "timestamp": "2026-02-11T10:00:00+07:00",
       "score": 0.9999940846750129,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 36
     },
     {
-      "id": "E0007:3:1",
+      "id": "E0007:3:1:20fd5baa9c1d",
       "encounterId": "E0007",
       "hour": 3,
       "timestamp": "2026-02-11T11:00:00+07:00",
       "score": 0.9999861977324573,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 36
     },
     {
-      "id": "E0007:4:1",
+      "id": "E0007:4:1:20fd5baa9c1d",
       "encounterId": "E0007",
       "hour": 4,
       "timestamp": "2026-02-11T12:00:00+07:00",
       "score": 0.9999895006168135,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 36
     },
     {
-      "id": "E0007:5:1",
+      "id": "E0007:5:1:20fd5baa9c1d",
       "encounterId": "E0007",
       "hour": 5,
       "timestamp": "2026-02-11T13:00:00+07:00",
       "score": 0.9999628585705677,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 36
     },
     {
-      "id": "E0007:6:1",
+      "id": "E0007:6:1:20fd5baa9c1d",
       "encounterId": "E0007",
       "hour": 6,
       "timestamp": "2026-02-11T14:00:00+07:00",
       "score": 0.9999740459690066,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0009:1:1",
+      "id": "E0009:1:1:20fd5baa9c1d",
       "encounterId": "E0009",
       "hour": 1,
       "timestamp": "2026-02-14T17:00:00+07:00",
       "score": 7.526784860687309e-06,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 36
     },
     {
-      "id": "E0009:2:1",
+      "id": "E0009:2:1:20fd5baa9c1d",
       "encounterId": "E0009",
       "hour": 2,
       "timestamp": "2026-02-14T18:00:00+07:00",
       "score": 0.0005214002070313701,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 36
     },
     {
-      "id": "E0009:3:1",
+      "id": "E0009:3:1:20fd5baa9c1d",
       "encounterId": "E0009",
       "hour": 3,
       "timestamp": "2026-02-14T19:00:00+07:00",
       "score": 0.0004432407995050879,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 36
     },
     {
-      "id": "E0009:4:1",
+      "id": "E0009:4:1:20fd5baa9c1d",
       "encounterId": "E0009",
       "hour": 4,
       "timestamp": "2026-02-14T20:00:00+07:00",
       "score": 0.0005356764187338836,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 36
     },
     {
-      "id": "E0009:5:1",
+      "id": "E0009:5:1:20fd5baa9c1d",
       "encounterId": "E0009",
       "hour": 5,
       "timestamp": "2026-02-14T21:00:00+07:00",
       "score": 9.674483518462396e-06,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 36
     },
     {
-      "id": "E0009:6:1",
+      "id": "E0009:6:1:20fd5baa9c1d",
       "encounterId": "E0009",
       "hour": 6,
       "timestamp": "2026-02-14T22:00:00+07:00",
       "score": 1.3421631072731213e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0009:7:1",
+      "id": "E0009:7:1:20fd5baa9c1d",
       "encounterId": "E0009",
       "hour": 7,
       "timestamp": "2026-02-14T23:00:00+07:00",
       "score": 0.052016553380624796,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0009:8:1",
+      "id": "E0009:8:1:20fd5baa9c1d",
       "encounterId": "E0009",
       "hour": 8,
       "timestamp": "2026-02-15T00:00:00+07:00",
       "score": 0.3388334936604574,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0009:9:1",
+      "id": "E0009:9:1:20fd5baa9c1d",
       "encounterId": "E0009",
       "hour": 9,
       "timestamp": "2026-02-15T01:00:00+07:00",
       "score": 0.3345761806410095,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0009:10:1",
+      "id": "E0009:10:1:20fd5baa9c1d",
       "encounterId": "E0009",
       "hour": 10,
       "timestamp": "2026-02-15T02:00:00+07:00",
       "score": 0.39794383128761435,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0009:11:1",
+      "id": "E0009:11:1:20fd5baa9c1d",
       "encounterId": "E0009",
       "hour": 11,
       "timestamp": "2026-02-15T03:00:00+07:00",
       "score": 0.7307478570106003,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0009:12:1",
+      "id": "E0009:12:1:20fd5baa9c1d",
       "encounterId": "E0009",
       "hour": 12,
       "timestamp": "2026-02-15T04:00:00+07:00",
       "score": 0.7601587388525324,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0015:1:1",
+      "id": "E0015:1:1:20fd5baa9c1d",
       "encounterId": "E0015",
       "hour": 1,
       "timestamp": "2026-02-24T17:00:00+07:00",
       "score": 4.428879526334941e-05,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 35
     },
     {
-      "id": "E0015:2:1",
+      "id": "E0015:2:1:20fd5baa9c1d",
       "encounterId": "E0015",
       "hour": 2,
       "timestamp": "2026-02-24T18:00:00+07:00",
       "score": 0.0008349867279256456,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 35
     },
     {
-      "id": "E0015:3:1",
+      "id": "E0015:3:1:20fd5baa9c1d",
       "encounterId": "E0015",
       "hour": 3,
       "timestamp": "2026-02-24T19:00:00+07:00",
       "score": 0.001070053125014451,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 35
     },
     {
-      "id": "E0015:4:1",
+      "id": "E0015:4:1:20fd5baa9c1d",
       "encounterId": "E0015",
       "hour": 4,
       "timestamp": "2026-02-24T20:00:00+07:00",
       "score": 0.0012930381745693852,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 35
     },
     {
-      "id": "E0015:5:1",
+      "id": "E0015:5:1:20fd5baa9c1d",
       "encounterId": "E0015",
       "hour": 5,
       "timestamp": "2026-02-24T21:00:00+07:00",
       "score": 0.0006199507356960999,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 35
     },
     {
-      "id": "E0015:6:1",
+      "id": "E0015:6:1:20fd5baa9c1d",
       "encounterId": "E0015",
       "hour": 6,
       "timestamp": "2026-02-24T22:00:00+07:00",
       "score": 0.000859868506648274,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0015:7:1",
+      "id": "E0015:7:1:20fd5baa9c1d",
       "encounterId": "E0015",
       "hour": 7,
       "timestamp": "2026-02-24T23:00:00+07:00",
       "score": 0.3114900255589191,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0015:8:1",
+      "id": "E0015:8:1:20fd5baa9c1d",
       "encounterId": "E0015",
       "hour": 8,
       "timestamp": "2026-02-25T00:00:00+07:00",
       "score": 0.9942307659739008,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0015:9:1",
+      "id": "E0015:9:1:20fd5baa9c1d",
       "encounterId": "E0015",
       "hour": 9,
       "timestamp": "2026-02-25T01:00:00+07:00",
       "score": 0.9938571393525009,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0015:10:1",
+      "id": "E0015:10:1:20fd5baa9c1d",
       "encounterId": "E0015",
       "hour": 10,
       "timestamp": "2026-02-25T02:00:00+07:00",
       "score": 0.9952821934793985,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0015:11:1",
+      "id": "E0015:11:1:20fd5baa9c1d",
       "encounterId": "E0015",
       "hour": 11,
       "timestamp": "2026-02-25T03:00:00+07:00",
       "score": 0.9993410947640378,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0015:12:1",
+      "id": "E0015:12:1:20fd5baa9c1d",
       "encounterId": "E0015",
       "hour": 12,
       "timestamp": "2026-02-25T04:00:00+07:00",
       "score": 0.9994342368643547,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 36
     },
     {
-      "id": "E0020:1:1",
+      "id": "E0020:1:1:20fd5baa9c1d",
       "encounterId": "E0020",
       "hour": 1,
       "timestamp": "2026-03-05T01:00:00+07:00",
       "score": 0.017984235676439694,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 35
     },
     {
-      "id": "E0020:2:1",
+      "id": "E0020:2:1:20fd5baa9c1d",
       "encounterId": "E0020",
       "hour": 2,
       "timestamp": "2026-03-05T02:00:00+07:00",
       "score": 0.026714425341933974,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 35
     },
     {
-      "id": "E0020:3:1",
+      "id": "E0020:3:1:20fd5baa9c1d",
       "encounterId": "E0020",
       "hour": 3,
       "timestamp": "2026-03-05T03:00:00+07:00",
       "score": 0.8391459700505505,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 35
     },
     {
-      "id": "E0020:4:1",
+      "id": "E0020:4:1:20fd5baa9c1d",
       "encounterId": "E0020",
       "hour": 4,
       "timestamp": "2026-03-05T04:00:00+07:00",
       "score": 0.8631138373378694,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 35
     },
     {
-      "id": "E0020:5:1",
+      "id": "E0020:5:1:20fd5baa9c1d",
       "encounterId": "E0020",
       "hour": 5,
       "timestamp": "2026-03-05T05:00:00+07:00",
       "score": 0.9152496406114395,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "ED",
       "availableFeatures": 35
     },
     {
-      "id": "E0020:6:1",
+      "id": "E0020:6:1:20fd5baa9c1d",
       "encounterId": "E0020",
       "hour": 6,
       "timestamp": "2026-03-05T06:00:00+07:00",
       "score": 0.9374306024740295,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0020:7:1",
+      "id": "E0020:7:1:20fd5baa9c1d",
       "encounterId": "E0020",
       "hour": 7,
       "timestamp": "2026-03-05T07:00:00+07:00",
       "score": 0.6881965641157585,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     },
     {
-      "id": "E0020:8:1",
+      "id": "E0020:8:1:20fd5baa9c1d",
       "encounterId": "E0020",
       "hour": 8,
       "timestamp": "2026-03-05T08:00:00+07:00",
       "score": 0.7076495264358155,
-      "threshold": 0.02757396730151618,
+      "threshold": 0.4080361343070105,
       "revision": 1,
-      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "department": "WARD",
       "availableFeatures": 35
     }
@@ -5959,7 +5959,7 @@
   "models": {
     "sepsis": {
       "model_name": "Logistic regression",
-      "model_version": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+      "model_version": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
       "data_kind": "SYNTHETIC_MOCK_EMR",
       "target": "sepsis_next_6h",
       "horizon_hours": 6,
@@ -6072,72 +6072,602 @@
       "validation_positive_encounters": 12,
       "temporal_holdout_encounters": 71,
       "temporal_holdout_positive_encounters": 11,
-      "evaluation_version": "timely-alert-v1",
-      "evaluated_at_utc": "2026-11-19T04:18:58.679630+00:00",
-      "threshold": 0.02757396730151618,
-      "threshold_rule": "Highest validation threshold within the demo ceiling meeting both recall targets; fallbacks are recorded under threshold_selection.",
+      "evaluation_version": "alert-episodes-6h-v2",
+      "evaluated_at_utc": "2026-11-20T11:33:33.012338+00:00",
+      "threshold": 0.4080361343070105,
+      "threshold_rule": "Highest validation threshold achieving patient-level sensitivity >= 80% under fixed six-hour alert episodes; no hourly sensitivity constraint, ceiling or silent fallback.",
       "threshold_selection": {
-        "branch": "both_recall_targets",
+        "branch": "patient_episode_recall",
         "minimum_recall": 0.8,
-        "demo_ceiling": 0.28,
-        "validation_encounter_recall": 0.9166666666666666,
-        "validation_snapshot_recall": 0.8
+        "recall_unit": "encounter_with_true_alert_episode",
+        "validation_encounter_recall": 0.8333333333333334,
+        "validation_snapshot_recall": 0.6428571428571429,
+        "validation_true_alert_episodes": 10,
+        "validation_false_alert_episodes": 4,
+        "selection_data": "independent_validation",
+        "probability_calibration": "not_applied",
+        "cooldown_hours": 6,
+        "hourly_recall_constraint": false,
+        "arbitrary_threshold_ceiling": false
       },
       "validation_synthetic_metrics": {
-        "snapshots": 1942,
-        "positive_snapshots": 70,
+        "snapshots": 1942.0,
+        "positive_snapshots": 70.0,
+        "encounters": 72.0,
+        "positive_encounters": 12.0,
         "auroc": 0.9799068986568986,
         "auprc": 0.8045906986741992,
         "brier": 0.013844179140126435,
         "observed_prevalence": 0.03604531410916581,
         "mean_predicted_probability": 0.030687219854960122,
-        "recall": 0.8,
-        "precision": 0.4409448818897638,
-        "alert_fraction": 0.06539649845520082,
-        "encounter_early_recall": 0.9166666666666666,
-        "timely_alert_encounters": 11,
-        "too_early_alert_encounters": 1,
-        "too_early_only_encounters": 0,
-        "encounter_precision": 0.6111111111111112,
-        "nne_encounters": 1.64,
-        "false_alert_encounters_per_100": 9.72,
-        "alert_episodes_per_100": 38.89,
-        "median_lead_hours": 5.0,
+        "calibration_intercept": 0.6819492837790292,
+        "calibration_slope": 0.5175038062800248,
+        "recall": 0.6428571428571429,
+        "precision": 0.7894736842105263,
+        "specificity": 0.9935897435897436,
+        "npv": 0.986737400530504,
+        "f1": 0.7086614173228346,
+        "alert_fraction": 0.029351184346035016,
+        "encounter_early_recall": 0.8333333333333334,
+        "timely_alert_encounters": 10.0,
+        "too_early_alert_encounters": 0.0,
+        "too_early_only_encounters": 0.0,
+        "raw_timely_alert_encounters": 10.0,
+        "encounter_precision": 0.8333333333333334,
+        "nne_encounters": 1.2,
+        "false_alert_encounters_per_100": 2.7777777777777777,
+        "alert_episodes": 14.0,
+        "true_alert_episodes": 10.0,
+        "false_alert_episodes": 4.0,
+        "episode_ppv": 0.7142857142857143,
+        "alert_episodes_per_100": 19.444444444444443,
+        "false_alert_episodes_per_100": 5.555555555555555,
+        "false_episodes_per_true_episode": 0.4,
+        "repeated_alert_fraction": 0.7543859649122807,
+        "median_lead_hours": 5.5,
+        "lead_q1_hours": 4.25,
+        "lead_q3_hours": 6.0,
         "iqr_lead_hours": [
-          5.0,
+          4.25,
           6.0
-        ]
+        ],
+        "calibration_curve": [
+          {
+            "mean_probability": 4.218740020513815e-10,
+            "observed_fraction": 0.0,
+            "snapshots": 195
+          },
+          {
+            "mean_probability": 4.720689914971987e-09,
+            "observed_fraction": 0.0,
+            "snapshots": 194
+          },
+          {
+            "mean_probability": 2.035726774997448e-08,
+            "observed_fraction": 0.0,
+            "snapshots": 194
+          },
+          {
+            "mean_probability": 9.466776663163429e-08,
+            "observed_fraction": 0.0,
+            "snapshots": 194
+          },
+          {
+            "mean_probability": 5.408289396169441e-07,
+            "observed_fraction": 0.0,
+            "snapshots": 194
+          },
+          {
+            "mean_probability": 3.820387621657102e-06,
+            "observed_fraction": 0.0,
+            "snapshots": 194
+          },
+          {
+            "mean_probability": 1.7668934649827386e-05,
+            "observed_fraction": 0.0,
+            "snapshots": 194
+          },
+          {
+            "mean_probability": 8.110345570295035e-05,
+            "observed_fraction": 0.005154639175257732,
+            "snapshots": 194
+          },
+          {
+            "mean_probability": 0.0009764705600015319,
+            "observed_fraction": 0.020618556701030927,
+            "snapshots": 194
+          },
+          {
+            "mean_probability": 0.30453904839494866,
+            "observed_fraction": 0.3333333333333333,
+            "snapshots": 195
+          }
+        ],
+        "confidence_intervals": {
+          "snapshots": {
+            "lower": 1818.0,
+            "upper": 2050.0,
+            "valid_resamples": 1000
+          },
+          "positive_snapshots": {
+            "lower": 36.0,
+            "upper": 108.0,
+            "valid_resamples": 1000
+          },
+          "encounters": {
+            "lower": 72.0,
+            "upper": 72.0,
+            "valid_resamples": 1000
+          },
+          "positive_encounters": {
+            "lower": 6.0,
+            "upper": 18.0,
+            "valid_resamples": 1000
+          },
+          "auroc": {
+            "lower": 0.9518791213064556,
+            "upper": 0.9966861327400816,
+            "valid_resamples": 1000
+          },
+          "auprc": {
+            "lower": 0.5815515872692086,
+            "upper": 0.9582443553705652,
+            "valid_resamples": 1000
+          },
+          "brier": {
+            "lower": 0.004587690736286487,
+            "upper": 0.025609112914373816,
+            "valid_resamples": 1000
+          },
+          "observed_prevalence": {
+            "lower": 0.017611235740537443,
+            "upper": 0.059153254229323306,
+            "valid_resamples": 1000
+          },
+          "mean_predicted_probability": {
+            "lower": 0.014713728434003774,
+            "upper": 0.05143461832978807,
+            "valid_resamples": 1000
+          },
+          "calibration_intercept": {
+            "lower": -1.092449747684811,
+            "upper": 2.9266112351368974,
+            "valid_resamples": 1000
+          },
+          "calibration_slope": {
+            "lower": 0.3835700437981953,
+            "upper": 1.0701244344127023,
+            "valid_resamples": 1000
+          },
+          "recall": {
+            "lower": 0.39359802431610946,
+            "upper": 0.8788419913419913,
+            "valid_resamples": 1000
+          },
+          "precision": {
+            "lower": 0.48132969034608375,
+            "upper": 1.0,
+            "valid_resamples": 1000
+          },
+          "specificity": {
+            "lower": 0.9824913726127884,
+            "upper": 1.0,
+            "valid_resamples": 1000
+          },
+          "npv": {
+            "lower": 0.9737969455273466,
+            "upper": 0.9966667670376852,
+            "valid_resamples": 1000
+          },
+          "f1": {
+            "lower": 0.4726482213438735,
+            "upper": 0.8888888888888888,
+            "valid_resamples": 1000
+          },
+          "alert_fraction": {
+            "lower": 0.012767957257175715,
+            "upper": 0.05044458748925659,
+            "valid_resamples": 1000
+          },
+          "encounter_early_recall": {
+            "lower": 0.5833333333333334,
+            "upper": 1.0,
+            "valid_resamples": 1000
+          },
+          "timely_alert_encounters": {
+            "lower": 5.0,
+            "upper": 16.0,
+            "valid_resamples": 1000
+          },
+          "too_early_alert_encounters": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "valid_resamples": 1000
+          },
+          "too_early_only_encounters": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "valid_resamples": 1000
+          },
+          "raw_timely_alert_encounters": {
+            "lower": 5.0,
+            "upper": 16.0,
+            "valid_resamples": 1000
+          },
+          "encounter_precision": {
+            "lower": 0.5833333333333334,
+            "upper": 1.0,
+            "valid_resamples": 1000
+          },
+          "nne_encounters": {
+            "lower": 1.0,
+            "upper": 1.7142857142857142,
+            "valid_resamples": 1000
+          },
+          "false_alert_encounters_per_100": {
+            "lower": 0.0,
+            "upper": 6.944444444444445,
+            "valid_resamples": 1000
+          },
+          "alert_episodes": {
+            "lower": 7.0,
+            "upper": 22.0,
+            "valid_resamples": 1000
+          },
+          "true_alert_episodes": {
+            "lower": 5.0,
+            "upper": 16.0,
+            "valid_resamples": 1000
+          },
+          "false_alert_episodes": {
+            "lower": 0.0,
+            "upper": 10.024999999999977,
+            "valid_resamples": 1000
+          },
+          "episode_ppv": {
+            "lower": 0.4,
+            "upper": 1.0,
+            "valid_resamples": 1000
+          },
+          "alert_episodes_per_100": {
+            "lower": 9.722222222222221,
+            "upper": 30.555555555555557,
+            "valid_resamples": 1000
+          },
+          "false_alert_episodes_per_100": {
+            "lower": 0.0,
+            "upper": 13.92361111111108,
+            "valid_resamples": 1000
+          },
+          "false_episodes_per_true_episode": {
+            "lower": 0.0,
+            "upper": 1.5,
+            "valid_resamples": 1000
+          },
+          "repeated_alert_fraction": {
+            "lower": 0.6875,
+            "upper": 0.8032860070257611,
+            "valid_resamples": 1000
+          },
+          "median_lead_hours": {
+            "lower": 4.0,
+            "upper": 6.0,
+            "valid_resamples": 1000
+          },
+          "lead_q1_hours": {
+            "lower": 1.25,
+            "upper": 6.0,
+            "valid_resamples": 1000
+          },
+          "lead_q3_hours": {
+            "lower": 5.0,
+            "upper": 6.0,
+            "valid_resamples": 1000
+          }
+        },
+        "bootstrap": {
+          "unit": "encounter",
+          "resamples": 1000,
+          "seed": 42,
+          "level": 0.95,
+          "fixed_model_and_threshold": true
+        }
       },
       "temporal_holdout_synthetic_metrics": {
-        "snapshots": 1926,
-        "positive_snapshots": 66,
+        "snapshots": 1926.0,
+        "positive_snapshots": 66.0,
+        "encounters": 71.0,
+        "positive_encounters": 11.0,
         "auroc": 0.9936705767350928,
         "auprc": 0.9013549562195304,
         "brier": 0.009505733578968988,
         "observed_prevalence": 0.03426791277258567,
         "mean_predicted_probability": 0.030805818154884586,
-        "recall": 0.9696969696969697,
-        "precision": 0.512,
-        "alert_fraction": 0.06490134994807892,
-        "encounter_early_recall": 1.0,
-        "timely_alert_encounters": 11,
-        "too_early_alert_encounters": 4,
-        "too_early_only_encounters": 0,
-        "encounter_precision": 0.6470588235294118,
-        "nne_encounters": 1.55,
-        "false_alert_encounters_per_100": 8.45,
-        "alert_episodes_per_100": 36.62,
+        "calibration_intercept": 0.46741299810999,
+        "calibration_slope": 0.8415115735441825,
+        "recall": 0.7424242424242424,
+        "precision": 0.8596491228070176,
+        "specificity": 0.9956989247311828,
+        "npv": 0.990904226859283,
+        "f1": 0.7967479674796748,
+        "alert_fraction": 0.029595015576323987,
+        "encounter_early_recall": 0.9090909090909091,
+        "timely_alert_encounters": 10.0,
+        "too_early_alert_encounters": 1.0,
+        "too_early_only_encounters": 0.0,
+        "raw_timely_alert_encounters": 10.0,
+        "encounter_precision": 0.9090909090909091,
+        "nne_encounters": 1.1,
+        "false_alert_encounters_per_100": 2.816901408450704,
+        "alert_episodes": 13.0,
+        "true_alert_episodes": 10.0,
+        "false_alert_episodes": 3.0,
+        "episode_ppv": 0.7692307692307693,
+        "alert_episodes_per_100": 18.309859154929576,
+        "false_alert_episodes_per_100": 4.225352112676056,
+        "false_episodes_per_true_episode": 0.3,
+        "repeated_alert_fraction": 0.7719298245614035,
         "median_lead_hours": 6.0,
+        "lead_q1_hours": 4.25,
+        "lead_q3_hours": 6.0,
         "iqr_lead_hours": [
-          6.0,
+          4.25,
           6.0
-        ]
+        ],
+        "calibration_curve": [
+          {
+            "mean_probability": 1.6106665911333745e-10,
+            "observed_fraction": 0.0,
+            "snapshots": 193
+          },
+          {
+            "mean_probability": 1.8449290160960365e-09,
+            "observed_fraction": 0.0,
+            "snapshots": 193
+          },
+          {
+            "mean_probability": 9.868845581740889e-09,
+            "observed_fraction": 0.0,
+            "snapshots": 192
+          },
+          {
+            "mean_probability": 4.513339797418722e-08,
+            "observed_fraction": 0.0,
+            "snapshots": 193
+          },
+          {
+            "mean_probability": 2.106226456288411e-07,
+            "observed_fraction": 0.0,
+            "snapshots": 192
+          },
+          {
+            "mean_probability": 8.7266041658828e-07,
+            "observed_fraction": 0.0,
+            "snapshots": 193
+          },
+          {
+            "mean_probability": 4.335459312222067e-06,
+            "observed_fraction": 0.0,
+            "snapshots": 192
+          },
+          {
+            "mean_probability": 4.714664895743672e-05,
+            "observed_fraction": 0.0,
+            "snapshots": 193
+          },
+          {
+            "mean_probability": 0.0010473176612690704,
+            "observed_fraction": 0.005208333333333333,
+            "snapshots": 192
+          },
+          {
+            "mean_probability": 0.3063252290579152,
+            "observed_fraction": 0.33678756476683935,
+            "snapshots": 193
+          }
+        ],
+        "confidence_intervals": {
+          "snapshots": {
+            "lower": 1804.0,
+            "upper": 2028.0,
+            "valid_resamples": 1000
+          },
+          "positive_snapshots": {
+            "lower": 36.0,
+            "upper": 108.0,
+            "valid_resamples": 1000
+          },
+          "encounters": {
+            "lower": 71.0,
+            "upper": 71.0,
+            "valid_resamples": 1000
+          },
+          "positive_encounters": {
+            "lower": 6.0,
+            "upper": 18.0,
+            "valid_resamples": 1000
+          },
+          "auroc": {
+            "lower": 0.9841582618079591,
+            "upper": 0.9996354373805489,
+            "valid_resamples": 1000
+          },
+          "auprc": {
+            "lower": 0.7449760819137988,
+            "upper": 0.990048583662714,
+            "valid_resamples": 1000
+          },
+          "brier": {
+            "lower": 0.003009572084087905,
+            "upper": 0.017528885998808818,
+            "valid_resamples": 1000
+          },
+          "observed_prevalence": {
+            "lower": 0.017716535433070866,
+            "upper": 0.059217047298863894,
+            "valid_resamples": 1000
+          },
+          "mean_predicted_probability": {
+            "lower": 0.014761516450034075,
+            "upper": 0.051175264959488584,
+            "valid_resamples": 1000
+          },
+          "calibration_intercept": {
+            "lower": -1.045152766258117,
+            "upper": 2.057863476974405,
+            "valid_resamples": 1000
+          },
+          "calibration_slope": {
+            "lower": 0.6179555156339351,
+            "upper": 2.2353911371170407,
+            "valid_resamples": 996
+          },
+          "recall": {
+            "lower": 0.520775462962963,
+            "upper": 0.9446428571428569,
+            "valid_resamples": 1000
+          },
+          "precision": {
+            "lower": 0.6363082039911309,
+            "upper": 1.0,
+            "valid_resamples": 1000
+          },
+          "specificity": {
+            "lower": 0.9881675235948725,
+            "upper": 1.0,
+            "valid_resamples": 1000
+          },
+          "npv": {
+            "lower": 0.9802800181530108,
+            "upper": 0.9989237177965301,
+            "valid_resamples": 1000
+          },
+          "f1": {
+            "lower": 0.599957264957265,
+            "upper": 0.9333870967741935,
+            "valid_resamples": 1000
+          },
+          "alert_fraction": {
+            "lower": 0.013648931577811354,
+            "upper": 0.05112546204499278,
+            "valid_resamples": 1000
+          },
+          "encounter_early_recall": {
+            "lower": 0.7,
+            "upper": 1.0,
+            "valid_resamples": 1000
+          },
+          "timely_alert_encounters": {
+            "lower": 5.0,
+            "upper": 16.0,
+            "valid_resamples": 1000
+          },
+          "too_early_alert_encounters": {
+            "lower": 0.0,
+            "upper": 3.0,
+            "valid_resamples": 1000
+          },
+          "too_early_only_encounters": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "valid_resamples": 1000
+          },
+          "raw_timely_alert_encounters": {
+            "lower": 5.0,
+            "upper": 16.0,
+            "valid_resamples": 1000
+          },
+          "encounter_precision": {
+            "lower": 0.7142857142857143,
+            "upper": 1.0,
+            "valid_resamples": 1000
+          },
+          "nne_encounters": {
+            "lower": 1.0,
+            "upper": 1.4,
+            "valid_resamples": 1000
+          },
+          "false_alert_encounters_per_100": {
+            "lower": 0.0,
+            "upper": 7.042253521126761,
+            "valid_resamples": 1000
+          },
+          "alert_episodes": {
+            "lower": 6.0,
+            "upper": 20.0,
+            "valid_resamples": 1000
+          },
+          "true_alert_episodes": {
+            "lower": 5.0,
+            "upper": 16.0,
+            "valid_resamples": 1000
+          },
+          "false_alert_episodes": {
+            "lower": 0.0,
+            "upper": 8.0,
+            "valid_resamples": 1000
+          },
+          "episode_ppv": {
+            "lower": 0.5,
+            "upper": 1.0,
+            "valid_resamples": 1000
+          },
+          "alert_episodes_per_100": {
+            "lower": 8.450704225352112,
+            "upper": 28.169014084507044,
+            "valid_resamples": 1000
+          },
+          "false_alert_episodes_per_100": {
+            "lower": 0.0,
+            "upper": 11.267605633802816,
+            "valid_resamples": 1000
+          },
+          "false_episodes_per_true_episode": {
+            "lower": 0.0,
+            "upper": 1.0,
+            "valid_resamples": 1000
+          },
+          "repeated_alert_fraction": {
+            "lower": 0.7187299679487179,
+            "upper": 0.8148391812865496,
+            "valid_resamples": 1000
+          },
+          "median_lead_hours": {
+            "lower": 4.0,
+            "upper": 6.0,
+            "valid_resamples": 1000
+          },
+          "lead_q1_hours": {
+            "lower": 2.0,
+            "upper": 6.0,
+            "valid_resamples": 1000
+          },
+          "lead_q3_hours": {
+            "lower": 5.5,
+            "upper": 6.0,
+            "valid_resamples": 1000
+          }
+        },
+        "bootstrap": {
+          "unit": "encounter",
+          "resamples": 1000,
+          "seed": 42,
+          "level": 0.95,
+          "fixed_model_and_threshold": true
+        }
       },
-      "warning": "Synthetic, event-enriched and rule-generated data. Not a clinical probability or clinical validation."
+      "warning": "Synthetic, event-enriched and rule-generated data. Not a clinical probability or clinical validation.",
+      "decision_policy_version": "patient-episodes-6h-v2",
+      "evaluation_limitations": [
+        "Synthetic data only.",
+        "Threshold uses independent validation, not nested out-of-fold predictions.",
+        "Probabilities have not been recalibrated; calibration fits are diagnostic only.",
+        "Bootstrap intervals hold the model and threshold fixed; they do not include model-selection uncertainty."
+      ]
     },
     "shock": {
       "model_name": "Logistic regression",
-      "model_version": "mock-emr-hourly-shock-lr-v3-expanding-t0",
+      "model_version": "mock-emr-hourly-shock-lr-v3-expanding-t0-episodes-v2",
       "data_kind": "SYNTHETIC_MOCK_EMR",
       "target": "shock_next_6h",
       "horizon_hours": 6,
@@ -6235,68 +6765,595 @@
       "validation_positive_encounters": 3,
       "temporal_holdout_encounters": 71,
       "temporal_holdout_positive_encounters": 2,
-      "evaluation_version": "timely-alert-v1",
-      "evaluated_at_utc": "2026-11-19T04:19:01.244450+00:00",
-      "threshold": 0.15,
-      "threshold_rule": "Highest validation threshold within the demo ceiling meeting both recall targets; fallbacks are recorded under threshold_selection.",
+      "evaluation_version": "alert-episodes-6h-v2",
+      "evaluated_at_utc": "2026-11-20T11:33:58.408544+00:00",
+      "threshold": 0.9584665792680003,
+      "threshold_rule": "Highest validation threshold achieving patient-level sensitivity >= 80% under fixed six-hour alert episodes; no hourly sensitivity constraint, ceiling or silent fallback.",
       "threshold_selection": {
-        "branch": "both_recall_targets",
+        "branch": "patient_episode_recall",
         "minimum_recall": 0.8,
-        "demo_ceiling": 0.15,
+        "recall_unit": "encounter_with_true_alert_episode",
         "validation_encounter_recall": 1.0,
-        "validation_snapshot_recall": 1.0
+        "validation_snapshot_recall": 0.3888888888888889,
+        "validation_true_alert_episodes": 3,
+        "validation_false_alert_episodes": 0,
+        "selection_data": "independent_validation",
+        "probability_calibration": "not_applied",
+        "cooldown_hours": 6,
+        "hourly_recall_constraint": false,
+        "arbitrary_threshold_ceiling": false
       },
       "validation_synthetic_metrics": {
-        "snapshots": 2120,
-        "positive_snapshots": 18,
+        "snapshots": 2120.0,
+        "positive_snapshots": 18.0,
+        "encounters": 72.0,
+        "positive_encounters": 3.0,
         "auroc": 0.999259964055397,
         "auprc": 0.9233937655068808,
         "brier": 0.0019137915274471682,
         "observed_prevalence": 0.008490566037735849,
         "mean_predicted_probability": 0.008704605206847862,
-        "recall": 1.0,
-        "precision": 0.75,
-        "alert_fraction": 0.011320754716981131,
+        "calibration_intercept": -0.10269352027250625,
+        "calibration_slope": 1.203345572054769,
+        "recall": 0.3888888888888889,
+        "precision": 1.0,
+        "specificity": 1.0,
+        "npv": 0.9947941315664931,
+        "f1": 0.56,
+        "alert_fraction": 0.0033018867924528303,
         "encounter_early_recall": 1.0,
-        "timely_alert_encounters": 3,
-        "too_early_alert_encounters": 3,
-        "too_early_only_encounters": 0,
+        "timely_alert_encounters": 3.0,
+        "too_early_alert_encounters": 0.0,
+        "too_early_only_encounters": 0.0,
+        "raw_timely_alert_encounters": 3.0,
         "encounter_precision": 1.0,
         "nne_encounters": 1.0,
         "false_alert_encounters_per_100": 0.0,
-        "alert_episodes_per_100": 8.33,
-        "median_lead_hours": 6.0,
+        "alert_episodes": 3.0,
+        "true_alert_episodes": 3.0,
+        "false_alert_episodes": 0.0,
+        "episode_ppv": 1.0,
+        "alert_episodes_per_100": 4.166666666666667,
+        "false_alert_episodes_per_100": 0.0,
+        "false_episodes_per_true_episode": 0.0,
+        "repeated_alert_fraction": 0.5714285714285714,
+        "median_lead_hours": 4.0,
+        "lead_q1_hours": 2.5,
+        "lead_q3_hours": 4.0,
         "iqr_lead_hours": [
-          6.0,
-          6.0
-        ]
+          2.5,
+          4.0
+        ],
+        "calibration_curve": [
+          {
+            "mean_probability": 5.603252937326581e-06,
+            "observed_fraction": 0.0,
+            "snapshots": 212
+          },
+          {
+            "mean_probability": 7.497462673059206e-06,
+            "observed_fraction": 0.0,
+            "snapshots": 212
+          },
+          {
+            "mean_probability": 8.62255200558156e-06,
+            "observed_fraction": 0.0,
+            "snapshots": 212
+          },
+          {
+            "mean_probability": 1.0041133401408207e-05,
+            "observed_fraction": 0.0,
+            "snapshots": 212
+          },
+          {
+            "mean_probability": 1.2187732848183136e-05,
+            "observed_fraction": 0.0,
+            "snapshots": 212
+          },
+          {
+            "mean_probability": 1.592650744641675e-05,
+            "observed_fraction": 0.0,
+            "snapshots": 212
+          },
+          {
+            "mean_probability": 2.0284984231359747e-05,
+            "observed_fraction": 0.0,
+            "snapshots": 212
+          },
+          {
+            "mean_probability": 2.806091070457478e-05,
+            "observed_fraction": 0.0,
+            "snapshots": 212
+          },
+          {
+            "mean_probability": 0.00014583401328532563,
+            "observed_fraction": 0.0,
+            "snapshots": 212
+          },
+          {
+            "mean_probability": 0.08679199351894537,
+            "observed_fraction": 0.08490566037735849,
+            "snapshots": 212
+          }
+        ],
+        "confidence_intervals": {
+          "snapshots": {
+            "lower": 2068.0,
+            "upper": 2160.0,
+            "valid_resamples": 1000
+          },
+          "positive_snapshots": {
+            "lower": 0.0,
+            "upper": 42.0,
+            "valid_resamples": 1000
+          },
+          "encounters": {
+            "lower": 72.0,
+            "upper": 72.0,
+            "valid_resamples": 1000
+          },
+          "positive_encounters": {
+            "lower": 0.0,
+            "upper": 7.0,
+            "valid_resamples": 1000
+          },
+          "auroc": {
+            "lower": 0.9981649739583334,
+            "upper": 1.0,
+            "valid_resamples": 955
+          },
+          "auprc": {
+            "lower": 0.907493894993895,
+            "upper": 1.0,
+            "valid_resamples": 955
+          },
+          "brier": {
+            "lower": 5.364756133096702e-06,
+            "upper": 0.004756371856177628,
+            "valid_resamples": 1000
+          },
+          "observed_prevalence": {
+            "lower": 0.0,
+            "upper": 0.020309477756286266,
+            "valid_resamples": 1000
+          },
+          "mean_predicted_probability": {
+            "lower": 0.000589637549284888,
+            "upper": 0.020032416058799872,
+            "valid_resamples": 1000
+          },
+          "calibration_intercept": {
+            "lower": -0.8835268606985722,
+            "upper": 0.2916435292278226,
+            "valid_resamples": 955
+          },
+          "calibration_slope": {
+            "lower": 0.9446186364018637,
+            "upper": 44.08792990608955,
+            "valid_resamples": 954
+          },
+          "recall": {
+            "lower": 0.16666666666666666,
+            "upper": 0.6666666666666666,
+            "valid_resamples": 955
+          },
+          "precision": {
+            "lower": 1.0,
+            "upper": 1.0,
+            "valid_resamples": 955
+          },
+          "specificity": {
+            "lower": 1.0,
+            "upper": 1.0,
+            "valid_resamples": 1000
+          },
+          "npv": {
+            "lower": 0.9868485143692158,
+            "upper": 1.0,
+            "valid_resamples": 1000
+          },
+          "f1": {
+            "lower": 0.2857142857142857,
+            "upper": 0.8,
+            "valid_resamples": 955
+          },
+          "alert_fraction": {
+            "lower": 0.0,
+            "upper": 0.008260811161342911,
+            "valid_resamples": 1000
+          },
+          "encounter_early_recall": {
+            "lower": 1.0,
+            "upper": 1.0,
+            "valid_resamples": 955
+          },
+          "timely_alert_encounters": {
+            "lower": 0.0,
+            "upper": 7.0,
+            "valid_resamples": 1000
+          },
+          "too_early_alert_encounters": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "valid_resamples": 1000
+          },
+          "too_early_only_encounters": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "valid_resamples": 1000
+          },
+          "raw_timely_alert_encounters": {
+            "lower": 0.0,
+            "upper": 7.0,
+            "valid_resamples": 1000
+          },
+          "encounter_precision": {
+            "lower": 1.0,
+            "upper": 1.0,
+            "valid_resamples": 955
+          },
+          "nne_encounters": {
+            "lower": 1.0,
+            "upper": 1.0,
+            "valid_resamples": 955
+          },
+          "false_alert_encounters_per_100": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "valid_resamples": 1000
+          },
+          "alert_episodes": {
+            "lower": 0.0,
+            "upper": 7.0,
+            "valid_resamples": 1000
+          },
+          "true_alert_episodes": {
+            "lower": 0.0,
+            "upper": 7.0,
+            "valid_resamples": 1000
+          },
+          "false_alert_episodes": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "valid_resamples": 1000
+          },
+          "episode_ppv": {
+            "lower": 1.0,
+            "upper": 1.0,
+            "valid_resamples": 955
+          },
+          "alert_episodes_per_100": {
+            "lower": 0.0,
+            "upper": 9.722222222222221,
+            "valid_resamples": 1000
+          },
+          "false_alert_episodes_per_100": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "valid_resamples": 1000
+          },
+          "false_episodes_per_true_episode": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "valid_resamples": 955
+          },
+          "repeated_alert_fraction": {
+            "lower": 0.0,
+            "upper": 0.75,
+            "valid_resamples": 955
+          },
+          "median_lead_hours": {
+            "lower": 1.0,
+            "upper": 4.0,
+            "valid_resamples": 955
+          },
+          "lead_q1_hours": {
+            "lower": 1.0,
+            "upper": 4.0,
+            "valid_resamples": 955
+          },
+          "lead_q3_hours": {
+            "lower": 1.0,
+            "upper": 4.0,
+            "valid_resamples": 955
+          }
+        },
+        "bootstrap": {
+          "unit": "encounter",
+          "resamples": 1000,
+          "seed": 42,
+          "level": 0.95,
+          "fixed_model_and_threshold": true
+        }
       },
       "temporal_holdout_synthetic_metrics": {
-        "snapshots": 2108,
-        "positive_snapshots": 12,
+        "snapshots": 2108.0,
+        "positive_snapshots": 12.0,
+        "encounters": 71.0,
+        "positive_encounters": 2.0,
         "auroc": 0.9995229007633588,
         "auprc": 0.9279040404040405,
         "brier": 0.0017346665728906925,
         "observed_prevalence": 0.0056925996204933585,
         "mean_predicted_probability": 0.00417713673753968,
-        "recall": 0.8333333333333334,
-        "precision": 0.8333333333333334,
-        "alert_fraction": 0.0056925996204933585,
-        "encounter_early_recall": 1.0,
-        "timely_alert_encounters": 2,
-        "too_early_alert_encounters": 1,
-        "too_early_only_encounters": 0,
-        "encounter_precision": 1.0,
-        "nne_encounters": 1.0,
+        "calibration_intercept": 0.7368947831531482,
+        "calibration_slope": 1.557186441338517,
+        "recall": 0.0,
+        "precision": null,
+        "specificity": 1.0,
+        "npv": 0.9943074003795066,
+        "f1": 0.0,
+        "alert_fraction": 0.0,
+        "encounter_early_recall": 0.0,
+        "timely_alert_encounters": 0.0,
+        "too_early_alert_encounters": 0.0,
+        "too_early_only_encounters": 0.0,
+        "raw_timely_alert_encounters": 0.0,
+        "encounter_precision": null,
+        "nne_encounters": null,
         "false_alert_encounters_per_100": 0.0,
-        "alert_episodes_per_100": 4.23,
-        "median_lead_hours": 5.0,
-        "iqr_lead_hours": [
-          4.5,
-          5.5
-        ]
+        "alert_episodes": 0.0,
+        "true_alert_episodes": 0.0,
+        "false_alert_episodes": 0.0,
+        "episode_ppv": null,
+        "alert_episodes_per_100": 0.0,
+        "false_alert_episodes_per_100": 0.0,
+        "false_episodes_per_true_episode": null,
+        "repeated_alert_fraction": null,
+        "median_lead_hours": null,
+        "lead_q1_hours": null,
+        "lead_q3_hours": null,
+        "iqr_lead_hours": null,
+        "calibration_curve": [
+          {
+            "mean_probability": 5.772678664243777e-06,
+            "observed_fraction": 0.0,
+            "snapshots": 211
+          },
+          {
+            "mean_probability": 7.447872516728538e-06,
+            "observed_fraction": 0.0,
+            "snapshots": 211
+          },
+          {
+            "mean_probability": 8.57281615610745e-06,
+            "observed_fraction": 0.0,
+            "snapshots": 211
+          },
+          {
+            "mean_probability": 9.711289756881455e-06,
+            "observed_fraction": 0.0,
+            "snapshots": 210
+          },
+          {
+            "mean_probability": 1.113481241933311e-05,
+            "observed_fraction": 0.0,
+            "snapshots": 211
+          },
+          {
+            "mean_probability": 1.3444497562400509e-05,
+            "observed_fraction": 0.0,
+            "snapshots": 211
+          },
+          {
+            "mean_probability": 1.7940396750905066e-05,
+            "observed_fraction": 0.0,
+            "snapshots": 210
+          },
+          {
+            "mean_probability": 2.617359997832865e-05,
+            "observed_fraction": 0.0,
+            "snapshots": 211
+          },
+          {
+            "mean_probability": 6.0054781773295864e-05,
+            "observed_fraction": 0.0,
+            "snapshots": 211
+          },
+          {
+            "mean_probability": 0.0415716519673135,
+            "observed_fraction": 0.05687203791469194,
+            "snapshots": 211
+          }
+        ],
+        "confidence_intervals": {
+          "snapshots": {
+            "lower": 2073.95,
+            "upper": 2130.0,
+            "valid_resamples": 1000
+          },
+          "positive_snapshots": {
+            "lower": 0.0,
+            "upper": 30.0,
+            "valid_resamples": 1000
+          },
+          "encounters": {
+            "lower": 71.0,
+            "upper": 71.0,
+            "valid_resamples": 1000
+          },
+          "positive_encounters": {
+            "lower": 0.0,
+            "upper": 5.0,
+            "valid_resamples": 1000
+          },
+          "auroc": {
+            "lower": 0.998636806231743,
+            "upper": 0.9996849401386264,
+            "valid_resamples": 854
+          },
+          "auprc": {
+            "lower": 0.9107142857142856,
+            "upper": 0.9279040404040405,
+            "valid_resamples": 854
+          },
+          "brier": {
+            "lower": 5.176816443479684e-06,
+            "upper": 0.004468271830376678,
+            "valid_resamples": 1000
+          },
+          "observed_prevalence": {
+            "lower": 0.0,
+            "upper": 0.01447876447876448,
+            "valid_resamples": 1000
+          },
+          "mean_predicted_probability": {
+            "lower": 0.0003821964210346701,
+            "upper": 0.009695833526071387,
+            "valid_resamples": 1000
+          },
+          "calibration_intercept": {
+            "lower": -0.0026909323080712274,
+            "upper": 1.5245703535214699,
+            "valid_resamples": 854
+          },
+          "calibration_slope": {
+            "lower": 1.2481400765231618,
+            "upper": 2.304919852866737,
+            "valid_resamples": 854
+          },
+          "recall": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "valid_resamples": 854
+          },
+          "precision": {
+            "lower": null,
+            "upper": null,
+            "valid_resamples": 0
+          },
+          "specificity": {
+            "lower": 1.0,
+            "upper": 1.0,
+            "valid_resamples": 1000
+          },
+          "npv": {
+            "lower": 0.9855212355212355,
+            "upper": 1.0,
+            "valid_resamples": 1000
+          },
+          "f1": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "valid_resamples": 854
+          },
+          "alert_fraction": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "valid_resamples": 1000
+          },
+          "encounter_early_recall": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "valid_resamples": 854
+          },
+          "timely_alert_encounters": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "valid_resamples": 1000
+          },
+          "too_early_alert_encounters": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "valid_resamples": 1000
+          },
+          "too_early_only_encounters": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "valid_resamples": 1000
+          },
+          "raw_timely_alert_encounters": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "valid_resamples": 1000
+          },
+          "encounter_precision": {
+            "lower": null,
+            "upper": null,
+            "valid_resamples": 0
+          },
+          "nne_encounters": {
+            "lower": null,
+            "upper": null,
+            "valid_resamples": 0
+          },
+          "false_alert_encounters_per_100": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "valid_resamples": 1000
+          },
+          "alert_episodes": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "valid_resamples": 1000
+          },
+          "true_alert_episodes": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "valid_resamples": 1000
+          },
+          "false_alert_episodes": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "valid_resamples": 1000
+          },
+          "episode_ppv": {
+            "lower": null,
+            "upper": null,
+            "valid_resamples": 0
+          },
+          "alert_episodes_per_100": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "valid_resamples": 1000
+          },
+          "false_alert_episodes_per_100": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "valid_resamples": 1000
+          },
+          "false_episodes_per_true_episode": {
+            "lower": null,
+            "upper": null,
+            "valid_resamples": 0
+          },
+          "repeated_alert_fraction": {
+            "lower": null,
+            "upper": null,
+            "valid_resamples": 0
+          },
+          "median_lead_hours": {
+            "lower": null,
+            "upper": null,
+            "valid_resamples": 0
+          },
+          "lead_q1_hours": {
+            "lower": null,
+            "upper": null,
+            "valid_resamples": 0
+          },
+          "lead_q3_hours": {
+            "lower": null,
+            "upper": null,
+            "valid_resamples": 0
+          }
+        },
+        "bootstrap": {
+          "unit": "encounter",
+          "resamples": 1000,
+          "seed": 42,
+          "level": 0.95,
+          "fixed_model_and_threshold": true
+        }
       },
-      "warning": "Synthetic, event-enriched and rule-generated data. Not a clinical probability or clinical validation."
+      "warning": "Synthetic, event-enriched and rule-generated data. Not a clinical probability or clinical validation.",
+      "decision_policy_version": "patient-episodes-6h-v2",
+      "evaluation_limitations": [
+        "Synthetic data only.",
+        "Threshold uses independent validation, not nested out-of-fold predictions.",
+        "Probabilities have not been recalibrated; calibration fits are diagnostic only.",
+        "Bootstrap intervals hold the model and threshold fixed; they do not include model-selection uncertainty."
+      ]
     }
   },
   "provenance": {

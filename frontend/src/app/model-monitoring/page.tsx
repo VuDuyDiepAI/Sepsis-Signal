@@ -1,69 +1,7 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { PageHeader, Panel } from "@/components/layout/page-container";
 import { createClinicalReader, percent } from "@/lib/clinical-data";
-import type { ModelMetadata, Metrics } from "@/lib/clinical-types";
-function Evaluation({ model }: { model: ModelMetadata }) {
-  const metrics: {
-    key: keyof Metrics;
-    label: string;
-    format: (n: number) => string;
-  }[] = [
-    { key: "auroc", label: "AUROC", format: (n) => n.toFixed(4) },
-    { key: "auprc", label: "AUPRC", format: (n) => n.toFixed(4) },
-    { key: "precision", label: "Precision theo mốc giờ", format: percent },
-    { key: "recall", label: "Recall theo mốc giờ", format: percent },
-    { key: "brier", label: "Brier score", format: (n) => n.toFixed(4) },
-    {
-      key: "median_lead_hours",
-      label: "Báo trước trung vị (trong cửa sổ 6h)",
-      format: (n) => `${n} giờ`,
-    },
-    {
-      key: "encounter_early_recall",
-      label: "Recall theo ca trong cửa sổ 6h",
-      format: percent,
-    },
-    {
-      key: "snapshots",
-      label: "Số mốc giờ đánh giá",
-      format: (n) => n.toLocaleString("vi-VN"),
-    },
-    {
-      key: "positive_snapshots",
-      label: "Số mốc giờ dương tính",
-      format: (n) => n.toLocaleString("vi-VN"),
-    },
-  ];
-  return (
-    <div className="table-scroll">
-      <table className="metric-table">
-        <caption className="sr-only">
-          Chỉ số validation và temporal holdout của {model.model_version}
-        </caption>
-        <thead>
-          <tr>
-            <th>Chỉ số</th>
-            <th>Validation</th>
-            <th>Temporal holdout</th>
-          </tr>
-        </thead>
-        <tbody>
-          {metrics.map(({ key, label, format }) => (
-            <tr key={key}>
-              <td>{label}</td>
-              {[
-                model.validation_synthetic_metrics,
-                model.temporal_holdout_synthetic_metrics,
-              ].map((m, i) => (
-                <td key={i}>{m[key] === null ? "Chưa có" : format(m[key])}</td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
+import { ModelEvaluation } from "@/components/clinical/model-evaluation";
 export default function Monitoring() {
   const reader = createClinicalReader(),
     m = reader.getModelMetadata(),
@@ -94,7 +32,7 @@ export default function Monitoring() {
             title="Mô hình sepsis"
             meta={`${m.validation_positive_encounters} ca validation · ${m.temporal_holdout_positive_encounters} ca holdout`}
           >
-            <Evaluation model={m} />
+            <ModelEvaluation model={m} />
           </Panel>
         </TabsContent>
         <TabsContent value="shock" className="workspace-pane">
@@ -106,7 +44,7 @@ export default function Monitoring() {
               Số ca ít, không diễn giải thành hiệu năng lâm sàng. Ngưỡng{" "}
               {percent(s.threshold)}.
             </p>
-            <Evaluation model={s} />
+            <ModelEvaluation model={s} />
           </Panel>
         </TabsContent>
         <TabsContent value="source" className="workspace-pane">
@@ -127,7 +65,27 @@ export default function Monitoring() {
               <p>
                 Quan sát tăng dần từ T0 đến giờ dự báo; chỉ dùng dữ liệu đã có
                 trên EMR. Chấm từ T0+1h đến T0+36h. Thời gian báo trước chỉ xét
-                cảnh báo trong 6 giờ trước khởi phát tham chiếu.
+                thời điểm bắt đầu đợt cảnh báo đúng trong 6 giờ trước khởi phát
+                tham chiếu. Các lần vượt ngưỡng bị gộp không được tính là cảnh
+                báo mới.
+              </p>
+              <p>
+                Chọn ngưỡng theo độ nhạy người bệnh ≥80%, không áp điều kiện
+                Recall theo giờ hoặc giới hạn ngưỡng tùy ý. Gộp cảnh báo trong 6
+                giờ tính từ đầu đợt; đợt quá sớm vẫn là cảnh báo giả dù người
+                bệnh sau đó có sepsis.
+              </p>
+              <p>
+                Quy trình hiện dùng validation độc lập để chọn ngưỡng. Xác suất
+                chưa qua bước tái hiệu chỉnh; intercept, slope và biểu đồ chỉ là
+                đánh giá hiệu chỉnh. Chưa thay thế quy trình nested CV, dự báo
+                ngoài mẫu sau hiệu chỉnh và kiểm định tiền cứu im lặng trong đề
+                cương.
+              </p>
+              <p>
+                Bootstrap giữ mô hình và ngưỡng cố định, chưa bao gồm bất định
+                do lựa chọn mô hình/ngưỡng. Chưa có dữ liệu vận hành EMR thực để
+                tính tỷ lệ tạo dự báo thành công, độ trễ, lỗi và uptime.
               </p>
               <p className="model-version">
                 SHA-256: {reader.getProvenance().sourceSha256}

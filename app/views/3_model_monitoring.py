@@ -4,6 +4,7 @@ import streamlit as st
 
 from app.shared_ui import page_header, percent
 from src.mock_emr import load_bundle
+from src.alert_evaluation import EVALUATION_VERSION
 
 
 SPLITS = {
@@ -11,6 +12,7 @@ SPLITS = {
     'temporal_holdout': 'Holdout · đánh giá',
 }
 BRANCH_LABELS = {
+    'patient_episode_recall': 'Ngưỡng cao nhất đạt độ nhạy người bệnh ≥80% theo đợt cảnh báo',
     'both_recall_targets': 'Đạt mục tiêu theo ca và theo giờ',
     'encounter_only': 'Nhánh dự phòng · chỉ đạt mục tiêu theo ca',
     'fixed_demo_threshold': 'Nhánh dự phòng · dùng ngưỡng cảnh báo cố định',
@@ -19,7 +21,7 @@ BRANCH_LABELS = {
 
 def show_evaluation(meta):
     policy = meta.get('threshold_selection')
-    if meta.get('evaluation_version') != 'timely-alert-v1' or policy is None:
+    if meta.get('evaluation_version') != EVALUATION_VERSION or policy is None:
         st.warning('Metadata đang dùng cách đánh giá cũ. Chạy scripts/train_mock_emr.py --refresh-metrics.')
         return
 
@@ -36,9 +38,9 @@ def show_evaluation(meta):
     branch = BRANCH_LABELS.get(policy['branch'], policy['branch'])
     st.write(f'**{branch}**')
     st.caption(
-        f'Validation đạt {validation["encounter_early_recall"]:.1%} theo ca và '
-        f'{validation["recall"]:.1%} theo giờ. Mục tiêu {policy["minimum_recall"]:.0%} cho mỗi chỉ số. '
-        f'Giới hạn trên khi chọn ngưỡng {policy["demo_ceiling"]:.0%}.'
+        f'Validation đạt {validation["encounter_early_recall"]:.1%} theo người bệnh. '
+        f'Mục tiêu tối thiểu {policy["minimum_recall"]:.0%}; không áp điều kiện Recall theo giờ hoặc trần ngưỡng tùy ý. '
+        'Validation dùng chọn ngưỡng; holdout giữ nguyên chính sách.'
     )
 
     st.subheader('Cảnh báo theo lượt khám')
@@ -54,9 +56,24 @@ def show_evaluation(meta):
             'Chỉ cảnh báo >6h': m['too_early_only_encounters'],
             'Báo trước trung vị': f'{lead:g} giờ' if lead is not None else '—',
             'Đợt cảnh báo / 100 ca': m['alert_episodes_per_100'],
+            'Đợt đúng / giả': f'{m["true_alert_episodes"]:g} / {m["false_alert_episodes"]:g}',
+            'PPV theo đợt': f'{m["episode_ppv"]:.1%}' if m['episode_ppv'] is not None else '—',
+            'Đợt giả / 100 ca': m['false_alert_episodes_per_100'],
+            'Đợt giả / đợt đúng': m['false_episodes_per_true_episode'],
+            'Lần vượt được gộp': m['repeated_alert_fraction'],
         })
     st.dataframe(pd.DataFrame(rows), hide_index=True, width='stretch')
-    st.caption('Lead time lấy cảnh báo đầu tiên trong 6 giờ trước khởi phát. Một ca có thể có cả cảnh báo >6 giờ và cảnh báo trong cửa sổ. Số đợt tính trên toàn bộ cảnh báo đủ điều kiện đánh giá.')
+    st.caption('Đợt bắt đầu ở lần vượt ngưỡng đầu tiên, gộp các lần vượt trong 6 giờ tính từ đầu đợt. Đợt đúng khi khởi phát trong (đầu đợt, +6h]. Lead time chỉ lấy đầu đợt đúng; đợt quá sớm không trở thành đúng nhờ các giờ bị gộp.')
+    intervals = []
+    for key, label in SPLITS.items():
+        m = meta[f'{key}_synthetic_metrics']
+        for name in ['encounter_early_recall', 'episode_ppv', 'false_alert_episodes_per_100', 'median_lead_hours']:
+            ci = m['confidence_intervals'][name]
+            intervals.append({'Tập': label, 'Chỉ số': name, 'Giá trị': m[name],
+                              'KTC 95% dưới': ci['lower'], 'KTC 95% trên': ci['upper']})
+    with st.expander('Khoảng tin cậy 95% theo người bệnh'):
+        st.dataframe(pd.DataFrame(intervals), hide_index=True, width='stretch')
+        st.caption('Bootstrap 1.000 lần theo người bệnh, giữ nguyên mô hình và ngưỡng; chưa bao gồm bất định do lựa chọn mô hình/ngưỡng.')
 
     with st.expander('Chỉ số theo giờ và cấu hình mô hình'):
         rows = []
@@ -68,6 +85,9 @@ def show_evaluation(meta):
                 'Recall': f'{m["recall"]:.1%}',
                 'Precision': f'{m["precision"]:.1%}',
                 'AUROC': m['auroc'], 'AUPRC': m['auprc'], 'Brier': m['brier'],
+                'Specificity': m['specificity'], 'NPV': m['npv'], 'F1': m['f1'],
+                'Calibration intercept': m['calibration_intercept'],
+                'Calibration slope': m['calibration_slope'],
             })
         st.dataframe(pd.DataFrame(rows), hide_index=True, width='stretch')
         st.caption(

@@ -6,6 +6,10 @@ Sepsis Signal là ứng dụng hỗ trợ theo dõi nguy cơ nhiễm khuẩn huy
 
 Đầu mối dự án là **Khoa Cấp cứu – Bệnh viện Đa khoa Quốc tế Vinmec**. Ứng dụng tổ chức dữ liệu và diễn biến nguy cơ theo từng ca, với các khu vực điều trị gồm Cấp cứu, Nội trú và Hồi sức tích cực.
 
+## Bản web Next.js
+
+Bản web mới nằm trong `frontend/`. Hồ sơ nhập tay, kết quả dự báo và ghi nhận xem xét được lưu trên máy chủ bằng SQLite tại `data/frontend_clinical.sqlite3` (đổi bằng `SEPSIS_WEB_DB`), giữ lại khi đóng tab và không tự xóa ghi nhận sau 8 giờ. Hướng dẫn chạy, chuyển dữ liệu tab cũ và sao lưu nằm trong [frontend/README.md](frontend/README.md). Các mô tả đăng nhập/SQLite Streamlit ở phần dưới áp dụng cho bản Streamlit.
+
 ## Hỗ trợ nhận diện nguy cơ qua diễn biến người bệnh
 
 Thông tin của một người bệnh xuất hiện dần theo thời gian. Sinh hiệu được đo lại, xét nghiệm có kết quả sau khi lấy mẫu, triệu chứng và nơi điều trị tiếp tục thay đổi. Bác sĩ cần tổng hợp những thông tin này để nhận ra diễn biến đáng lo ngại giữa nhiều ca đang theo dõi.
@@ -23,7 +27,7 @@ Mục tiêu của ứng dụng là hỗ trợ bác sĩ nhận diện nguy cơ s�
 | **Chạy ca mẫu** | Chọn hồ sơ có sẵn và chuyển qua từng giờ. | Điểm sepsis, trạng thái cảnh báo, biểu đồ, sinh hiệu gần nhất và xét nghiệm mới trả. |
 | **Nhập ca theo giờ** | Tạo hồ sơ, cập nhật chỉ số và ghi nhận đã xem xét kết quả. | Cảnh báo, dữ kiện thay đổi, biểu đồ và lịch sử xem xét theo từng bản tính. |
 | **Danh sách theo dõi** | Lọc ca theo cảnh báo, trạng thái xem xét và khoa. Chọn một dòng để mở hồ sơ. | Ưu tiên ca vượt ngưỡng đang chờ xem xét, kèm điểm mới nhất và người ghi nhận. |
-| **Đánh giá mô hình** | Xem cách chọn ngưỡng và kết quả kiểm tra mô hình. | Các chỉ số theo giờ, theo lượt khám và thời gian cảnh báo trước khởi phát tham chiếu. |
+| **Đánh giá mô hình** | Xem cách chọn ngưỡng và kết quả kiểm tra mô hình. | Độ nhạy người bệnh, PPV theo đợt, tải cảnh báo giả, thời gian báo trước, hiệu chỉnh và chỉ số bổ sung theo giờ. |
 
 Quy trình sử dụng là **tạo ca → nhập chỉ số → lưu và chấm điểm → xem cảnh báo → cập nhật ở giờ tiếp theo**. Người dùng nhập trực tiếp trên biểu mẫu hoặc chọn hồ sơ mẫu có sẵn để xem diễn biến theo thời gian.
 
@@ -91,7 +95,7 @@ Phiên bản đang phục vụ sử dụng **hồi quy logistic có điều chu�
 4. **Tính điểm và so ngưỡng.** Mô hình trả điểm sepsis. Điểm bằng hoặc cao hơn ngưỡng tạo trạng thái cảnh báo.
 5. **Hiển thị và lưu lịch sử.** Người dùng xem điểm cùng sinh hiệu, xét nghiệm và biểu đồ để đối chiếu qua các giờ.
 
-Khi huấn luyện, các mốc của cùng lượt khám được giữ trong cùng nhóm. Tham số được chọn qua xác thực chéo theo nhóm trên tập huấn luyện, ngưỡng được chọn trên tập xác thực riêng và kết quả cuối được báo trên tập giữ lại theo thời gian mô phỏng. Metadata lưu cấu hình, phiên bản và checksum workbook để đối chiếu. [Xem metadata sepsis](artifacts/mock_emr_hourly_lr/sepsis_metadata.json).
+Khi huấn luyện, các mốc của cùng lượt khám được giữ trong cùng nhóm. Tham số được chọn qua xác thực chéo theo nhóm trên tập huấn luyện, ngưỡng được chọn trên tập xác thực riêng và kết quả cuối được báo trên tập giữ lại theo thời gian mô phỏng. Ngưỡng cao nhất đạt độ nhạy người bệnh ≥80% được chọn theo đợt cảnh báo gộp trong 6 giờ. Không bắt buộc Recall theo giờ ≥80%. PPV theo đợt và cảnh báo giả được đánh giá riêng, có khoảng tin cậy bootstrap theo người bệnh. Xác suất chưa tái hiệu chỉnh; cách chọn ngưỡng hiện dùng validation độc lập, chưa thay thế đầy đủ quy trình nested CV và hiệu chỉnh ngoài mẫu trong đề cương. Metadata lưu cấu hình, phiên bản và checksum workbook để đối chiếu. [Xem metadata sepsis](artifacts/mock_emr_hourly_lr/sepsis_metadata.json).
 
 ## Cài đặt và chạy trên Windows
 

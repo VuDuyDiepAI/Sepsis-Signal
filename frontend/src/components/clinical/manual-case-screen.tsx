@@ -22,8 +22,8 @@ import {
   useManualCases,
   useClinicalReader,
   type ManualCase,
-  type ScoreResponse,
 } from "@/lib/manual-store";
+import { useStorageStatus } from "@/lib/clinical-storage";
 import {
   vitalFields,
   labFields,
@@ -42,7 +42,8 @@ export function NewCaseScreen() {
   const hydrated = useHydrated();
   const router = useRouter();
   const [error, setError] = useState("");
-  function create(event: React.FormEvent<HTMLFormElement>) {
+  const [creating, setCreating] = useState(false);
+  async function create(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const f = new FormData(event.currentTarget);
     const result = profileSchema.safeParse({
@@ -63,13 +64,14 @@ export function NewCaseScreen() {
       return;
     }
     try {
-      createManualCase(result.data);
+      setCreating(true);
+      await createManualCase(result.data);
       router.push("/patients/" + result.data.id + "?hour=0");
-    } catch {
+    } catch (error) {
       setError(
-        "Trình duyệt chưa cho phép lưu trong phiên tab. Bật lưu trữ trình duyệt rồi thử lại.",
+        error instanceof Error ? error.message : "Không tạo được hồ sơ trên máy chủ. Vui lòng thử lại.",
       );
-    }
+    } finally { setCreating(false); }
   }
   return (
     <div className="viewport-screen form-screen">
@@ -152,16 +154,16 @@ export function NewCaseScreen() {
             </p>
           )}
           <div className="flex gap-3 flex-wrap">
-            <Button type="submit" disabled={!hydrated}>
+            <Button type="submit" disabled={!hydrated || creating}>
               <Plus size={17} />
-              Tạo hồ sơ và nhập dữ liệu T0
+              {creating ? "Đang tạo hồ sơ…" : "Tạo hồ sơ và nhập dữ liệu T0"}
             </Button>
             <Link href="/patients" className="link-button">
               Quay lại danh sách
             </Link>
           </div>
           <p className="secondary-text">
-            Mã hồ sơ được tạo tự động. Ca nhập tay chỉ lưu trong phiên tab này;
+            Mã hồ sơ được tạo tự động. Hồ sơ được lưu trên máy chủ;
             không nhập tên hoặc thông tin định danh người bệnh thật.
           </p>
         </form>
@@ -195,6 +197,8 @@ function ManualEntryForm({
 }) {
   const [category, setCategory] = useState("vitals");
   const [timingOpen, setTimingOpen] = useState(false);
+  // Polling must not silently give an old form permission to overwrite newer data.
+  const [editRevision,setEditRevision] = useState(record.revision);
   const old = record.entries.find((e) => e.hour === hour);
   const at = timeAt(record.profile.t0 + "+07:00", hour).slice(0, 16);
   const [withVitals, setWithVitals] = useState(old ? !!old.vitals : true),
@@ -249,24 +253,12 @@ function ManualEntryForm({
     }
     setBusy(true);
     try {
-      let response: ScoreResponse | undefined;
-      if (hours.length) {
-        const result = await fetch("/api/manual-score", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(parsed.data),
-        });
-        const payload = await result.json();
-        if (!result.ok)
-          throw new Error(payload.error ?? "Không thể chấm điểm.");
-        response = payload;
-      }
-      updateManualCase(
+      const saved = await updateManualCase(
         record.profile.id,
-        record.revision,
+        editRevision,
         parsed.data.entries.find((e) => e.hour === hour)! as ManualEntry,
-        response,
       );
+      setEditRevision(saved.revision);
       const atMs = Date.parse(at + "+07:00");
       const delayed =
         Object.keys(entry.labs).length > 0 &&
@@ -274,7 +266,7 @@ function ManualEntryForm({
       const savedMessage =
         hour === 0
           ? "Đã lưu dữ liệu T0. Chọn T0+1h để chấm lần đầu."
-          : (response?.errors[String(hour)] ??
+          : (saved.errors[String(hour)] ??
             "Đã lưu dữ liệu và cập nhật kết quả.");
       const notice =
         savedMessage +
@@ -282,7 +274,7 @@ function ManualEntryForm({
           ? " Xét nghiệm trả sau mốc này: đã lưu, chưa dùng để chấm tại giờ đang xem."
           : "");
       setMessage(notice);
-      if (hour > 0 && response?.predictions.some((p) => p.hour === hour))
+      if (hour > 0 && saved.predictions.some((p) => p.hour === hour))
         onScored(notice);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Không lưu được dữ liệu.");
@@ -519,6 +511,7 @@ export function ManualCaseScreen({
   const cases = useManualCases(),
     reader = useClinicalReader();
   const record = cases.find((c) => c.profile.id === id);
+  const storage = useStorageStatus();
   const hour = initialHour ?? record?.currentHour ?? 0;
   const setHour = (next: number) =>
     startNavigation(() =>
@@ -527,8 +520,8 @@ export function ManualCaseScreen({
   if (!record)
     return (
       <div className="empty-state panel">
-        <h1>Hồ sơ không có trong phiên tab này</h1>
-        <p>Ca nhập tay được lưu riêng trong tab đã tạo hồ sơ.</p>
+        <h1>{storage.loading ? "Đang tải hồ sơ…" : storage.error ? "Chưa tải được hồ sơ" : "Không tìm thấy hồ sơ"}</h1>
+        <p>{storage.error || "Hồ sơ nhập tay được lưu trên máy chủ, có thể mở lại từ danh sách hồ sơ."}</p>
         <Link href="/patients/new" className="link-button primary">
           Tạo ca mới
         </Link>
@@ -543,7 +536,13 @@ export function ManualCaseScreen({
         onHourChange={setHour}
         navigationPending={navigationPending}
         returnTo={returnTo}
-        statusMessage={record.errors[String(hour)]}
+        statusMessage={
+          record.errors[String(hour)] ||
+          (record.predictions.some((p) => p.hour === hour) &&
+          !reader.getPrediction(id, hour)
+            ? "Chính sách cảnh báo đã cập nhật. Lưu dữ liệu và chấm lại mốc này để xem kết quả mới."
+            : undefined)
+        }
         action={
           <Link href="/patients/new" className="link-button">
             <Plus size={16} />

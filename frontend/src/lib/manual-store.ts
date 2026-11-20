@@ -1,119 +1,17 @@
 "use client";
 import { useMemo, useSyncExternalStore } from "react";
-import { dataset, timeAt, createClinicalReader } from "./clinical-data";
-import type { ClinicalDataset, Prediction, VitalKey } from "./clinical-types";
+import { dataset, createClinicalReader } from "./clinical-data";
+import type { ClinicalDataset, VitalKey } from "./clinical-types";
 import type { ManualEntry, ManualProfile } from "./manual-schema";
-export interface ManualPrediction extends Prediction {
-  featureHash: string;
+import type { ManualCase } from "./manual-types";
+export type { ManualCase, ManualPrediction, ScoreResponse } from "./manual-types";
+import { getClinicalSnapshot, getServerClinicalSnapshot, subscribeClinical, persistClinical } from "./clinical-storage";
+export async function createManualCase(profile: ManualProfile) {
+  await persistClinical("/api/cases", "POST", profile);
 }
-export interface ManualCase {
-  profile: ManualProfile;
-  entries: ManualEntry[];
-  predictions: ManualPrediction[];
-  attemptedHours: number[];
-  revision: number;
-  currentHour: number;
-  errors: Record<string, string>;
-}
-export interface ScoreResponse {
-  predictions: {
-    hour: number;
-    score: number;
-    threshold: number;
-    modelVersion: string;
-    department: "ED" | "WARD" | "ICU";
-    availableFeatures: number;
-    featureHash: string;
-  }[];
-  errors: Record<string, string>;
-}
-const key = "sepsis-manual-cases-v1";
-const empty: ManualCase[] = [];
-let cases: ManualCase[] = empty;
-let loaded = false;
-const listeners = new Set<() => void>();
-function snapshot() {
-  if (typeof window !== "undefined" && !loaded) {
-    loaded = true;
-    try {
-      cases = JSON.parse(sessionStorage.getItem(key) ?? "[]");
-    } catch {
-      cases = empty;
-    }
-  }
-  return cases;
-}
-function subscribe(fn: () => void) {
-  listeners.add(fn);
-  return () => {
-    listeners.delete(fn);
-  };
-}
-function commit(next: ManualCase[]) {
-  sessionStorage.setItem(key, JSON.stringify(next));
-  cases = next;
-  listeners.forEach((fn) => fn());
-}
-export function createManualCase(profile: ManualProfile) {
-  snapshot();
-  commit([
-    {
-      profile,
-      entries: [],
-      predictions: [],
-      attemptedHours: [],
-      revision: 0,
-      currentHour: 0,
-      errors: {},
-    },
-    ...cases,
-  ]);
-}
-export function updateManualCase(
-  id: string,
-  revision: number,
-  entry: ManualEntry,
-  response?: ScoreResponse,
-) {
-  const c = snapshot().find((c) => c.profile.id === id);
-  if (!c || c.revision !== revision)
-    throw new Error("Hồ sơ đã thay đổi. Mở lại mốc giờ trước khi lưu.");
-  const entries = [
-    ...c.entries.filter((e) => e.hour !== entry.hour),
-    entry,
-  ].sort((a, b) => a.hour - b.hour);
-  const predictions = response
-    ? response.predictions.map((p) => {
-        const old = c.predictions.find((q) => q.hour === p.hour);
-        const rev =
-          old?.featureHash === p.featureHash ? old.revision : c.revision + 1;
-        return {
-          ...p,
-          encounterId: id,
-          timestamp: timeAt(iso(c.profile.t0), p.hour),
-          revision: rev,
-          id: `${id}:${p.hour}:${rev}`,
-        };
-      })
-    : c.predictions;
-  commit(
-    cases.map((v) =>
-      v === c
-        ? {
-            ...c,
-            entries,
-            predictions,
-            errors: response?.errors ?? {},
-            attemptedHours:
-              entry.hour > 0
-                ? [...new Set([...c.attemptedHours, entry.hour])]
-                : c.attemptedHours,
-            revision: c.revision + 1,
-            currentHour: Math.max(c.currentHour, entry.hour),
-          }
-        : v,
-    ),
-  );
+export async function updateManualCase(id: string, revision: number, entry: ManualEntry) {
+  const state = await persistClinical(`/api/cases/${id}/entries`, "PUT", { revision, entry });
+  return state.cases.find(c => c.profile.id === id)!;
 }
 const iso = (s: string) => (s.length === 16 ? s + ":00" : s) + "+07:00";
 const units: Record<string, string> = {
@@ -142,7 +40,14 @@ export function mergeManualCases(manual: ManualCase[]): ClinicalDataset {
       t0: iso(c.profile.t0),
       currentHour: c.currentHour,
     });
-    data.predictions.push(...c.predictions);
+    // Retain entered data but require rescoring after model/decision-policy changes.
+    data.predictions.push(
+      ...c.predictions.filter(
+        (p) =>
+          p.modelVersion === dataset.models.sepsis.model_version &&
+          p.threshold === dataset.models.sepsis.threshold,
+      ),
+    );
     // Mirror Python event identity replacement before availability filtering.
     const vitals = new Map<string, ClinicalDataset["vitals"][number]>(),
       labs = new Map<string, ClinicalDataset["labs"][number]>(),
@@ -203,7 +108,7 @@ export function mergeManualCases(manual: ManualCase[]): ClinicalDataset {
   return data;
 }
 export function useManualCases() {
-  return useSyncExternalStore(subscribe, snapshot, () => empty);
+  return useSyncExternalStore(subscribeClinical, () => getClinicalSnapshot().cases, () => getServerClinicalSnapshot().cases);
 }
 export function useClinicalDataset() {
   const manual = useManualCases();

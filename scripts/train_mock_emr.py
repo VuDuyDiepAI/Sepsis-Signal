@@ -1,6 +1,6 @@
 """Train or reevaluate a logistic-regression demo on synthetic ED/hospital EMR.
 
-The temporal holdout is used once for descriptive synthetic-only evaluation.
+Threshold selection never uses the temporal holdout; its evaluation is descriptive and synthetic-only.
 No metric in this script estimates performance on real patients.
 """
 from __future__ import annotations
@@ -20,9 +20,6 @@ from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (
     average_precision_score,
-    brier_score_loss,
-    precision_score,
-    recall_score,
     roc_auc_score,
 )
 from sklearn.model_selection import GroupKFold, train_test_split
@@ -31,6 +28,7 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+from src.alert_evaluation import EVALUATION_VERSION, evaluate_predictions, select_patient_threshold  # noqa: E402
 from src.mock_emr import (  # noqa: E402
     CATEGORICAL_FEATURES,
     DATA_PATH,
@@ -75,78 +73,8 @@ def make_pipeline(c_value: float = 0.1) -> Pipeline:
     ])
 
 
-def _count_episodes_6h(alert_times: list[pd.Timestamp]) -> int:
-    """Group consecutive hourly alerts within a 6-hour cooldown window into 1 episode."""
-    if not alert_times:
-        return 0
-    episodes = 0
-    active_until = None
-    for t in sorted(alert_times):
-        if active_until is None or t > active_until:
-            episodes += 1
-            active_until = t + pd.Timedelta(hours=6)
-    return episodes
-
-
-def metrics(frame: pd.DataFrame, y: np.ndarray, score: np.ndarray, threshold: float,
-            outcomes: pd.DataFrame, target: str) -> dict:
-    prediction = score >= threshold
-    df = frame[['encounter_id', 'prediction_at']].copy()
-    df['y'] = y
-    df['alert'] = prediction
-    onset_col = f'{target}_onset_at'
-    df = df.merge(outcomes[['encounter_id', onset_col]], on='encounter_id',
-                  how='left', validate='many_to_one')
-    df['lead_hours'] = (df[onset_col] - df['prediction_at']).dt.total_seconds() / 3600
-
-    total_encounters = int(df['encounter_id'].nunique())
-    pos_enc_ids = set(df.loc[df['y'] == 1, 'encounter_id'].unique())
-    alerted_enc_ids = set(df.loc[df['alert'], 'encounter_id'].unique())
-
-    timely = df.loc[df['alert'] & df['y'].eq(1) & df['lead_hours'].gt(0)
-                    & df['lead_hours'].le(6)]
-    timely_ids = set(timely['encounter_id'])
-    too_early_ids = set(df.loc[df['alert'] & df['lead_hours'].gt(6), 'encounter_id'])
-    tp_enc = len(timely_ids)
-    fp_enc = df.loc[df['alert'] & df[onset_col].isna(), 'encounter_id'].nunique()
-    enc_early_recall = float(tp_enc / len(pos_enc_ids)) if pos_enc_ids else 0.0
-    enc_precision = float(tp_enc / len(alerted_enc_ids)) if alerted_enc_ids else 0.0
-    nne_enc = round(float(1.0 / enc_precision), 2) if enc_precision > 0 else None
-    false_alert_enc_per_100 = round(float(fp_enc / total_encounters * 100.0), 2) if total_encounters else 0.0
-
-    total_episodes = sum(_count_episodes_6h(group['prediction_at'].tolist())
-                         for _, group in df.loc[df['alert']].groupby('encounter_id'))
-    lead_hours = timely.groupby('encounter_id')['lead_hours'].max().to_numpy()
-
-    episodes_per_100 = round(float(total_episodes / total_encounters * 100.0), 2) if total_encounters else 0.0
-    median_lead = round(float(np.median(lead_hours)), 2) if len(lead_hours) else None
-    iqr_lead = (
-        [round(float(np.percentile(lead_hours, 25)), 2), round(float(np.percentile(lead_hours, 75)), 2)]
-        if len(lead_hours) else None
-    )
-
-    return {
-        'snapshots': int(len(y)),
-        'positive_snapshots': int(np.sum(y)),
-        'auroc': float(roc_auc_score(y, score)) if len(np.unique(y)) == 2 else None,
-        'auprc': float(average_precision_score(y, score)) if np.sum(y) else None,
-        'brier': float(brier_score_loss(y, score)),
-        'observed_prevalence': float(np.mean(y)),
-        'mean_predicted_probability': float(np.mean(score)),
-        'recall': float(recall_score(y, prediction, zero_division=0)),
-        'precision': float(precision_score(y, prediction, zero_division=0)),
-        'alert_fraction': float(np.mean(prediction)),
-        'encounter_early_recall': enc_early_recall,
-        'timely_alert_encounters': tp_enc,
-        'too_early_alert_encounters': len(too_early_ids),
-        'too_early_only_encounters': len(too_early_ids - timely_ids),
-        'encounter_precision': enc_precision,
-        'nne_encounters': nne_enc,
-        'false_alert_encounters_per_100': false_alert_enc_per_100,
-        'alert_episodes_per_100': episodes_per_100,
-        'median_lead_hours': median_lead,
-        'iqr_lead_hours': iqr_lead,
-    }
+def metrics(frame, y, score, threshold, outcomes, target, bootstrap_samples=1000):
+    return evaluate_predictions(frame, y, score, threshold, outcomes, target, bootstrap_samples)
 
 
 def tune_regularization_cv(train_df: pd.DataFrame, label_col: str, target: str) -> tuple[float, dict]:
@@ -207,46 +135,23 @@ def split_target(tables, target):
     return train, validation, holdout
 
 
-def select_threshold(validation, label_col, scores, target):
-    # Positive labels mark eligible hours with onset in (t, t+6 hours].
-    val_eval = validation[['encounter_id', label_col]].assign(score=scores)
-    positives = val_eval.loc[val_eval[label_col].eq(1)]
-    positive_scores = positives['score'].to_numpy()
-    if not len(positive_scores):
-        raise ValueError('Validation không có nhãn dương.')
-
-    per_encounter = positives.groupby('encounter_id')['score'].max().to_numpy()
-    ceiling = 0.15 if target == 'shock' else 0.28
-    candidates = np.unique(np.append(scores, [ceiling]))
-    candidates = candidates[candidates <= ceiling]
-    encounter_feasible = [float(t) for t in candidates if np.mean(per_encounter >= t) >= 0.80]
-    both_feasible = [t for t in encounter_feasible if np.mean(positive_scores >= t) >= 0.80]
-    if both_feasible:
-        threshold, branch = max(both_feasible), 'both_recall_targets'
-    elif encounter_feasible:
-        threshold, branch = max(encounter_feasible), 'encounter_only'
-    else:
-        threshold, branch = (0.10 if target == 'shock' else 0.20), 'fixed_demo_threshold'
-    return threshold, {
-        'branch': branch,
-        'minimum_recall': 0.80,
-        'demo_ceiling': ceiling,
-        'validation_encounter_recall': float(np.mean(per_encounter >= threshold)),
-        'validation_snapshot_recall': float(np.mean(positive_scores >= threshold)),
-    }
+def select_threshold(validation, label_col, scores, target, outcomes):
+    return select_patient_threshold(validation, label_col, scores, outcomes, target)
 
 
 def evaluate_model(tables, target, model, validation, holdout):
     label_col = TARGETS[target][1]
     outcomes = tables['ReferenceOutcomes']
     validation_score = model.predict_proba(validation[FEATURES])[:, 1]
-    threshold, selection = select_threshold(validation, label_col, validation_score, target)
+    threshold, selection = select_threshold(validation, label_col, validation_score, target, outcomes)
     holdout_score = model.predict_proba(holdout[FEATURES])[:, 1]
     return {
-        'evaluation_version': 'timely-alert-v1',
+        'evaluation_version': EVALUATION_VERSION,
+        'decision_policy_version': 'patient-episodes-6h-v2',
+        'evaluation_limitations': ['Synthetic data only.', 'Threshold uses independent validation, not nested out-of-fold predictions.', 'Probabilities have not been recalibrated; calibration fits are diagnostic only.', 'Bootstrap intervals hold the model and threshold fixed; they do not include model-selection uncertainty.'],
         'evaluated_at_utc': datetime.now(timezone.utc).isoformat(),
         'threshold': threshold,
-        'threshold_rule': 'Highest validation threshold within the demo ceiling meeting both recall targets; fallbacks are recorded under threshold_selection.',
+        'threshold_rule': 'Highest validation threshold achieving patient-level sensitivity >= 80% under fixed six-hour alert episodes; no hourly sensitivity constraint, ceiling or silent fallback.',
         'threshold_selection': selection,
         'validation_synthetic_metrics': metrics(validation, validation[label_col].to_numpy(), validation_score, threshold, outcomes, target),
         'temporal_holdout_synthetic_metrics': metrics(holdout, holdout[label_col].to_numpy(), holdout_score, threshold, outcomes, target),
@@ -265,7 +170,7 @@ def train_target(tables, target):
 
     metadata = {
         'model_name': 'Logistic regression',
-        'model_version': f'mock-emr-hourly-{target}-lr-v3-expanding-t0',
+        'model_version': f'mock-emr-hourly-{target}-lr-v3-expanding-t0-episodes-v2',
         'data_kind': 'SYNTHETIC_MOCK_EMR',
         'target': label_col,
         'horizon_hours': 6,
@@ -321,7 +226,8 @@ def main():
         evaluation = evaluate_model(tables, target, model, validation, holdout)
         _, metadata_path = bundle_paths(target)
         pending = metadata_path.with_suffix('.pending')
-        pending.write_text(json.dumps({**metadata, **evaluation}, ensure_ascii=False, indent=2),
+        version = metadata['model_version'].removesuffix('-episodes-v2') + '-episodes-v2'
+        pending.write_text(json.dumps({**metadata, **evaluation, 'model_version': version}, ensure_ascii=False, indent=2),
                            encoding='utf-8')
         pending.replace(metadata_path)
         print(f'{target}: {evaluation["threshold"]!r} {evaluation["threshold_selection"]}')

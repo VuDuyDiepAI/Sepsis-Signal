@@ -44,13 +44,40 @@ export function PatientWorkspace({
 }) {
   const reader = useClinicalReader();
   const [activeTab, setActiveTab] = useState(
-    entryForm ? "entry" : embedded ? "timeline" : "assessment",
+    entryForm ? "entry" : "assessment",
   );
   const [savedNotice, setSavedNotice] = useState("");
   const hydrated = useHydrated();
   const at = timeAt(encounter.t0, hour);
   const IdentityHeading = embedded ? "strong" : "h1";
   const updates = reader.getUpdates(encounter.id, hour);
+  const assessment = (
+    <div className="clinical-board">
+      <div className="clinical-board-data">
+        <div className="clinical-board-column">
+          <RiskSummary encounter={encounter} hour={hour} />
+          <RiskTimeline
+            encounter={encounter}
+            hour={hour}
+            onHourChange={onHourChange}
+            onset={onset}
+          />
+        </div>
+        <div className="clinical-board-column">
+          <VitalSignsPanel id={encounter.id} hour={hour} />
+          <LaboratoryPanel id={encounter.id} hour={hour} />
+        </div>
+      </div>
+      <ReviewPanel
+        key={`${encounter.id}:${hour}`}
+        prediction={reader.getPrediction(encounter.id, hour)}
+        encounterId={encounter.id}
+        hour={hour}
+        returnTo={returnTo}
+        compact
+      />
+    </div>
+  );
   return (
     <div className="viewport-screen patient-workspace">
       <section className="patient-bar" aria-label="Thông tin hồ sơ">
@@ -125,71 +152,50 @@ export function PatientWorkspace({
         </p>
       )}
 
-      <Tabs
-        value={activeTab}
-        onValueChange={(value) => setActiveTab(String(value))}
-        className="workspace-tabs"
-      >
-        <TabsList variant="line" aria-label="Nội dung hồ sơ">
-          <TabsTrigger value="assessment">Tổng hợp</TabsTrigger>
-          <TabsTrigger value="timeline">Diễn biến</TabsTrigger>
-          <TabsTrigger value="labs">Xét nghiệm</TabsTrigger>
-          <TabsTrigger value="review">Xem xét</TabsTrigger>
-          {entryForm && <TabsTrigger value="entry">Nhập chỉ số</TabsTrigger>}
-        </TabsList>
-        {(savedNotice || statusMessage) && (
-          <p role="status" className="workspace-notice">
-            {statusMessage || savedNotice}
-          </p>
-        )}
-        <TabsContent value="assessment" keepMounted className="workspace-pane">
-          <div className="assessment-grid">
-            <div className="assessment-risk">
-              <RiskSummary encounter={encounter} hour={hour} />
-              <Button variant="outline" onClick={() => setActiveTab("review")}>
-                Mở ghi nhận xem xét
-              </Button>
-            </div>
-            <VitalSignsPanel id={encounter.id} hour={hour} />
-          </div>
-        </TabsContent>
-        <TabsContent value="timeline" keepMounted className="workspace-pane">
-          <RiskTimeline
-            encounter={encounter}
-            hour={hour}
-            onHourChange={onHourChange}
-            onset={onset}
-          />
-        </TabsContent>
-        <TabsContent value="labs" keepMounted className="workspace-pane">
-          <LaboratoryPanel id={encounter.id} hour={hour} />
-        </TabsContent>
-        <TabsContent value="review" keepMounted className="workspace-pane">
-          <ReviewPanel
-            key={`${encounter.id}:${hour}`}
-            prediction={reader.getPrediction(encounter.id, hour)}
-            returnTo={returnTo}
-          />
-        </TabsContent>
-        {entryForm && (
+      {(savedNotice || statusMessage) && (
+        <p role="status" className="workspace-notice">
+          {statusMessage || savedNotice}
+        </p>
+      )}
+      {!entryForm ? (
+        assessment
+      ) : (
+        <Tabs
+          value={activeTab}
+          onValueChange={(value) => setActiveTab(String(value))}
+          className="workspace-tabs"
+        >
+          <TabsList variant="line" aria-label="Nội dung hồ sơ">
+            <TabsTrigger value="assessment">Tổng hợp</TabsTrigger>
+            <TabsTrigger value="entry">Nhập chỉ số</TabsTrigger>
+          </TabsList>
           <TabsContent
-            value="entry"
+            value="assessment"
             keepMounted
-            className="workspace-pane entry-pane"
+            className="workspace-pane board-pane"
           >
-            <fieldset
-              className="entry-boundary"
-              disabled={navigationPending}
-              aria-busy={navigationPending}
-            >
-              {entryForm((message) => {
-                setSavedNotice(message);
-                setActiveTab("assessment");
-              })}
-            </fieldset>
+            {assessment}
           </TabsContent>
-        )}
-      </Tabs>
+          {entryForm && (
+            <TabsContent
+              value="entry"
+              keepMounted
+              className="workspace-pane entry-pane"
+            >
+              <fieldset
+                className="entry-boundary"
+                disabled={navigationPending}
+                aria-busy={navigationPending}
+              >
+                {entryForm((message) => {
+                  setSavedNotice(message);
+                  setActiveTab("assessment");
+                })}
+              </fieldset>
+            </TabsContent>
+          )}
+        </Tabs>
+      )}
       <details className="screen-help">
         <summary>Dữ liệu và cách đọc kết quả</summary>
         <ClinicalNote>

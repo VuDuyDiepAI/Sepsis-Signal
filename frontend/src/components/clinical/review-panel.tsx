@@ -23,17 +23,24 @@ type Values = z.infer<typeof schema>;
 export function ReviewPanel({
   prediction,
   returnTo,
+  compact = false,
+  encounterId,
+  hour,
 }: {
   prediction?: Prediction;
   returnTo?: string;
+  compact?: boolean;
+  encounterId?: string;
+  hour?: number;
 }) {
   const { reviews, recordReview } = useReviews();
   const [storageError, setStorageError] = useState("");
   const review = reviewFor(prediction, reviews);
+  const prior = Object.values(reviews).filter(r => r.encounterId === (encounterId ?? prediction?.encounterId) && r.hour === (hour ?? prediction?.hour) && r.predictionId !== prediction?.id);
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<Values>({
     resolver: zodResolver(schema),
     defaultValues: { reviewer: "", note: "" },
@@ -41,8 +48,14 @@ export function ReviewPanel({
   return (
     <Panel
       title="Ghi nhận xem xét"
-      meta="Thao tác trải nghiệm"
-      className="review-panel"
+      meta={
+        compact
+          ? prediction
+            ? `Bản tính #${prediction.revision} · ${review ? "Đã xem xét" : "Chưa xem xét"}`
+            : "Chưa có dự báo"
+          : "Lịch sử lưu trên máy chủ"
+      }
+      className={`review-panel ${compact ? "review-compact" : ""}`}
     >
       <div className="panel-body">
         {!prediction ? (
@@ -51,7 +64,7 @@ export function ReviewPanel({
           <div className="review-success" role="status">
             <strong className="flex gap-2 items-center">
               <CheckCheck size={18} />
-              Đã xem xét trong phiên trải nghiệm
+              Đã ghi nhận xem xét
             </strong>
             <span>
               {review.reviewer} · {formatTime(review.timestamp, true)}
@@ -67,22 +80,24 @@ export function ReviewPanel({
         ) : (
           <form
             className="review-form"
-            onSubmit={handleSubmit((v) => {
+            onSubmit={handleSubmit(async (v) => {
               try {
-                recordReview(prediction, v.reviewer, v.note);
+                await recordReview(prediction, v.reviewer, v.note);
                 setStorageError("");
-              } catch {
+              } catch (error) {
                 setStorageError(
-                  "Không lưu được ghi nhận trong phiên tab. Kiểm tra quyền lưu trữ trình duyệt rồi thử lại.",
+                  error instanceof Error ? error.message : "Chưa lưu được ghi nhận trên máy chủ. Vui lòng thử lại.",
                 );
               }
             })}
             noValidate
           >
-            <p className="secondary-text">
-              Chưa xem xét · Bản tính #{prediction.revision}. Ghi nhận này gắn
-              riêng với kết quả tại mốc đang xem.
-            </p>
+            {!compact && (
+              <p className="secondary-text">
+                Chưa xem xét · Bản tính #{prediction.revision}. Ghi nhận này gắn
+                riêng với kết quả tại mốc đang xem.
+              </p>
+            )}
             <label>
               Người xem xét
               <Input
@@ -92,7 +107,7 @@ export function ReviewPanel({
                 aria-describedby={
                   errors.reviewer ? "reviewer-error" : undefined
                 }
-                placeholder="Nhập tên để trải nghiệm"
+                placeholder="Nhập tên người xem xét"
               />
             </label>
             {errors.reviewer && (
@@ -113,9 +128,9 @@ export function ReviewPanel({
                 {errors.note.message}
               </p>
             )}
-            <Button type="submit">
+            <Button type="submit" disabled={isSubmitting}>
               <ClipboardCheck size={17} />
-              Ghi nhận đã xem xét
+              {isSubmitting ? "Đang lưu…" : "Ghi nhận đã xem xét"}
             </Button>
           </form>
         )}
@@ -125,10 +140,16 @@ export function ReviewPanel({
           </p>
         )}
         <p className="clinical-note">
-          Ghi nhận trải nghiệm được giữ khi tải lại trong cùng tab, tối đa 8
-          giờ. Chưa gửi hoặc lưu lên hệ thống bệnh viện. Đã xem xét không có
-          nghĩa đã hoàn tất xử trí.
+          Lưu trên máy chủ, gắn với từng phiên bản kết quả. Đã xem xét không có nghĩa đã hoàn tất xử trí.
         </p>
+        {prior.length > 0 && (
+          <details className="clinical-note">
+            <summary>Lịch sử xem xét các phiên bản trước</summary>
+            {prior.map(r => (
+              <p key={r.predictionId}>Bản tính #{r.revision} · {r.reviewer} · {formatTime(r.timestamp,true)}{r.note ? ` — ${r.note}` : ""}</p>
+            ))}
+          </details>
+        )}
       </div>
     </Panel>
   );

@@ -23,7 +23,7 @@ import {
   DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useReviews } from "@/components/review-context";
+import { StorageNotice } from "@/components/storage-notice";
 const links = [
   {
     href: "/dashboard",
@@ -48,7 +48,6 @@ export function AppShell({ children }: { children: ReactNode }) {
   const path = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [mobile, setMobile] = useState(false);
-  const { reviews, reset } = useReviews();
   const nav = (
     <nav aria-label="Điều hướng chính">
       {links.map(({ href, label, icon: Icon, group }) => (
@@ -168,14 +167,9 @@ export function AppShell({ children }: { children: ReactNode }) {
                   giờ tiếp theo, dùng dữ liệu đã có trên EMR từ T0.
                 </p>
                 <p className="secondary-text">
-                  Ghi nhận xem xét được giữ khi tải lại trong cùng tab, tối đa 8
-                  giờ. Chưa kết nối hệ thống bệnh viện.
+                  Hồ sơ và ghi nhận xem xét được lưu trên máy chủ. Ghi nhận gắn
+                  với từng phiên bản kết quả, không tự hết hạn sau 8 giờ. Chưa kết nối hệ thống bệnh viện.
                 </p>
-                {Object.keys(reviews).length > 0 && (
-                  <Button variant="outline" onClick={reset}>
-                    Xóa ghi nhận trong phiên trải nghiệm
-                  </Button>
-                )}
               </DialogContent>
             </Dialog>
             <span
@@ -187,6 +181,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
         </header>
         <main id="main-content" className="page">
+          <StorageNotice />
           {children}
         </main>
       </div>

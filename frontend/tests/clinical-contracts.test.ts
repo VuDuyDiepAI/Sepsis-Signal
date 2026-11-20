@@ -157,7 +157,7 @@ describe("reader and source corrections", () => {
     expect(reader.getModelMetadata()).toEqual(dataset.models.sepsis);
   });
 });
-describe("session review safety", () => {
+describe("persisted review safety", () => {
   const p = dataset.predictions[0],
     now = Date.now();
   const r: Review = {
@@ -175,7 +175,7 @@ describe("session review safety", () => {
       reviewFor({ ...p, revision: p.revision + 1 }, restored),
     ).toBeUndefined();
   });
-  it("ignores damaged, expired, future or mismatched records", () => {
+  it("keeps older history and ignores damaged, future or mismatched records", () => {
     expect(decodeReviews("broken", now)).toEqual({});
     expect(decodeReviews(JSON.stringify({ wrong: r }), now)).toEqual({});
     expect(
@@ -188,7 +188,7 @@ describe("session review safety", () => {
         }),
         now,
       ),
-    ).toEqual({});
+    ).toHaveProperty(p.id);
     expect(
       decodeReviews(
         JSON.stringify({

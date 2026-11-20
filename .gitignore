@@ -12,3 +12,12 @@ logs/
 reports/
 deliverables/
 *.log
+*.sqlite3
+*.sqlite3-wal
+*.sqlite3-shm
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.db
+*.db-wal
+*.db-shm
