@@ -1,17 +1,41 @@
 import { test, expect } from "@playwright/test";
-test("dashboard is a work queue; registry supports search, filter, sort and keyboard navigation", async ({
+test("one monitoring queue and a separate searchable patient registry", async ({
   page,
 }) => {
   await page.goto("/dashboard");
   await expect(
-    page.getByRole("heading", { name: "Cần xem xét trước", exact: true }),
+    page.getByRole("heading", { name: "Theo dõi & Cảnh báo", exact: true }),
   ).toBeVisible();
-  await expect(page.locator("table")).toHaveCount(0);
-  await expect(page.locator(".priority-case")).toHaveCount(3);
+  const queue = page.getByRole("region", {
+    name: "Bảng theo dõi và cảnh báo",
+    exact: true,
+  });
+  await expect(queue.locator("tbody tr")).toHaveCount(4);
+  await expect(
+    page
+      .getByRole("navigation", { name: "Điều hướng chính" })
+      .getByRole("link"),
+  ).toHaveCount(4);
+  await expect(
+    page.getByRole("link", { name: "Trung tâm cảnh báo", exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByRole("region", { name: "Vừa xem xét", exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    queue.getByRole("columnheader", {
+      name: "Dữ liệu vừa thay đổi",
+      exact: true,
+    }),
+  ).toBeVisible();
   await page.getByRole("link", { name: "Hồ sơ theo dõi", exact: true }).click();
   await expect(
     page.getByRole("heading", { name: "Danh sách hồ sơ", exact: true }),
   ).toBeVisible();
+  const registry = page.getByRole("region", {
+    name: "Bảng hồ sơ có thể cuộn ngang",
+    exact: true,
+  });
   await page.getByLabel("Tìm mã hồ sơ", { exact: true }).fill("absent");
   await expect(
     page.getByText("Không tìm thấy hồ sơ", { exact: true }),
@@ -21,39 +45,57 @@ test("dashboard is a work queue; registry supports search, filter, sort and keyb
     .getByLabel("Trạng thái cảnh báo", { exact: true })
     .selectOption("above");
   await expect(page).toHaveURL(/state=above/);
-  await expect(page.locator("tbody tr")).toHaveCount(4);
+  await expect(registry.locator("tbody tr")).toHaveCount(4);
   await page
     .getByLabel("Trạng thái cảnh báo", { exact: true })
     .selectOption("all");
   await page
     .getByRole("button", { name: "Sắp xếp Điểm sepsis", exact: true })
     .click();
-  await expect(page.locator("th[aria-sort=descending]")).toHaveCount(1);
+  await expect(registry.locator("th[aria-sort=descending]")).toHaveCount(1);
   await page.getByLabel("Tìm mã hồ sơ", { exact: true }).fill("E0009");
-  const link = page.getByRole("link", { name: "E0009", exact: true });
+  const link = registry.getByRole("link", { name: "E0009", exact: true });
   await link.focus();
   await link.press("Enter");
   await expect(page).toHaveURL(/patients\/E0009/);
 });
-test("fixture URL hour and review remain correct across reload and navigation", async ({
+test("review returns to the same queue filters; changing hour does not inherit review", async ({
   page,
 }) => {
-  await page.goto("/patients/E0009?hour=7");
+  const initial = "/dashboard?search=E0009&department=WARD";
+  await page.goto(initial);
+  const queue = page.getByRole("region", {
+    name: "Bảng theo dõi và cảnh báo",
+    exact: true,
+  });
+  await expect(queue.locator("tbody tr")).toHaveCount(1);
+  await queue.getByRole("link", { name: "E0009", exact: true }).click();
   await expect(page.getByTestId("risk-score")).toHaveText("5.20%");
+  expect(new URL(page.url()).searchParams.get("returnTo")).toBe(initial);
   await page
     .getByLabel("Người xem xét", { exact: true })
     .fill("Bác sĩ kiểm thử");
   await page
     .getByRole("button", { name: "Ghi nhận đã xem xét", exact: true })
     .click();
-  await page.reload();
+  await page
+    .getByRole("link", { name: "Quay về danh sách", exact: true })
+    .click();
+  await expect(page).toHaveURL(
+    new RegExp("dashboard\\?search=E0009&department=WARD$"),
+  );
   await expect(
-    page.getByText("Đã xem xét trong phiên trải nghiệm", { exact: true }),
+    page.getByText("Không có cảnh báo phù hợp", { exact: true }),
   ).toBeVisible();
+  await page
+    .getByRole("combobox", { name: "Trạng thái xem xét", exact: true })
+    .selectOption("reviewed");
+  await expect(queue.locator("tbody tr")).toHaveCount(1);
+  await expect(queue).toContainText("Bác sĩ kiểm thử");
+  await queue.getByRole("link", { name: "E0009", exact: true }).click();
   await page
     .getByRole("combobox", { name: "Mốc giờ đang xem", exact: true })
     .selectOption("8");
-  await expect(page).toHaveURL(/hour=8/);
   await expect(page.getByTestId("risk-score")).toHaveText("33.88%");
   await expect(
     page.getByRole("button", { name: "Ghi nhận đã xem xét", exact: true }),
@@ -62,32 +104,121 @@ test("fixture URL hour and review remain correct across reload and navigation", 
     .getByRole("combobox", { name: "Mốc giờ đang xem", exact: true })
     .selectOption("7");
   await expect(
+    page.getByRole("combobox", { name: "Mốc giờ đang xem", exact: true }),
+  ).toHaveValue("7");
+  await page.reload();
+  await expect(
     page.getByText("Đã xem xét trong phiên trải nghiệm", { exact: true }),
   ).toBeVisible();
+  await expect(
+    page
+      .getByText("Đã xem xét không có nghĩa đã hoàn tất xử trí.", {
+        exact: false,
+      })
+      .first(),
+  ).toBeVisible();
   await page
-    .getByRole("link", { name: "Tổng quan lâm sàng", exact: true })
+    .getByRole("link", { name: "Về theo dõi & cảnh báo", exact: true })
     .click();
-  await expect(page.getByRole("region", { name: "Vừa xem xét" })).toContainText(
-    "Bác sĩ kiểm thử",
+  await expect(
+    page.getByRole("combobox", { name: "Trạng thái xem xét", exact: true }),
+  ).toHaveValue("reviewed");
+  await expect(
+    page.getByLabel("Tìm mã hồ sơ cảnh báo", { exact: true }),
+  ).toHaveValue("E0009");
+  await page.getByRole("button", { name: "Lịch sử", exact: true }).click();
+  await expect(
+    page.getByRole("combobox", { name: "Trạng thái xem xét", exact: true }),
+  ).toHaveValue("reviewed");
+  await expect(
+    page.getByText("Không có cảnh báo phù hợp", { exact: true }),
+  ).toBeVisible();
+});
+test("current/history and review status remain independent, including the legacy URL", async ({
+  page,
+}) => {
+  await page.goto("/dashboard");
+  await page.evaluate(() => {
+    const id = "HS-DEAD0001",
+      t0 = "2026-11-20T08:00",
+      modelVersion = "test";
+    const predictions = [1, 2, 3].map((hour) => ({
+      id: `${id}:${hour}:1`,
+      encounterId: id,
+      hour,
+      timestamp: `2026-11-20T${String(8 + hour).padStart(2, "0")}:00:00+07:00`,
+      score: 0.8,
+      threshold: 0.1,
+      revision: 1,
+      modelVersion,
+      department: "ED",
+      availableFeatures: 20,
+      featureHash: `hash-${hour}`,
+    }));
+    sessionStorage.setItem(
+      "sepsis-manual-cases-v1",
+      JSON.stringify([
+        {
+          profile: {
+            id,
+            t0,
+            age: 55,
+            sex: "F",
+            height: null,
+            weight: null,
+            comorbidities: {},
+          },
+          entries: [],
+          predictions,
+          attemptedHours: [1, 2],
+          revision: 1,
+          currentHour: 2,
+          errors: {},
+        },
+      ]),
+    );
+    sessionStorage.setItem(
+      "sepsis-reviews-v1",
+      JSON.stringify({
+        [predictions[0].id]: {
+          predictionId: predictions[0].id,
+          revision: 1,
+          reviewer: "History reviewer",
+          timestamp: new Date().toISOString(),
+          note: "",
+          localOnly: true,
+        },
+      }),
+    );
+  });
+  await page.goto("/alerts?search=HS-DEAD0001&review=all");
+  await expect(page).toHaveURL(
+    (url) =>
+      url.pathname === "/dashboard" &&
+      url.searchParams.get("search") === "HS-DEAD0001" &&
+      url.searchParams.get("review") === "all",
   );
-  await page
-    .getByRole("link", { name: "Trung tâm cảnh báo", exact: true })
-    .click();
-  const alertTable = page.getByRole("region", {
-    name: "Bảng cảnh báo có thể cuộn ngang",
+  const queue = page.getByRole("region", {
+    name: "Bảng theo dõi và cảnh báo",
     exact: true,
   });
-  await expect(alertTable.locator("tbody tr")).toHaveCount(3);
+  await expect(queue.locator("tbody tr")).toHaveCount(1);
+  await expect(queue).toContainText("T0+2h");
+  await expect(queue).not.toContainText("T0+3h");
+  await page.getByRole("button", { name: "Lịch sử", exact: true }).click();
+  await expect(queue.locator("tbody tr")).toHaveCount(1);
+  await expect(queue).toContainText("T0+1h");
   await page
-    .getByRole("button", { name: "Đã xem xét (1)", exact: true })
-    .click();
-  await expect(alertTable.locator("tbody tr")).toHaveCount(1);
-  await expect(alertTable.locator("tbody")).toContainText("E0009");
-  await page.getByRole("button", { name: "Lịch sử (4)", exact: true }).click();
-  await expect(alertTable.locator("tbody tr")).toHaveCount(4);
+    .getByRole("combobox", { name: "Trạng thái xem xét", exact: true })
+    .selectOption("pending");
+  await expect(
+    page.getByText("Không có cảnh báo phù hợp", { exact: true }),
+  ).toBeVisible();
   await page
-    .getByLabel("Tìm mã hồ sơ cảnh báo", { exact: true })
-    .fill("absent");
+    .getByRole("combobox", { name: "Trạng thái xem xét", exact: true })
+    .selectOption("reviewed");
+  await expect(queue).toContainText("History reviewer");
+  await page.getByRole("button", { name: "Hiện tại", exact: true }).click();
   await expect(
     page.getByText("Không có cảnh báo phù hợp", { exact: true }),
   ).toBeVisible();
@@ -213,7 +344,7 @@ for (const width of [1440, 1280, 1024, 768, 390])
       "/dashboard",
       "/patients",
       "/patients/E0009?hour=7",
-      "/alerts",
+      "/dashboard?scope=history&review=all",
       "/sample-cases",
       "/patients/new",
     ]) {
@@ -227,13 +358,13 @@ for (const width of [1440, 1280, 1024, 768, 390])
           }),
         ).toHaveCount(0);
       }
-      if (route === "/dashboard" || route === "/alerts") {
+      if (route.startsWith("/dashboard")) {
         await expect(page.locator(".stats-grid")).toHaveCount(0);
       }
       if (width === 1440) {
         const mainData =
           route === "/dashboard"
-            ? ".priority-case"
+            ? "table"
             : route === "/patients" || route === "/alerts"
               ? "table"
               : route.startsWith("/patients/E0009")

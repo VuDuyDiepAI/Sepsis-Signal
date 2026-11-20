@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,7 +20,13 @@ const schema = z.object({
   note: z.string().trim().max(1000, "Ghi chú tối đa 1.000 ký tự."),
 });
 type Values = z.infer<typeof schema>;
-export function ReviewPanel({ prediction }: { prediction?: Prediction }) {
+export function ReviewPanel({
+  prediction,
+  returnTo,
+}: {
+  prediction?: Prediction;
+  returnTo?: string;
+}) {
   const { reviews, recordReview } = useReviews();
   const [storageError, setStorageError] = useState("");
   const review = reviewFor(prediction, reviews);
@@ -50,9 +57,14 @@ export function ReviewPanel({ prediction }: { prediction?: Prediction }) {
               {review.reviewer} · {formatTime(review.timestamp, true)}
             </span>
             <span className="secondary-text">
-              Bản tính #{review.revision} · {prediction.modelVersion}
+              Bản tính #{review.revision}
             </span>
             {review.note && <p>{review.note}</p>}
+            {returnTo && (
+              <Link className="link-button" href={returnTo}>
+                Quay về danh sách
+              </Link>
+            )}
           </div>
         ) : (
           <form
@@ -116,7 +128,8 @@ export function ReviewPanel({ prediction }: { prediction?: Prediction }) {
         )}
         <p className="clinical-note">
           Ghi nhận trải nghiệm được giữ khi tải lại trong cùng tab, tối đa 8
-          giờ. Chưa gửi hoặc lưu lên hệ thống bệnh viện.
+          giờ. Chưa gửi hoặc lưu lên hệ thống bệnh viện. Đã xem xét không có
+          nghĩa đã hoàn tất xử trí.
         </p>
       </div>
     </Panel>

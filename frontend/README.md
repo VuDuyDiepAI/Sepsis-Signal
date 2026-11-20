@@ -16,7 +16,7 @@ Mở **http://localhost:3000**. Các hồ sơ mẫu vẫn xem độc lập, khô
 
 ### Tạo ca mới và chấm điểm nhập tay
 
-Bấm **Tạo ca mới** ở Tổng quan hoặc Hồ sơ. Tạo thông tin ban đầu, nhập sinh hiệu/xét nghiệm tại **T0** rồi lưu. Chọn **T0+1h**, nhập bổ sung nếu có hoặc bỏ chọn sinh hiệu mới để dùng bản ghi T0, rồi bấm **Lưu dữ liệu và chấm điểm**. Tiếp tục ở T0+2h và các giờ sau.
+Bấm **Tạo ca mới** ở Hồ sơ theo dõi. Tạo thông tin ban đầu, nhập sinh hiệu/xét nghiệm tại **T0** rồi lưu. Chọn **T0+1h**, nhập bổ sung nếu có hoặc bỏ chọn sinh hiệu mới để dùng bản ghi T0, rồi bấm **Lưu dữ liệu và chấm điểm**. Tiếp tục ở T0+2h và các giờ sau.
 
 Ca nhập tay được giữ trong **sessionStorage của tab**, còn sau tải lại trang và mất khi kết thúc phiên tab. Không nhập danh tính người bệnh thật. Danh sách theo dõi, tổng quan và cảnh báo bao gồm cả các ca nhập tay trong tab.
 
@@ -35,17 +35,21 @@ npm run dev
 
 | Đường dẫn | Nội dung |
 | --- | --- |
-| `/dashboard` | Hàng đợi công việc: 3 cảnh báo hiện tại chưa xem xét có điểm cao nhất, hồ sơ chưa có kết quả, các ghi nhận vừa xem xét và phạm vi theo dõi. Không lặp lại bảng danh sách. |
+| `/dashboard` | Theo dõi & Cảnh báo: một bảng duy nhất, mặc định các ca vượt ngưỡng hiện tại chưa xem xét. Có hai phạm vi Hiện tại/Lịch sử, bộ lọc xem xét độc lập, dữ liệu vừa thay đổi và liên kết mở đúng hồ sơ/giờ. |
 | `/patients` | Danh sách đầy đủ, mặc định T0 mới nhất trước. Tìm mã, lọc nguồn nhập tay/mẫu, khoa, cảnh báo, xem xét; sắp xếp và phân trang. Liên kết mã hồ sơ hỗ trợ bàn phím. |
 | `/patients/new` | Tạo ca và nhập dữ liệu tại T0; theo dõi ở các mốc sau bằng mô hình Python đang lưu. |
 | `/patients/[id]?hour=8` | Điểm và ngưỡng nguồn, thay đổi điểm phần trăm, biểu đồ đến giờ chọn, sinh hiệu, xét nghiệm, ghi nhận xem xét theo phiên bản. |
-| `/alerts` | Bảng kết quả vượt ngưỡng với các nhóm chưa xem xét, đã xem xét và lịch sử; số đếm nằm ngay trên bộ lọc. Mỗi bản liên kết đến đúng hồ sơ/giờ. |
+| `/alerts` | Đường dẫn tương thích, chuyển về `/dashboard` và giữ các bộ lọc hợp lệ. Không còn màn hình/sidebar cảnh báo độc lập. |
 | `/sample-cases` | Chọn hồ sơ, đi qua T0–T0+36, hiển thị dữ liệu theo availability. Mốc khởi phát chỉ tải/hiện khi bật tùy chọn tham chiếu. |
 | `/model-monitoring` | Metadata và chỉ số validation/temporal holdout sepsis. Mô hình shock nằm trong phần mở rộng riêng. |
 
 Sidebar thu gọn trên desktop; menu dialog trên tablet/mobile. Có trạng thái tải, không tìm thấy, dữ liệu thiếu và lỗi có nút thử lại. Biểu đồ có tooltip và chọn điểm để quay về giờ cũ; bộ chọn giờ cho phép đi tiếp.
 
-Các màn hình lâm sàng ưu tiên nội dung trong vùng nhìn đầu tiên: Tổng quan dùng dòng số liệu gọn thay thẻ KPI; Hồ sơ dùng thanh công cụ chung cho nguồn dữ liệu và danh sách; Trung tâm cảnh báo tập trung vào bảng xử lý. Hồ sơ chi tiết đi thẳng vào thanh người bệnh, mốc giờ và dữ liệu lâm sàng, không có khối thuật toán/đặc trưng/phiên bản mô hình. Thông tin kỹ thuật nằm ở trang Đánh giá mô hình.
+Sidebar có hai màn hình lâm sàng (Theo dõi & Cảnh báo, Hồ sơ theo dõi) và hai màn hình nghiên cứu (Diễn tiến ca mẫu, Đánh giá mô hình). Không có danh sách ưu tiên thứ hai, khối Vừa xem xét hoặc Phạm vi theo dõi trên trang chính. Hồ sơ chi tiết đi thẳng vào thanh người bệnh, mốc giờ và dữ liệu lâm sàng. Thông tin thuật toán nằm ở trang Đánh giá mô hình.
+
+Luồng chính: nhận cảnh báo → mở hồ sơ → đối chiếu dữ liệu → ghi nhận xem xét → quay về đúng bộ lọc danh sách. `returnTo` chỉ nhận hai đường dẫn danh sách nội bộ và được giữ khi đổi giờ. Ghi nhận xem xét không đồng nghĩa đã hoàn tất xử trí; chỉ có hiệu lực với đúng ID/revision dự báo.
+
+Hiện tại chỉ gồm bản vượt ngưỡng tại `currentHour` của mỗi ca; Lịch sử chỉ gồm các bản trước giờ đó, không lẫn hiện tại hoặc tương lai. Trạng thái xem xét được lọc riêng trong từng phạm vi. Số liệu tóm tắt luôn tính theo mốc hiện tại, chưa áp dụng bộ lọc tìm kiếm. Dữ liệu vừa thay đổi so sánh giá trị gần nhất đã có tại giờ chọn với giờ trước, kèm cả thời điểm đo/lấy mẫu và thời điểm có trên EMR. Giá trị thiếu, kết quả chưa trả hoặc mẫu cũ trả muộn không được suy diễn thành thay đổi; đây không phải giải thích đóng góp đặc trưng hay nguyên nhân gây sepsis.
 
 ## Dữ liệu và quy tắc
 
@@ -56,7 +60,7 @@ Các màn hình lâm sàng ưu tiên nội dung trong vùng nhìn đầu tiên: 
 - Sinh hiệu/xét nghiệm chỉ hiện nếu thời điểm đo/lấy mẫu từ T0 và `measured/collected_at <= available_at <= giờ đang xem`. Chọn giá trị theo thứ tự thời gian đo/lấy mẫu, rồi availability. Giữ nguyên null và đơn vị nguồn.
 - Múi giờ cố định `Asia/Ho_Chi_Minh` (+07:00), kể cả khi trình duyệt chạy múi giờ khác.
 - Ngưỡng hiện tại lấy từ metadata: khoảng **2,76%**; UI giữ nguyên độ chính xác số khi so sánh. Phần trăm hiển thị được làm tròn 2 chữ số.
-- Tổng quan dùng một mốc hiện tại cố định cho từng hồ sơ mẫu, chọn trong các bản nguồn để trải nghiệm nhiều trạng thái. Ca nhập tay dùng giờ đã lưu mới nhất. Cảnh báo lịch sử chỉ tính đến mốc đó.
+- Theo dõi & Cảnh báo dùng một mốc hiện tại cố định cho từng hồ sơ mẫu, chọn trong các bản nguồn để trải nghiệm nhiều trạng thái. Ca nhập tay dùng giờ đã lưu mới nhất. Cảnh báo lịch sử chỉ tính các giờ trước mốc đó.
 - Biểu mẫu chỉ nhận giờ đo/lấy mẫu trong `[T0, T0+N]`. Giờ có dữ liệu được phép muộn hơn giờ đang xem; UI thông báo kết quả đang chờ và không dùng sớm. Các bản sửa cùng giờ đo hoặc cùng xét nghiệm/giờ lấy mẫu thay thế bản cũ trước khi lọc availability, tương ứng với cầu nối Python.
 - Mốc giờ nằm trong URL `?hour=N`; đổi giờ, mở lại liên kết và tải lại đều giữ đúng mốc đang xem.
 - Kết cục tham chiếu tách riêng khỏi fixture lâm sàng và không được đưa vào đầu vào mô hình. Không có dữ liệu người bệnh thật trong frontend.

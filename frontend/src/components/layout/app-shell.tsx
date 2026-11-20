@@ -6,7 +6,6 @@ import {
   Activity,
   LayoutDashboard,
   UsersRound,
-  BellRing,
   FlaskConical,
   ChartNoAxesCombined,
   PanelLeftClose,
@@ -28,12 +27,11 @@ import { useReviews } from "@/components/review-context";
 const links = [
   {
     href: "/dashboard",
-    label: "Tổng quan lâm sàng",
+    label: "Theo dõi & Cảnh báo",
     icon: LayoutDashboard,
     group: "KHÔNG GIAN LÂM SÀNG",
   },
   { href: "/patients", label: "Hồ sơ theo dõi", icon: UsersRound },
-  { href: "/alerts", label: "Trung tâm cảnh báo", icon: BellRing },
   {
     href: "/sample-cases",
     label: "Diễn tiến ca mẫu",
@@ -74,7 +72,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <Link
       href="/dashboard"
       className="brand"
-      aria-label="Sepsis Signal — Tổng quan"
+      aria-label="Sepsis Signal — Theo dõi và Cảnh báo"
     >
       <span className="brand-mark">
         <Activity size={25} />

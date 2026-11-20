@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useClinicalReader } from "@/lib/manual-store";
 import { useHydrated } from "@/lib/use-hydrated";
 import { UserRound, ChevronLeft, ChevronRight } from "lucide-react";
@@ -25,6 +26,7 @@ export function PatientWorkspace({
   navigationPending = false,
   action,
   embedded = false,
+  returnTo,
 }: {
   encounter: Encounter;
   hour: number;
@@ -34,6 +36,7 @@ export function PatientWorkspace({
   navigationPending?: boolean;
   action?: React.ReactNode;
   embedded?: boolean;
+  returnTo?: string;
 }) {
   const reader = useClinicalReader();
   const hydrated = useHydrated();
@@ -59,6 +62,13 @@ export function PatientWorkspace({
           </div>
         </div>
         <div className="patient-controls">
+          {returnTo && (
+            <Link className="link-button" href={returnTo}>
+              {returnTo.startsWith("/dashboard")
+                ? "Về theo dõi & cảnh báo"
+                : "Về danh sách hồ sơ"}
+            </Link>
+          )}
           {action}
           <Button
             variant="outline"
@@ -127,6 +137,7 @@ export function PatientWorkspace({
           <ReviewPanel
             key={`${encounter.id}:${hour}`}
             prediction={reader.getPrediction(encounter.id, hour)}
+            returnTo={returnTo}
           />
         </div>
         <div className="workspace-column">

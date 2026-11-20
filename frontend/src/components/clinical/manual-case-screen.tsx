@@ -8,6 +8,7 @@ import { PageHeader, Panel } from "@/components/layout/page-container";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PatientWorkspace } from "./patient-workspace";
+import { patientHref } from "@/lib/clinical-navigation";
 import {
   conditions,
   symptomFields,
@@ -454,9 +455,11 @@ function ManualEntryForm({
 export function ManualCaseScreen({
   id,
   initialHour,
+  returnTo,
 }: {
   id: string;
   initialHour?: number;
+  returnTo: string;
 }) {
   const router = useRouter();
   const [navigationPending, startNavigation] = useTransition();
@@ -466,7 +469,7 @@ export function ManualCaseScreen({
   const hour = initialHour ?? record?.currentHour ?? 0;
   const setHour = (next: number) =>
     startNavigation(() =>
-      router.replace(`/patients/${id}?hour=${next}`, { scroll: false }),
+      router.replace(patientHref(id, next, returnTo), { scroll: false }),
     );
   if (!record)
     return (
@@ -486,6 +489,7 @@ export function ManualCaseScreen({
         hour={hour}
         onHourChange={setHour}
         navigationPending={navigationPending}
+        returnTo={returnTo}
         action={
           <Link href="/patients/new" className="link-button">
             <Plus size={16} />
