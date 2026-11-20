@@ -1,5 +1,6 @@
 "use client";
 import { useClinicalReader } from "@/lib/client/manual-store";
+import { useHydrated } from "@/hooks/use-hydrated";
 import {
   LineChart,
   Line,
@@ -26,6 +27,7 @@ export function RiskTimeline({
   onset?: string | null;
 }) {
   const reader = useClinicalReader();
+  const hydrated = useHydrated();
   const predictions = reader.getPredictions(encounter.id, hour);
   const onsetHour = onset
     ? (new Date(onset).getTime() - new Date(encounter.t0).getTime()) / 3600000
@@ -64,7 +66,7 @@ export function RiskTimeline({
           role="img"
           aria-label={`Biểu đồ nguy cơ đến ${hourLabel(hour)}, ngưỡng ${percent(threshold)}`}
         >
-          <ResponsiveContainer width="100%" height="100%">
+          {hydrated ? <ResponsiveContainer width="100%" height="100%">
             <LineChart
               data={points}
               margin={{ top: 18, right: 15, left: 0, bottom: 8 }}
@@ -148,7 +150,7 @@ export function RiskTimeline({
                 activeDot={{ r: 5 }}
               />
             </LineChart>
-          </ResponsiveContainer>
+          </ResponsiveContainer> : <div role="status" className="secondary-text">Đang tải biểu đồ diễn biến…</div>}
         </div>
       </div>
       <div className="chart-key">
