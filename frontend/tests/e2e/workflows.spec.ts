@@ -468,8 +468,12 @@ test("API refuses a foreign origin and malformed observations before spawning Py
 for (const width of [1440, 1280, 1024, 768, 390])
   test(`responsive ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 1000 });
-    const errors: string[] = [];
-    page.on("pageerror", (e) => errors.push(e.message));
+    // Attribute hydration/runtime errors to each route, rather than only the viewport.
+    let activeRoute = "initial";
+    const errors: { route: string; message: string; stack: string }[] = [];
+    page.on("pageerror", (error) => {
+      errors.push({ route: activeRoute, message: error.message, stack: error.stack ?? "" });
+    });
     for (const route of [
       "/dashboard",
       "/patients",
@@ -479,6 +483,7 @@ for (const width of [1440, 1280, 1024, 768, 390])
       "/model-monitoring",
       "/patients/new",
     ]) {
+      activeRoute = route;
       await page.goto(route);
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
       if (route.startsWith("/patients/E0009")) {
@@ -517,8 +522,20 @@ for (const width of [1440, 1280, 1024, 768, 390])
           ),
         )
         .toBe(true);
+      const routeErrors = errors.filter((entry) => entry.route === route);
+      if (routeErrors.length) {
+        const slug = route.replace(/[^a-z0-9]+/gi, "-");
+        await test.info().attach(`browser-errors-${width}-${slug}`, {
+          body: JSON.stringify({ viewport: width, route, errors: routeErrors }, null, 2),
+          contentType: "application/json",
+        });
+        await test.info().attach(`browser-screenshot-${width}-${slug}`, {
+          body: await page.screenshot({ fullPage: true }),
+          contentType: "image/png",
+        });
+      }
+      expect(routeErrors, `Browser error at ${width}px on ${route}`).toEqual([]);
     }
-    expect(errors).toEqual([]);
   });
 
 for (const viewport of [

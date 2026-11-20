@@ -1,10 +1,26 @@
 name: Frontend checks
 on:
   pull_request:
-    paths: ['frontend/**', 'scripts/export_frontend_demo.py', 'scripts/score_frontend_case.py', '.github/workflows/frontend.yml']
+    paths:
+      - 'frontend/**'
+      - 'src/**'
+      - 'scripts/**'
+      - 'requirements.txt'
+      - 'requirements-dev.txt'
+      - 'artifacts/**'
+      - 'data/**'
+      - '.github/workflows/frontend.yml'
   push:
-    branches: ['feat/clinical-ui-refresh']
-    paths: ['frontend/**', 'scripts/export_frontend_demo.py', 'scripts/score_frontend_case.py', '.github/workflows/frontend.yml']
+    branches: ['main', 'feat/clinical-ui-refresh']
+    paths:
+      - 'frontend/**'
+      - 'src/**'
+      - 'scripts/**'
+      - 'requirements.txt'
+      - 'requirements-dev.txt'
+      - 'artifacts/**'
+      - 'data/**'
+      - '.github/workflows/frontend.yml'
 permissions:
   contents: read
 jobs:
@@ -36,3 +52,14 @@ jobs:
       - run: python -m pip install -r ../requirements.txt
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
+
+      - name: Upload Playwright diagnostics on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-diagnostics-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            frontend/test-results/
+            frontend/playwright-report/
+          retention-days: 7
+          if-no-files-found: warn
