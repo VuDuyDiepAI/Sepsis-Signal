@@ -56,9 +56,7 @@ export function ReviewPanel({
             <span>
               {review.reviewer} · {formatTime(review.timestamp, true)}
             </span>
-            <span className="secondary-text">
-              Bản tính #{review.revision}
-            </span>
+            <span className="secondary-text">Bản tính #{review.revision}</span>
             {review.note && <p>{review.note}</p>}
             {returnTo && (
               <Link className="link-button" href={returnTo}>

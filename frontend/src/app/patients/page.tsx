@@ -6,10 +6,9 @@ import { Plus } from "lucide-react";
 import { Suspense } from "react";
 export default function Patients() {
   return (
-    <>
+    <div className="viewport-screen list-screen">
       <PageHeader
         title="Hồ sơ theo dõi"
-        description="Tra cứu, tạo và quản lý toàn bộ hồ sơ. Chọn mã hồ sơ để xem diễn biến và cập nhật chỉ số."
         action={
           <Link href="/patients/new" className="link-button primary">
             <Plus size={17} />
@@ -26,7 +25,10 @@ export default function Patients() {
       >
         <PatientTable />
       </Suspense>
-      <ClinicalNote />
-    </>
+      <details className="screen-help">
+        <summary>Cách đọc kết quả</summary>
+        <ClinicalNote />
+      </details>
+    </div>
   );
 }

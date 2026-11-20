@@ -1,5 +1,7 @@
 "use client";
 import Link from "next/link";
+import { useState } from "react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useClinicalReader } from "@/lib/manual-store";
 import { useHydrated } from "@/lib/use-hydrated";
 import { UserRound, ChevronLeft, ChevronRight } from "lucide-react";
@@ -27,24 +29,30 @@ export function PatientWorkspace({
   action,
   embedded = false,
   returnTo,
+  statusMessage,
 }: {
   encounter: Encounter;
   hour: number;
   onHourChange: (h: number) => void;
   onset?: string | null;
-  entryForm?: React.ReactNode;
+  entryForm?: (onScored: (message: string) => void) => React.ReactNode;
   navigationPending?: boolean;
   action?: React.ReactNode;
   embedded?: boolean;
   returnTo?: string;
+  statusMessage?: string;
 }) {
   const reader = useClinicalReader();
+  const [activeTab, setActiveTab] = useState(
+    entryForm ? "entry" : embedded ? "timeline" : "assessment",
+  );
+  const [savedNotice, setSavedNotice] = useState("");
   const hydrated = useHydrated();
   const at = timeAt(encounter.t0, hour);
   const IdentityHeading = embedded ? "strong" : "h1";
   const updates = reader.getUpdates(encounter.id, hour);
   return (
-    <>
+    <div className="viewport-screen patient-workspace">
       <section className="patient-bar" aria-label="Thông tin hồ sơ">
         <div className="patient-identity">
           <span className="patient-icon">
@@ -55,9 +63,6 @@ export function PatientWorkspace({
             <p>
               {encounter.age} tuổi · {encounter.sex === "F" ? "Nữ" : "Nam"} ·{" "}
               {departments[reader.getDepartment(encounter.id, at)]}
-            </p>
-            <p className="secondary-text">
-              T0 {formatTime(encounter.t0, true)}
             </p>
           </div>
         </div>
@@ -104,7 +109,10 @@ export function PatientWorkspace({
           </Button>
         </div>
         <p className="patient-updates" role="status">
-          <span>Đang xem {formatTime(at, true)}</span>
+          <span>
+            Đang xem {formatTime(at, true)} · T0{" "}
+            {formatTime(encounter.t0, true)}
+          </span>
           <span>
             {updates.vitals} bản đo mới · {updates.labs} kết quả xét nghiệm mới
             trong giờ
@@ -116,50 +124,80 @@ export function PatientWorkspace({
           Đang chuyển mốc dữ liệu…
         </p>
       )}
-      {entryForm && (
-        <fieldset
-          className="entry-boundary"
-          disabled={navigationPending}
-          aria-busy={navigationPending}
-        >
-          {entryForm}
-        </fieldset>
-      )}
-      <div className="workspace-grid">
-        <div className="workspace-column">
-          <RiskSummary encounter={encounter} hour={hour} />
+
+      <Tabs
+        value={activeTab}
+        onValueChange={(value) => setActiveTab(String(value))}
+        className="workspace-tabs"
+      >
+        <TabsList variant="line" aria-label="Nội dung hồ sơ">
+          <TabsTrigger value="assessment">Tổng hợp</TabsTrigger>
+          <TabsTrigger value="timeline">Diễn biến</TabsTrigger>
+          <TabsTrigger value="labs">Xét nghiệm</TabsTrigger>
+          <TabsTrigger value="review">Xem xét</TabsTrigger>
+          {entryForm && <TabsTrigger value="entry">Nhập chỉ số</TabsTrigger>}
+        </TabsList>
+        {(savedNotice || statusMessage) && (
+          <p role="status" className="workspace-notice">
+            {statusMessage || savedNotice}
+          </p>
+        )}
+        <TabsContent value="assessment" keepMounted className="workspace-pane">
+          <div className="assessment-grid">
+            <div className="assessment-risk">
+              <RiskSummary encounter={encounter} hour={hour} />
+              <Button variant="outline" onClick={() => setActiveTab("review")}>
+                Mở ghi nhận xem xét
+              </Button>
+            </div>
+            <VitalSignsPanel id={encounter.id} hour={hour} />
+          </div>
+        </TabsContent>
+        <TabsContent value="timeline" keepMounted className="workspace-pane">
           <RiskTimeline
             encounter={encounter}
             hour={hour}
             onHourChange={onHourChange}
             onset={onset}
           />
+        </TabsContent>
+        <TabsContent value="labs" keepMounted className="workspace-pane">
+          <LaboratoryPanel id={encounter.id} hour={hour} />
+        </TabsContent>
+        <TabsContent value="review" keepMounted className="workspace-pane">
           <ReviewPanel
             key={`${encounter.id}:${hour}`}
             prediction={reader.getPrediction(encounter.id, hour)}
             returnTo={returnTo}
           />
-        </div>
-        <div className="workspace-column">
-          <VitalSignsPanel id={encounter.id} hour={hour} />
-          <LaboratoryPanel id={encounter.id} hour={hour} />
-          <details className="panel secondary-details">
-            <summary>Dữ liệu và cách đọc kết quả</summary>
-            <div className="panel-body">
-              <p>
-                Chỉ sử dụng thông tin có sẵn trên EMR từ T0 đến{" "}
-                {formatTime(at, true)}. Kết quả cũ trả muộn không thay thế lần
-                lấy mẫu mới hơn.
-              </p>
-              <p className="secondary-text mt-3">
-                Màu cảnh báo thể hiện điểm vượt ngưỡng, không phải mức độ bệnh
-                hay chẩn đoán. Mô hình sử dụng dữ liệu EMR mô phỏng.
-              </p>
-            </div>
-          </details>
-        </div>
-      </div>
-      <ClinicalNote />
-    </>
+        </TabsContent>
+        {entryForm && (
+          <TabsContent
+            value="entry"
+            keepMounted
+            className="workspace-pane entry-pane"
+          >
+            <fieldset
+              className="entry-boundary"
+              disabled={navigationPending}
+              aria-busy={navigationPending}
+            >
+              {entryForm((message) => {
+                setSavedNotice(message);
+                setActiveTab("assessment");
+              })}
+            </fieldset>
+          </TabsContent>
+        )}
+      </Tabs>
+      <details className="screen-help">
+        <summary>Dữ liệu và cách đọc kết quả</summary>
+        <ClinicalNote>
+          Chỉ dùng dữ liệu đã có trên EMR từ T0 đến {formatTime(at, true)}. Điểm
+          nguy cơ không xác định chẩn đoán; dưới ngưỡng không loại trừ sepsis.
+          Đã xem xét chưa đồng nghĩa đã hoàn tất xử trí.
+        </ClinicalNote>
+      </details>
+    </div>
   );
 }

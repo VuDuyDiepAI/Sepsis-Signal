@@ -37,12 +37,8 @@ export function ReplayScreen() {
   }
   const onset = reveal && reference?.id === id ? reference.onset : undefined;
   return (
-    <>
-      <PageHeader
-        title="Diễn tiến ca mẫu"
-        description="Đi qua từng mốc giờ để xem dữ kiện xuất hiện và điểm nguy cơ thay đổi."
-        section="Dữ liệu & mô hình"
-      />
+    <div className="viewport-screen replay-screen">
+      <PageHeader title="Diễn tiến ca mẫu" section="Dữ liệu & mô hình" />
       <section className="replay-toolbar">
         <label className="filter-label">
           Hồ sơ mô phỏng
@@ -97,6 +93,6 @@ export function ReplayScreen() {
         onHourChange={setHour}
         onset={onset}
       />
-    </>
+    </div>
   );
 }

@@ -72,6 +72,7 @@ test("review returns to the same queue filters; changing hour does not inherit r
   await queue.getByRole("link", { name: "E0009", exact: true }).click();
   await expect(page.getByTestId("risk-score")).toHaveText("5.20%");
   expect(new URL(page.url()).searchParams.get("returnTo")).toBe(initial);
+  await page.getByRole("tab", { name: "Xem xét", exact: true }).click();
   await page
     .getByLabel("Người xem xét", { exact: true })
     .fill("Bác sĩ kiểm thử");
@@ -97,6 +98,7 @@ test("review returns to the same queue filters; changing hour does not inherit r
     .getByRole("combobox", { name: "Mốc giờ đang xem", exact: true })
     .selectOption("8");
   await expect(page.getByTestId("risk-score")).toHaveText("33.88%");
+  await page.getByRole("tab", { name: "Xem xét", exact: true }).click();
   await expect(
     page.getByRole("button", { name: "Ghi nhận đã xem xét", exact: true }),
   ).toBeVisible();
@@ -107,6 +109,7 @@ test("review returns to the same queue filters; changing hour does not inherit r
     page.getByRole("combobox", { name: "Mốc giờ đang xem", exact: true }),
   ).toHaveValue("7");
   await page.reload();
+  await page.getByRole("tab", { name: "Xem xét", exact: true }).click();
   await expect(
     page.getByText("Đã xem xét trong phiên trải nghiệm", { exact: true }),
   ).toBeVisible();
@@ -237,6 +240,7 @@ test("manual late results, URL updates, review reload and invalidation use real 
   await page.getByLabel("Nhịp tim (lần/phút)", { exact: true }).fill("90");
   await page.getByLabel("Nhịp thở (lần/phút)", { exact: true }).fill("18");
   await page.getByLabel("HA tâm thu (mmHg)", { exact: true }).fill("120");
+  await page.getByRole("button", { name: "Xét nghiệm", exact: true }).click();
   await page.getByLabel("CRP (mg/L)", { exact: true }).fill("180");
   await page
     .getByLabel("Giờ xét nghiệm có trên EMR", { exact: true })
@@ -260,9 +264,11 @@ test("manual late results, URL updates, review reload and invalidation use real 
   await expect(page.getByTestId("risk-score")).not.toHaveText("—", {
     timeout: 60000,
   });
+  await page.getByRole("tab", { name: "Xét nghiệm", exact: true }).click();
   await expect(
     page.getByRole("region", { name: "Kết quả xét nghiệm" }),
   ).not.toContainText("180.00");
+  await page.getByRole("tab", { name: "Xem xét", exact: true }).click();
   await page
     .getByLabel("Người xem xét", { exact: true })
     .fill("Người xem ca nhập tay");
@@ -270,6 +276,7 @@ test("manual late results, URL updates, review reload and invalidation use real 
     .getByRole("button", { name: "Ghi nhận đã xem xét", exact: true })
     .click();
   await page.reload();
+  await page.getByRole("tab", { name: "Xem xét", exact: true }).click();
   await expect(
     page.getByRole("combobox", { name: "Mốc giờ đang xem", exact: true }),
   ).toHaveValue("1");
@@ -279,9 +286,11 @@ test("manual late results, URL updates, review reload and invalidation use real 
   await page
     .getByRole("combobox", { name: "Mốc giờ đang xem", exact: true })
     .selectOption("2");
+  await page.getByRole("tab", { name: "Xét nghiệm", exact: true }).click();
   await expect(
     page.getByRole("region", { name: "Kết quả xét nghiệm" }),
   ).toContainText("180.00");
+  await page.getByRole("tab", { name: "Nhập chỉ số", exact: true }).click();
   await page
     .getByLabel("Có sinh hiệu mới tại mốc này", { exact: true })
     .uncheck();
@@ -298,6 +307,9 @@ test("manual late results, URL updates, review reload and invalidation use real 
     page.getByRole("combobox", { name: "Mốc giờ đang xem", exact: true }),
   ).toHaveValue("0");
   await page
+    .getByText("Chỉnh giờ đo và giờ có trên EMR", { exact: true })
+    .click();
+  await page
     .getByLabel("Giờ sinh hiệu có trên EMR", { exact: true })
     .fill("2026-11-19T09:30");
   await page
@@ -312,6 +324,7 @@ test("manual late results, URL updates, review reload and invalidation use real 
   await expect(
     page.getByRole("combobox", { name: "Mốc giờ đang xem", exact: true }),
   ).toHaveValue("1");
+  await page.getByRole("tab", { name: "Tổng hợp", exact: true }).click();
   await expect(page.getByTestId("risk-score")).toHaveText("—");
   await expect(
     page.getByRole("region", { name: "Sinh hiệu gần nhất" }),
@@ -346,6 +359,7 @@ for (const width of [1440, 1280, 1024, 768, 390])
       "/patients/E0009?hour=7",
       "/dashboard?scope=history&review=all",
       "/sample-cases",
+      "/model-monitoring",
       "/patients/new",
     ]) {
       await page.goto(route);
@@ -370,10 +384,14 @@ for (const width of [1440, 1280, 1024, 768, 390])
               : route.startsWith("/patients/E0009")
                 ? ".risk-panel"
                 : null;
-        if (mainData)
-          expect(
-            (await page.locator(mainData).first().boundingBox())!.y,
-          ).toBeLessThan(400);
+        if (mainData) {
+          const content = page
+            .locator(mainData)
+            .filter({ visible: true })
+            .first();
+          await expect(content).toBeVisible();
+          expect((await content.boundingBox())!.y).toBeLessThan(400);
+        }
       }
       await expect
         .poll(() =>
@@ -384,4 +402,106 @@ for (const width of [1440, 1280, 1024, 768, 390])
         .toBe(true);
     }
     expect(errors).toEqual([]);
+  });
+
+for (const viewport of [
+  { width: 1366, height: 768 },
+  { width: 1440, height: 900 },
+])
+  test(`desktop viewport ${viewport.width}x${viewport.height} keeps tools visible and every section reachable`, async ({
+    page,
+  }) => {
+    await page.setViewportSize(viewport);
+    for (const route of [
+      "/dashboard",
+      "/patients",
+      "/patients/E0009?hour=7",
+      "/sample-cases",
+      "/model-monitoring",
+      "/patients/new",
+    ]) {
+      await page.goto(route);
+      await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+      await expect
+        .poll(() =>
+          page.evaluate(() => ({
+            documentFits:
+              document.documentElement.scrollHeight <= innerHeight + 1,
+            mainFits:
+              document.querySelector("main")!.scrollHeight <=
+              document.querySelector("main")!.clientHeight + 1,
+          })),
+        )
+        .toEqual({ documentFits: true, mainFits: true });
+      if (route === "/patients/E0009?hour=7") {
+        for (const tab of ["Diễn biến", "Xét nghiệm", "Xem xét", "Tổng hợp"]) {
+          await page.getByRole("tab", { name: tab, exact: true }).click();
+          await expect(
+            page.getByRole("tab", { name: tab, exact: true }),
+          ).toHaveAttribute("aria-selected", "true");
+        }
+        await expect(
+          page.getByRole("region", { name: "Sinh hiệu gần nhất", exact: true }),
+        ).toBeVisible();
+      }
+      if (route === "/model-monitoring") {
+        await page
+          .getByRole("tab", { name: "Thông tin & nguồn", exact: true })
+          .click();
+        await expect(
+          page.getByRole("region", {
+            name: "Nguồn dữ liệu và hợp đồng đặc trưng",
+            exact: true,
+          }),
+        ).toBeVisible();
+        await page
+          .getByRole("tab", { name: "Hiệu năng sepsis", exact: true })
+          .click();
+        await expect(
+          page.getByRole("cell", {
+            name: "Precision theo mốc giờ",
+            exact: true,
+          }),
+        ).toBeVisible();
+      }
+    }
+    await page.goto("/patients");
+    const registry = page.getByRole("region", {
+      name: "Bảng hồ sơ có thể cuộn ngang",
+      exact: true,
+    });
+    await expect(
+      page.getByRole("button", { name: "Trang sau", exact: true }),
+    ).toBeEnabled();
+    const first = await registry
+      .locator("tbody .encounter-id")
+      .allTextContents();
+    await page.getByRole("button", { name: "Trang sau", exact: true }).click();
+    await expect(
+      registry.locator("tbody .encounter-id").first(),
+    ).not.toHaveText(first[0].trim());
+    const second = await registry
+      .locator("tbody .encounter-id")
+      .allTextContents();
+    expect(new Set([...first, ...second].map((s) => s.trim())).size).toBe(9);
+    await page.goto("/dashboard");
+    const next = page.getByRole("button", {
+      name: "Trang cảnh báo sau",
+      exact: true,
+    });
+    if (await next.isEnabled()) {
+      const queue = page.getByRole("region", {
+        name: "Bảng theo dõi và cảnh báo",
+        exact: true,
+      });
+      const old = await queue
+        .locator("tbody .encounter-id")
+        .first()
+        .innerText();
+      await next.click();
+      await expect(queue.locator("tbody .encounter-id").first()).not.toHaveText(
+        old,
+      );
+      await expect(page).toHaveURL(/page=2/);
+    }
   });

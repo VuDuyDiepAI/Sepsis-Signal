@@ -1478,3 +1478,419 @@ textarea {
     gap: 2px 6px;
   }
 }
+
+/* One-screen work areas: fixed tools, bounded data and explicit tabs/pagination. */
+[hidden] {
+  display: none !important;
+}
+.viewport-screen {
+  min-width: 0;
+}
+.screen-help {
+  color: #526779;
+  font-size: 13px;
+  margin-top: 8px;
+}
+.screen-help > summary {
+  cursor: pointer;
+  width: fit-content;
+}
+.screen-help .clinical-note {
+  margin: 8px 0;
+}
+.list-screen > .page-heading {
+  gap: 14px;
+  margin-bottom: 12px;
+}
+.list-screen > .page-heading .overview-summary {
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+.list-screen > .page-heading .overview-summary a {
+  padding: 4px 12px;
+}
+.list-screen > .page-heading .overview-summary a:first-child {
+  padding-left: 0;
+}
+.monitoring-panel > .alert-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 14px;
+}
+.monitoring-filters {
+  display: flex;
+  flex: 1;
+  gap: 10px;
+  margin-left: 12px;
+  padding: 0;
+  min-width: 0;
+}
+.monitoring-filters .filter-label {
+  min-width: 0;
+  flex: 1;
+}
+.monitoring-filters .filter-label:first-child {
+  flex: 1.2;
+}
+.monitoring-filters .filter-label > span:not(.search-field) {
+  display: none;
+}
+.registry-panel .filters {
+  padding: 10px 16px;
+}
+.registry-toolbar {
+  padding: 8px 16px;
+  gap: 12px;
+}
+.table-scroll {
+  min-width: 0;
+}
+.table-scroll thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #f5f8fb;
+}
+.workspace-tabs {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  gap: 10px;
+}
+.workspace-tabs > [data-slot="tabs-list"] {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  height: auto;
+  min-height: 42px;
+  max-width: 100%;
+  flex-shrink: 0;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #dce5ed;
+  padding: 0;
+}
+.workspace-tabs [data-slot="tabs-trigger"] {
+  min-height: 40px;
+  flex: none;
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 4px 4px 0 0;
+}
+.workspace-tabs [data-slot="tabs-trigger"][data-active] {
+  background: #e7f2f6;
+  color: #145f76;
+}
+.workspace-pane {
+  font-size: 16px;
+  min-height: 0;
+  overflow: auto;
+}
+.assessment-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+.assessment-risk {
+  display: grid;
+  gap: 10px;
+}
+.assessment-risk > .risk-panel {
+  order: 0;
+}
+.assessment-risk > button {
+  order: 1;
+}
+.workspace-notice {
+  font-size: 14px;
+  color: #225f74;
+  padding: 8px 12px;
+  background: #edf6f8;
+  border: 1px solid #cce0e7;
+  border-radius: 4px;
+}
+.patient-workspace .patient-bar {
+  padding: 10px 14px;
+  gap: 6px 16px;
+  margin-bottom: 10px;
+}
+.patient-workspace .patient-updates {
+  padding-top: 6px;
+}
+.patient-workspace .patient-controls > .filter-label {
+  min-width: 155px;
+}
+.patient-workspace .patient-controls > .filter-label > span {
+  display: none;
+}
+.entry-categories {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  padding: 8px 12px;
+  border-bottom: 1px solid #dce5ed;
+}
+.entry-categories [aria-pressed="true"] {
+  background: #e7f2f6;
+  color: #145f76;
+}
+.tabbed-entry {
+  gap: 0;
+}
+.entry-fields {
+  padding: 14px 18px;
+  min-height: 0;
+}
+.entry-fields > div {
+  display: grid;
+  gap: 12px;
+}
+.entry-actions {
+  display: grid;
+  gap: 8px;
+  border-top: 1px solid #dce5ed;
+  padding: 10px 18px;
+}
+.entry-actions > .secondary-text {
+  font-size: 13px;
+}
+.manual-form .manual-grid {
+  gap: 10px 14px;
+}
+.entry-actions .review-success {
+  padding: 8px 12px;
+}
+.entry-timing > summary {
+  cursor: pointer;
+  font-size: 14px;
+  color: #225f74;
+}
+.entry-timing > .manual-grid {
+  margin-top: 10px;
+}
+.model-summary {
+  display: flex;
+  gap: 10px 24px;
+  flex-wrap: wrap;
+  color: #526779;
+  font-size: 14px;
+  padding: 8px 0 12px;
+}
+.model-summary strong {
+  color: #152b45;
+}
+.compact-panel-note {
+  padding: 8px 16px;
+  font-size: 14px;
+  color: #64748b;
+}
+.source-details {
+  display: grid;
+  gap: 14px;
+}
+.screen-footnote {
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 8px;
+}
+.research-screen .metric-table td,
+.research-screen .metric-table th {
+  padding: 10px 18px;
+}
+.research-screen .panel-heading {
+  padding: 12px 18px;
+}
+@media (min-width: 1024px) {
+  .assessment-grid .vital-cell {
+    padding: 14px 16px;
+  }
+  .assessment-grid .vitals-panel .panel-heading {
+    padding: 14px 18px 12px;
+  }
+  .main-shell {
+    height: 100dvh;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .topbar {
+    flex: none;
+  }
+  .page {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    overflow: auto;
+    padding: 12px 24px;
+  }
+  .viewport-screen {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .viewport-screen > .page-heading,
+  .viewport-screen > .model-summary,
+  .viewport-screen > .patient-bar,
+  .viewport-screen > .replay-toolbar,
+  .viewport-screen > .screen-help,
+  .viewport-screen > .screen-footnote {
+    flex: none;
+  }
+  .viewport-screen > .panel {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .viewport-screen > .panel > .table-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+  }
+  .viewport-screen > .panel > .table-footer,
+  .viewport-screen > .panel > .filters,
+  .viewport-screen > .panel > .registry-toolbar,
+  .viewport-screen > .panel > .alert-toolbar {
+    flex: none;
+  }
+  .list-screen > .page-heading h1 {
+    font-size: 24px;
+  }
+  .list-screen .filter-label {
+    font-size: 14px;
+    gap: 4px;
+  }
+  .workspace-tabs {
+    flex: 1;
+    overflow: hidden;
+  }
+  .workspace-pane {
+    flex: 1;
+  }
+  .patient-workspace .patient-bar {
+    position: static;
+  }
+  .patient-workspace .patient-controls {
+    align-items: center;
+  }
+  .patient-workspace .patient-controls > .filter-label {
+    font-size: 0;
+  }
+  .patient-workspace .patient-controls select {
+    font-size: 14px;
+  }
+  .patient-workspace .workspace-pane > .timeline-panel {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .patient-workspace .timeline-panel > .panel-body {
+    flex: 1;
+    min-height: 260px;
+  }
+  .patient-workspace .timeline-panel .chart-wrap {
+    height: calc(100% - 34px);
+    min-height: 220px;
+  }
+  .patient-workspace .entry-pane {
+    overflow: hidden;
+  }
+  .entry-boundary,
+  .manual-entry,
+  .tabbed-entry {
+    height: 100%;
+    min-height: 0;
+  }
+  .manual-entry {
+    margin: 0;
+  }
+  .tabbed-entry {
+    display: flex;
+    flex-direction: column;
+  }
+  .entry-fields {
+    flex: 1;
+    overflow: auto;
+  }
+  .entry-categories,
+  .entry-actions {
+    flex: none;
+  }
+  .form-screen > .panel {
+    overflow: auto;
+  }
+  .replay-screen > .patient-workspace {
+    height: auto;
+    flex: 1;
+  }
+  .replay-screen .replay-toolbar {
+    padding: 10px 16px;
+    gap: 14px;
+    margin-bottom: 10px;
+  }
+}
+@media (max-width: 1150px) and (min-width: 1024px) {
+  .list-screen > .page-heading {
+    flex-wrap: wrap;
+  }
+  .assessment-grid {
+    grid-template-columns: 1fr;
+  }
+  .patient-workspace .patient-bar {
+    grid-template-columns: 1fr;
+  }
+  .monitoring-filters {
+    flex-basis: 100%;
+    margin-left: 0;
+  }
+}
+@media (max-width: 1023px) {
+  .viewport-screen {
+    height: auto;
+  }
+  .workspace-tabs {
+    margin-top: 12px;
+  }
+  .assessment-grid {
+    grid-template-columns: 1fr;
+  }
+  .monitoring-filters {
+    flex-basis: 100%;
+    margin-left: 0;
+  }
+  .list-screen > .page-heading {
+    flex-wrap: wrap;
+  }
+  .list-screen > .page-heading .overview-summary {
+    width: 100%;
+  }
+  .workspace-pane {
+    overflow: visible;
+  }
+}
+@media (max-width: 600px) {
+  .monitoring-filters {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .monitoring-filters > :first-child {
+    grid-column: 1/-1;
+  }
+  .workspace-tabs [data-slot="tabs-trigger"] {
+    padding: 8px 12px;
+  }
+  .entry-fields,
+  .entry-actions {
+    padding: 12px;
+  }
+  .entry-categories [data-slot="button"] {
+    padding-inline: 10px;
+  }
+}

@@ -3,6 +3,7 @@ import { useClinicalReader } from "@/lib/manual-store";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
+import { usePageCapacity } from "@/lib/use-page-capacity";
 import { useHydrated } from "@/lib/use-hydrated";
 import { useMemo, useState } from "react";
 import {
@@ -122,6 +123,12 @@ export function PatientTable() {
   const router = useRouter();
   const params = useSearchParams();
   const hydrated = useHydrated();
+  const {
+    ref: tableRef,
+    capacity,
+    ready: capacityReady,
+  } = usePageCapacity(66, 5, 8);
+  const [pageIndex, setPageIndex] = useState(0);
   const [source, setSource] = useState("all");
   const [search, setSearch] = useState("");
   const [department, setDepartment] = useState("all");
@@ -161,12 +168,32 @@ export function PatientTable() {
   const table = useReactTable({
     data,
     columns,
-    state: { sorting },
+    state: {
+      sorting,
+      pagination: {
+        pageIndex: Math.min(
+          pageIndex,
+          Math.max(0, Math.ceil(data.length / capacity) - 1),
+        ),
+        pageSize: capacity,
+      },
+    },
+    onPaginationChange: (change) => {
+      const previous = {
+        pageIndex: Math.min(
+          pageIndex,
+          Math.max(0, Math.ceil(data.length / capacity) - 1),
+        ),
+        pageSize: capacity,
+      };
+      setPageIndex(
+        (typeof change === "function" ? change(previous) : change).pageIndex,
+      );
+    },
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    initialState: { pagination: { pageSize: 8 } },
   });
   function reset() {
     setSearch("");
@@ -281,6 +308,7 @@ export function PatientTable() {
         />
       ) : (
         <div
+          ref={tableRef}
           className="table-scroll"
           role="region"
           aria-label="Bảng hồ sơ có thể cuộn ngang"
@@ -344,7 +372,7 @@ export function PatientTable() {
             variant="outline"
             size="icon"
             aria-label="Trang trước"
-            disabled={!table.getCanPreviousPage()}
+            disabled={!capacityReady || !table.getCanPreviousPage()}
             onClick={() => table.previousPage()}
           >
             <ChevronLeft />
@@ -357,7 +385,7 @@ export function PatientTable() {
             variant="outline"
             size="icon"
             aria-label="Trang sau"
-            disabled={!table.getCanNextPage()}
+            disabled={!capacityReady || !table.getCanNextPage()}
             onClick={() => table.nextPage()}
           >
             <ChevronRight />

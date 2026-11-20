@@ -1,9 +1,10 @@
 "use client";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Search } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { useClinicalReader } from "@/lib/manual-store";
 import { useHydrated } from "@/lib/use-hydrated";
+import { usePageCapacity } from "@/lib/use-page-capacity";
 import { useReviews } from "@/components/review-context";
 import { PageHeader } from "@/components/layout/page-container";
 import { Button } from "@/components/ui/button";
@@ -46,6 +47,11 @@ export function MonitoringScreen() {
     { reviews } = useReviews(),
     hydrated = useHydrated();
   const params = useSearchParams();
+  const {
+    ref: tableRef,
+    capacity,
+    ready: capacityReady,
+  } = usePageCapacity(112, 4, 8);
   const scope: AlertScope =
     params.get("scope") === "history" ? "history" : "current";
   const review = ["pending", "reviewed", "all"].includes(
@@ -59,6 +65,7 @@ export function MonitoringScreen() {
       : "all";
   function update(key: string, value: string) {
     const next = new URLSearchParams(window.location.search);
+    if (key !== "page") next.delete("page");
     if (
       !value ||
       (key === "scope" && value === "current") ||
@@ -82,27 +89,34 @@ export function MonitoringScreen() {
       (department === "all" || row.prediction.department === department) &&
       (review === "all" || (review === "reviewed") === !!row.review),
   );
+  const totalPages = Math.max(1, Math.ceil(shown.length / capacity));
+  const page = Math.min(
+    totalPages,
+    Math.max(1, Math.floor(Number(params.get("page")) || 1)),
+  );
+  const visible = shown.slice((page - 1) * capacity, page * capacity);
   const returnTo = "/dashboard" + (params.size ? "?" + params.toString() : "");
   return (
-    <>
+    <div className="viewport-screen list-screen">
       <PageHeader
         title="Theo dõi & Cảnh báo"
-        description="Ưu tiên các ca vượt ngưỡng chưa xem xét. Đối chiếu dữ liệu mới và mở hồ sơ để đánh giá."
+        action={
+          <nav className="overview-summary" aria-label="Tóm tắt theo dõi">
+            <Link className="summary-alert" href="/dashboard">
+              <span>Chờ xem xét</span>
+              <strong>{summary.pending}</strong>
+            </Link>
+            <Link href="/dashboard?review=reviewed">
+              <span>Đã xem xét</span>
+              <strong>{current.filter((r) => r.review).length}</strong>
+            </Link>
+            <Link href="/patients?state=unavailable">
+              <span>Chưa có kết quả</span>
+              <strong>{summary.unavailable}</strong>
+            </Link>
+          </nav>
+        }
       />
-      <nav className="overview-summary" aria-label="Tóm tắt theo dõi">
-        <Link className="summary-alert" href="/dashboard">
-          <span>Chờ xem xét hiện tại</span>
-          <strong>{summary.pending}</strong>
-        </Link>
-        <Link href="/dashboard?review=reviewed">
-          <span>Đã xem xét hiện tại</span>
-          <strong>{current.filter((r) => r.review).length}</strong>
-        </Link>
-        <Link href="/patients?state=unavailable">
-          <span>Chưa có kết quả</span>
-          <strong>{summary.unavailable}</strong>
-        </Link>
-      </nav>
       <section
         className="panel monitoring-panel"
         aria-label="Danh sách theo dõi và cảnh báo"
@@ -127,53 +141,48 @@ export function MonitoringScreen() {
               {label}
             </Button>
           ))}
-          <span className="queue-scope-note">
-            {scope === "current"
-              ? "Một bản dự báo tại mốc đang theo dõi của mỗi ca"
-              : "Các bản vượt ngưỡng trước mốc đang theo dõi"}
-          </span>
-        </div>
-        <div className="filters monitoring-filters">
-          <label className="filter-label">
-            Tìm hồ sơ
-            <span className="search-field">
-              <Search />
-              <Input
-                aria-label="Tìm mã hồ sơ cảnh báo"
+          <div className="filters monitoring-filters">
+            <label className="filter-label">
+              Tìm hồ sơ
+              <span className="search-field">
+                <Search />
+                <Input
+                  aria-label="Tìm mã hồ sơ cảnh báo"
+                  disabled={!hydrated}
+                  placeholder="Nhập mã hồ sơ…"
+                  value={search}
+                  onChange={(e) => update("search", e.target.value)}
+                />
+              </span>
+            </label>
+            <label className="filter-label">
+              Khoa điều trị
+              <select
                 disabled={!hydrated}
-                placeholder="Nhập mã hồ sơ…"
-                value={search}
-                onChange={(e) => update("search", e.target.value)}
-              />
-            </span>
-          </label>
-          <label className="filter-label">
-            Khoa điều trị
-            <select
-              disabled={!hydrated}
-              value={department}
-              onChange={(e) => update("department", e.target.value)}
-            >
-              <option value="all">Tất cả các khoa</option>
-              {Object.entries(departments).map(([key, label]) => (
-                <option key={key} value={key}>
-                  {label}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="filter-label">
-            Trạng thái xem xét
-            <select
-              disabled={!hydrated}
-              value={review}
-              onChange={(e) => update("review", e.target.value)}
-            >
-              <option value="pending">Chưa xem xét</option>
-              <option value="reviewed">Đã xem xét</option>
-              <option value="all">Tất cả trạng thái</option>
-            </select>
-          </label>
+                value={department}
+                onChange={(e) => update("department", e.target.value)}
+              >
+                <option value="all">Tất cả các khoa</option>
+                {Object.entries(departments).map(([key, label]) => (
+                  <option key={key} value={key}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="filter-label">
+              Trạng thái xem xét
+              <select
+                disabled={!hydrated}
+                value={review}
+                onChange={(e) => update("review", e.target.value)}
+              >
+                <option value="pending">Chưa xem xét</option>
+                <option value="reviewed">Đã xem xét</option>
+                <option value="all">Tất cả trạng thái</option>
+              </select>
+            </label>
+          </div>
         </div>
         {shown.length === 0 ? (
           <EmptyState
@@ -192,6 +201,7 @@ export function MonitoringScreen() {
           />
         ) : (
           <div
+            ref={tableRef}
             className="table-scroll"
             role="region"
             aria-label="Bảng theo dõi và cảnh báo"
@@ -214,7 +224,7 @@ export function MonitoringScreen() {
                 </tr>
               </thead>
               <tbody>
-                {shown.map(
+                {visible.map(
                   ({
                     encounter,
                     prediction: p,
@@ -306,18 +316,45 @@ export function MonitoringScreen() {
                 ? "Đã xem xét"
                 : "Tất cả trạng thái"}
           </span>
-          <span className="secondary-text">
+          <div className="pagination">
+            <Button
+              variant="outline"
+              size="icon"
+              aria-label="Trang cảnh báo trước"
+              disabled={!capacityReady || page === 1}
+              onClick={() => update("page", String(page - 1))}
+            >
+              <ChevronLeft />
+            </Button>
+            <span>
+              {page} / {totalPages}
+            </span>
+            <Button
+              variant="outline"
+              size="icon"
+              aria-label="Trang cảnh báo sau"
+              disabled={!capacityReady || page === totalPages}
+              onClick={() => update("page", String(page + 1))}
+            >
+              <ChevronRight />
+            </Button>
+          </div>
+          <span className="sr-only">
             {scope === "current"
               ? "Chưa xem xét trước, sau đó điểm nguy cơ giảm dần"
               : "Mốc dự báo mới nhất trước"}
           </span>
         </div>
       </section>
-      <ClinicalNote>
-        Dữ liệu vừa thay đổi là giá trị mới có trên EMR trong giờ dự báo, không
-        phải giải thích nguyên nhân làm tăng điểm. Đã xem xét không có nghĩa đã
-        hoàn tất xử trí. Các ghi nhận gắn với đúng bản dự báo trong phiên tab.
-      </ClinicalNote>
-    </>
+      <details className="screen-help">
+        <summary>Cách đọc cảnh báo</summary>
+        <ClinicalNote>
+          Dữ liệu vừa thay đổi là giá trị mới có trên EMR trong giờ dự báo,
+          không phải giải thích nguyên nhân làm tăng điểm. Đã xem xét không có
+          nghĩa đã hoàn tất xử trí. Các ghi nhận gắn với đúng bản dự báo trong
+          phiên tab.
+        </ClinicalNote>
+      </details>
+    </div>
   );
 }

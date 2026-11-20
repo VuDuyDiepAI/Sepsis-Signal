@@ -49,6 +49,10 @@ Sidebar có hai màn hình lâm sàng (Theo dõi & Cảnh báo, Hồ sơ theo d�
 
 Luồng chính: nhận cảnh báo → mở hồ sơ → đối chiếu dữ liệu → ghi nhận xem xét → quay về đúng bộ lọc danh sách. `returnTo` chỉ nhận hai đường dẫn danh sách nội bộ và được giữ khi đổi giờ. Ghi nhận xem xét không đồng nghĩa đã hoàn tất xử trí; chỉ có hiệu lực với đúng ID/revision dự báo.
 
+Trên desktop (từ 1024 px), các màn hình dùng chiều cao cửa sổ: thanh công cụ và phân trang cố định, số dòng tự điều chỉnh theo vùng bảng. Không kéo dài toàn bộ trang; dữ liệu dài hoặc mở thêm chi tiết được cuộn trong vùng nội dung. Trên mobile hoặc khi phóng to làm cửa sổ hẹp hơn, trang cho phép cuộn tự nhiên để giữ chữ và thao tác dễ đọc.
+
+Hồ sơ chia thành các tab Tổng hợp, Diễn biến, Xét nghiệm, Xem xét và Nhập chỉ số (ca nhập tay). Biểu mẫu nhập có ba nhóm Sinh hiệu, Xét nghiệm, Triệu chứng và khoa; đổi nhóm giữ nguyên giá trị chưa lưu. Giờ sinh hiệu mặc định theo mốc đang nhập, có thể mở mục Chỉnh giờ đo và giờ có trên EMR để sửa. Sau khi chấm thành công, giao diện chuyển sang Tổng hợp. Đánh giá mô hình cũng dùng tab cho sepsis, shock và nguồn dữ liệu.
+
 Hiện tại chỉ gồm bản vượt ngưỡng tại `currentHour` của mỗi ca; Lịch sử chỉ gồm các bản trước giờ đó, không lẫn hiện tại hoặc tương lai. Trạng thái xem xét được lọc riêng trong từng phạm vi. Số liệu tóm tắt luôn tính theo mốc hiện tại, chưa áp dụng bộ lọc tìm kiếm. Dữ liệu vừa thay đổi so sánh giá trị gần nhất đã có tại giờ chọn với giờ trước, kèm cả thời điểm đo/lấy mẫu và thời điểm có trên EMR. Giá trị thiếu, kết quả chưa trả hoặc mẫu cũ trả muộn không được suy diễn thành thay đổi; đây không phải giải thích đóng góp đặc trưng hay nguyên nhân gây sepsis.
 
 ## Dữ liệu và quy tắc

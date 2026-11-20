@@ -1,10 +1,4 @@
-import {
-  TriangleAlert,
-  Cpu,
-  Layers,
-  Clock3,
-  SlidersHorizontal,
-} from "lucide-react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { PageHeader, Panel } from "@/components/layout/page-container";
 import { createClinicalReader, percent } from "@/lib/clinical-data";
 import type { ModelMetadata, Metrics } from "@/lib/clinical-types";
@@ -75,111 +69,82 @@ export default function Monitoring() {
     m = reader.getModelMetadata(),
     s = reader.getModelMetadata("shock");
   return (
-    <>
-      <PageHeader
-        title="Đánh giá mô hình"
-        description="Thông số đang phục vụ và kết quả đánh giá trên dữ liệu nghiên cứu."
-        section="Dữ liệu & mô hình"
-      />
-      <div className="research-notice">
-        <TriangleAlert size={22} />
-        <p>
-          <strong>Giới hạn sử dụng</strong>
-          <br />
-          Đây là mô hình nghiên cứu trên dữ liệu EMR mô phỏng, chưa được xác
-          thực lâm sàng trên người bệnh thực tế.
-        </p>
+    <div className="viewport-screen research-screen">
+      <PageHeader title="Đánh giá mô hình" />
+      <div className="model-summary" aria-label="Cấu hình mô hình">
+        <span>Logistic Regression · L2</span>
+        <span>
+          <strong>{m.features.length}</strong> đặc trưng
+        </span>
+        <span>
+          Dự báo <strong>{m.horizon_hours} giờ</strong>
+        </span>
+        <span>
+          Ngưỡng <strong>{percent(m.threshold)}</strong>
+        </span>
       </div>
-      <div className="stats-grid">
-        {[
-          {
-            label: "Thuật toán",
-            value: "Logistic",
-            caption: "Regression · L2",
-            icon: Cpu,
-          },
-          {
-            label: "Đặc trưng đầu vào",
-            value: m.features.length,
-            caption: "Theo schema expanding-t0-v1",
-            icon: Layers,
-          },
-          {
-            label: "Cửa sổ dự báo",
-            value: `${m.horizon_hours} giờ`,
-            caption: "Tương lai từ giờ dự báo",
-            icon: Clock3,
-          },
-          {
-            label: "Ngưỡng cảnh báo",
-            value: percent(m.threshold),
-            caption: "Lấy trực tiếp từ metadata",
-            icon: SlidersHorizontal,
-          },
-        ].map(({ label, value, caption, icon: Icon }) => (
-          <div className="stat" key={label}>
-            <div className="stat-top">
-              {label}
-              <span className="stat-icon">
-                <Icon size={18} />
-              </span>
+      <Tabs defaultValue="sepsis" className="workspace-tabs">
+        <TabsList variant="line" aria-label="Nội dung đánh giá mô hình">
+          <TabsTrigger value="sepsis">Hiệu năng sepsis</TabsTrigger>
+          <TabsTrigger value="shock">Mở rộng shock</TabsTrigger>
+          <TabsTrigger value="source">Thông tin & nguồn</TabsTrigger>
+        </TabsList>
+        <TabsContent value="sepsis" className="workspace-pane">
+          <Panel
+            title="Mô hình sepsis"
+            meta={`${m.validation_positive_encounters} ca validation · ${m.temporal_holdout_positive_encounters} ca holdout`}
+          >
+            <Evaluation model={m} />
+          </Panel>
+        </TabsContent>
+        <TabsContent value="shock" className="workspace-pane">
+          <Panel
+            title="Mô hình shock · Nghiên cứu mở rộng"
+            meta={`${s.validation_positive_encounters} ca validation · ${s.temporal_holdout_positive_encounters} ca holdout`}
+          >
+            <p className="compact-panel-note">
+              Số ca ít, không diễn giải thành hiệu năng lâm sàng. Ngưỡng{" "}
+              {percent(s.threshold)}.
+            </p>
+            <Evaluation model={s} />
+          </Panel>
+        </TabsContent>
+        <TabsContent value="source" className="workspace-pane">
+          <Panel title="Nguồn dữ liệu và hợp đồng đặc trưng">
+            <div className="panel-body source-details">
+              <p>
+                <strong>Phiên bản sepsis:</strong> {m.model_version}
+              </p>
+              <p>
+                <strong>Phiên bản shock:</strong> {s.model_version}
+              </p>
+              <p>
+                Ca sepsis dương tính: {m.train_positive_encounters} train ·{" "}
+                {m.validation_positive_encounters} validation ·{" "}
+                {m.temporal_holdout_positive_encounters} holdout.
+              </p>
+              <p>{reader.getProvenance().source}</p>
+              <p>
+                Quan sát tăng dần từ T0 đến giờ dự báo; chỉ dùng dữ liệu đã có
+                trên EMR. Chấm từ T0+1h đến T0+36h. Thời gian báo trước chỉ xét
+                cảnh báo trong 6 giờ trước khởi phát tham chiếu.
+              </p>
+              <p className="model-version">
+                SHA-256: {reader.getProvenance().sourceSha256}
+              </p>
+              <p>
+                Các chỉ số từ tập mô phỏng được làm giàu biến cố và tạo theo
+                luật; chưa phản ánh quần thể khoa Cấp cứu thực tế. Chưa được xác
+                thực lâm sàng trên người bệnh thực tế.
+              </p>
             </div>
-            <div className="stat-value" style={{ fontSize: 28 }}>
-              {value}
-            </div>
-            <small>{caption}</small>
-          </div>
-        ))}
-      </div>
-      <div className="section-stack">
-        <Panel
-          title="Mô hình sepsis · Hiệu năng mô tả"
-          description="Validation dùng chọn ngưỡng; temporal holdout dùng đánh giá riêng."
-          meta="Nguồn: metadata"
-        >
-          <div className="panel-body">
-            <p className="model-version">{m.model_version}</p>
-            <p className="secondary-text mt-2">
-              Ca dương tính: {m.train_positive_encounters} train ·{" "}
-              {m.validation_positive_encounters} validation ·{" "}
-              {m.temporal_holdout_positive_encounters} holdout.
-            </p>
-          </div>
-          <Evaluation model={m} />
-        </Panel>
-        <details className="panel secondary-details">
-          <summary>Mô hình shock · Mở rộng nghiên cứu riêng</summary>
-          <div className="panel-body">
-            <p className="model-version">{s.model_version}</p>
-            <p className="secondary-text mt-2">
-              Ngưỡng {percent(s.threshold)} · Ca dương tính:{" "}
-              {s.train_positive_encounters} train,{" "}
-              {s.validation_positive_encounters} validation,{" "}
-              {s.temporal_holdout_positive_encounters} holdout. Số ca ít, không
-              diễn giải thành hiệu năng lâm sàng.
-            </p>
-          </div>
-          <Evaluation model={s} />
-        </details>
-        <details className="panel secondary-details">
-          <summary>Nguồn dữ liệu và hợp đồng đặc trưng</summary>
-          <div className="panel-body">
-            <p>{reader.getProvenance().source}</p>
-            <p className="secondary-text mt-2">
-              Quan sát tăng dần từ T0 đến giờ dự báo; chỉ dùng dữ liệu đã có
-              trên EMR. Chấm từ T0+1h đến T0+36h. Thời gian báo trước chỉ xét
-              cảnh báo trong 6 giờ trước khởi phát tham chiếu.
-            </p>
-            <p className="model-version mt-3">
-              SHA-256: {reader.getProvenance().sourceSha256}
-            </p>
-            <p className="secondary-text mt-3">
-              Các chỉ số từ tập mô phỏng được làm giàu biến cố và tạo theo luật;
-              chưa phản ánh quần thể khoa Cấp cứu thực tế.
-            </p>
-          </div>
-        </details>
-      </div>
-    </>
+          </Panel>
+        </TabsContent>
+      </Tabs>
+      <p className="screen-footnote">
+        Dữ liệu nghiên cứu mô phỏng. Validation dùng chọn ngưỡng; temporal
+        holdout đánh giá riêng.
+      </p>
+    </div>
   );
 }

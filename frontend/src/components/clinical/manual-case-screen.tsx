@@ -72,7 +72,7 @@ export function NewCaseScreen() {
     }
   }
   return (
-    <>
+    <div className="viewport-screen form-screen">
       <PageHeader
         title="Tạo ca mới"
         description="Tạo hồ sơ để nhập chỉ số ban đầu tại T0 và theo dõi các giờ tiếp theo."
@@ -166,7 +166,7 @@ export function NewCaseScreen() {
           </p>
         </form>
       </Panel>
-    </>
+    </div>
   );
 }
 const bounds: Record<string, [number, number]> = {
@@ -187,10 +187,14 @@ const vitalInputs = [
 function ManualEntryForm({
   record,
   hour,
+  onScored,
 }: {
   record: ManualCase;
   hour: number;
+  onScored: (message: string) => void;
 }) {
+  const [category, setCategory] = useState("vitals");
+  const [timingOpen, setTimingOpen] = useState(false);
   const old = record.entries.find((e) => e.hour === hour);
   const at = timeAt(record.profile.t0 + "+07:00", hour).slice(0, 16);
   const [withVitals, setWithVitals] = useState(old ? !!old.vitals : true),
@@ -232,6 +236,10 @@ function ManualEntryForm({
       hours,
     });
     if (!parsed.success) {
+      if (parsed.error.issues[0]?.message.startsWith("Giờ"))
+        setTimingOpen(true);
+      if (parsed.error.issues[0]?.path.includes("vitals"))
+        setCategory("vitals");
       setError(
         parsed.error.issues[0]?.message?.startsWith("Giờ")
           ? parsed.error.issues[0].message
@@ -268,12 +276,14 @@ function ManualEntryForm({
           ? "Đã lưu dữ liệu T0. Chọn T0+1h để chấm lần đầu."
           : (response?.errors[String(hour)] ??
             "Đã lưu dữ liệu và cập nhật kết quả.");
-      setMessage(
+      const notice =
         savedMessage +
-          (delayed
-            ? " Xét nghiệm trả sau mốc này: đã lưu để mô phỏng, chưa dùng để chấm tại giờ đang xem."
-            : ""),
-      );
+        (delayed
+          ? " Xét nghiệm trả sau mốc này: đã lưu, chưa dùng để chấm tại giờ đang xem."
+          : "");
+      setMessage(notice);
+      if (hour > 0 && response?.predictions.some((p) => p.hour === hour))
+        onScored(notice);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Không lưu được dữ liệu.");
     } finally {
@@ -281,175 +291,218 @@ function ManualEntryForm({
     }
   }
   return (
-    <details className="panel manual-entry" open>
-      <summary>Nhập chỉ số và cập nhật kết quả · {hourLabel(hour)}</summary>
-      <form className="panel-body manual-form" onSubmit={save}>
-        <label className="manual-switch">
-          <input
-            type="checkbox"
-            checked={withVitals}
-            onChange={(e) => setWithVitals(e.target.checked)}
-          />
-          Có sinh hiệu mới tại mốc này
-        </label>
-        {withVitals && (
-          <>
-            <div className="manual-grid">
-              {vitalInputs.map((v) => (
-                <label className="filter-label" key={v.key}>
-                  {v.label} ({v.unit})
+    <section className="panel manual-entry" aria-label="Nhập chỉ số">
+      <h2 className="sr-only">
+        Nhập chỉ số và cập nhật kết quả · {hourLabel(hour)}
+      </h2>
+      <form className="manual-form tabbed-entry" onSubmit={save} noValidate>
+        <div
+          className="entry-categories"
+          role="group"
+          aria-label="Nhóm dữ liệu nhập"
+        >
+          {[
+            ["vitals", "Sinh hiệu"],
+            ["labs", "Xét nghiệm"],
+            ["context", "Triệu chứng và khoa"],
+          ].map(([value, label]) => (
+            <Button
+              key={value}
+              type="button"
+              variant="ghost"
+              aria-pressed={category === value}
+              onClick={() => setCategory(value)}
+            >
+              {label}
+            </Button>
+          ))}
+        </div>
+        <div className="entry-fields">
+          <div hidden={category !== "vitals"}>
+            <label className="manual-switch">
+              <input
+                type="checkbox"
+                checked={withVitals}
+                onChange={(e) => setWithVitals(e.target.checked)}
+              />
+              Có sinh hiệu mới tại mốc này
+            </label>
+            {withVitals && (
+              <>
+                <div className="manual-grid">
+                  {vitalInputs.map((v) => (
+                    <label className="filter-label" key={v.key}>
+                      {v.label} ({v.unit})
+                      <Input
+                        name={v.key}
+                        type="number"
+                        min={bounds[v.key][0]}
+                        max={bounds[v.key][1]}
+                        step="any"
+                        defaultValue={
+                          old?.vitals?.[
+                            v.key as keyof NonNullable<ManualEntry["vitals"]>
+                          ] ?? ""
+                        }
+                        required={[
+                          "heart_rate_bpm",
+                          "respiratory_rate_per_min",
+                          "sbp_mmhg",
+                        ].includes(v.key)}
+                      />
+                    </label>
+                  ))}
+                </div>
+                <p className="secondary-text">
+                  Để trống MAP để tính từ HA tâm thu và tâm trương khi đủ dữ
+                  liệu.
+                </p>
+              </>
+            )}
+            <details
+              className="entry-timing"
+              open={timingOpen}
+              onToggle={(event) => setTimingOpen(event.currentTarget.open)}
+            >
+              <summary>Chỉnh giờ đo và giờ có trên EMR</summary>
+              <div className="manual-grid">
+                <label className="filter-label">
+                  Giờ đo sinh hiệu / ghi nhận
                   <Input
-                    name={v.key}
-                    type="number"
-                    min={bounds[v.key][0]}
-                    max={bounds[v.key][1]}
-                    step="any"
-                    defaultValue={
-                      old?.vitals?.[
-                        v.key as keyof NonNullable<ManualEntry["vitals"]>
-                      ] ?? ""
-                    }
-                    required={[
-                      "heart_rate_bpm",
-                      "respiratory_rate_per_min",
-                      "sbp_mmhg",
-                    ].includes(v.key)}
+                    name="measuredAt"
+                    type="datetime-local"
+                    defaultValue={old?.measuredAt ?? at}
+                    min={record.profile.t0}
+                    required
                   />
                 </label>
-              ))}
-            </div>
-            <p className="secondary-text">
-              Để trống MAP để tính từ HA tâm thu và tâm trương khi đủ dữ liệu.
-            </p>
-          </>
-        )}
-        <div className="manual-grid">
-          <label className="filter-label">
-            Giờ đo sinh hiệu / ghi nhận
-            <Input
-              name="measuredAt"
-              type="datetime-local"
-              defaultValue={old?.measuredAt ?? at}
-              min={record.profile.t0}
-              required
-            />
-          </label>
-          <label className="filter-label">
-            Giờ sinh hiệu có trên EMR
-            <Input
-              name="availableAt"
-              type="datetime-local"
-              defaultValue={old?.availableAt ?? at}
-              min={record.profile.t0}
-              required
-            />
-          </label>
+                <label className="filter-label">
+                  Giờ sinh hiệu có trên EMR
+                  <Input
+                    name="availableAt"
+                    type="datetime-local"
+                    defaultValue={old?.availableAt ?? at}
+                    min={record.profile.t0}
+                    required
+                  />
+                </label>
+              </div>
+            </details>
+          </div>
+          <div hidden={category !== "labs"}>
+            <fieldset>
+              <legend>Xét nghiệm đã có kết quả</legend>
+              <div className="manual-grid">
+                {labFields.map(([code, label]) => (
+                  <label key={code} className="filter-label">
+                    {label} (
+                    {code === "WBC" || code === "platelets"
+                      ? "10⁹/L"
+                      : code === "CRP"
+                        ? "mg/L"
+                        : code === "procalcitonin"
+                          ? "ng/mL"
+                          : "mg/dL"}
+                    )
+                    <Input
+                      name={code}
+                      type="number"
+                      min={0}
+                      max={100000}
+                      step="any"
+                      defaultValue={
+                        old?.labs[code as keyof typeof old.labs] ?? ""
+                      }
+                      placeholder="Chưa có kết quả"
+                    />
+                  </label>
+                ))}
+              </div>
+              <div className="manual-grid">
+                <label className="filter-label">
+                  Giờ lấy mẫu
+                  <Input
+                    type="datetime-local"
+                    name="collectedAt"
+                    defaultValue={old?.collectedAt ?? at}
+                    min={record.profile.t0}
+                    required
+                  />
+                </label>
+                <label className="filter-label">
+                  Giờ xét nghiệm có trên EMR
+                  <Input
+                    type="datetime-local"
+                    name="labAvailableAt"
+                    defaultValue={old?.labAvailableAt ?? at}
+                    min={record.profile.t0}
+                    required
+                  />
+                </label>
+              </div>
+            </fieldset>
+          </div>
+          <div hidden={category !== "context"}>
+            <label className="filter-label">
+              Khoa tại thời điểm ghi nhận
+              <select name="department" defaultValue={old?.department ?? "ED"}>
+                {Object.entries(departments).map(([k, v]) => (
+                  <option key={k} value={k}>
+                    {v}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="manual-switch">
+              <input
+                type="checkbox"
+                checked={withSymptoms}
+                onChange={(e) => setWithSymptoms(e.target.checked)}
+              />
+              Cập nhật triệu chứng nghi nhiễm trùng
+            </label>
+            {withSymptoms && (
+              <div className="manual-checkboxes">
+                {symptomFields.map(([k, label]) => (
+                  <label key={k}>
+                    <input
+                      name={k}
+                      type="checkbox"
+                      defaultChecked={old?.symptoms?.[k] ?? false}
+                    />
+                    {label}
+                  </label>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-        <fieldset>
-          <legend>Xét nghiệm đã có kết quả</legend>
-          <div className="manual-grid">
-            {labFields.map(([code, label]) => (
-              <label key={code} className="filter-label">
-                {label} (
-                {code === "WBC" || code === "platelets"
-                  ? "10⁹/L"
-                  : code === "CRP"
-                    ? "mg/L"
-                    : code === "procalcitonin"
-                      ? "ng/mL"
-                      : "mg/dL"}
-                )
-                <Input
-                  name={code}
-                  type="number"
-                  min={0}
-                  max={100000}
-                  step="any"
-                  defaultValue={old?.labs[code as keyof typeof old.labs] ?? ""}
-                  placeholder="Chưa có kết quả"
-                />
-              </label>
-            ))}
-          </div>
-          <div className="manual-grid">
-            <label className="filter-label">
-              Giờ lấy mẫu
-              <Input
-                type="datetime-local"
-                name="collectedAt"
-                defaultValue={old?.collectedAt ?? at}
-                min={record.profile.t0}
-                required
-              />
-            </label>
-            <label className="filter-label">
-              Giờ xét nghiệm có trên EMR
-              <Input
-                type="datetime-local"
-                name="labAvailableAt"
-                defaultValue={old?.labAvailableAt ?? at}
-                min={record.profile.t0}
-                required
-              />
-            </label>
-          </div>
-        </fieldset>
-        <label className="filter-label">
-          Khoa tại thời điểm ghi nhận
-          <select name="department" defaultValue={old?.department ?? "ED"}>
-            {Object.entries(departments).map(([k, v]) => (
-              <option key={k} value={k}>
-                {v}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="manual-switch">
-          <input
-            type="checkbox"
-            checked={withSymptoms}
-            onChange={(e) => setWithSymptoms(e.target.checked)}
-          />
-          Cập nhật triệu chứng nghi nhiễm trùng
-        </label>
-        {withSymptoms && (
-          <div className="manual-checkboxes">
-            {symptomFields.map(([k, label]) => (
-              <label key={k}>
-                <input
-                  name={k}
-                  type="checkbox"
-                  defaultChecked={old?.symptoms?.[k] ?? false}
-                />
-                {label}
-              </label>
-            ))}
-          </div>
-        )}
-        {error && (
-          <p className="form-error" role="alert">
-            {error}
+        <div className="entry-actions">
+          {error && (
+            <p className="form-error" role="alert">
+              {error}
+            </p>
+          )}
+          {message && (
+            <p className="review-success" role="status">
+              {message}
+            </p>
+          )}
+          <Button type="submit" disabled={busy}>
+            {busy ? <LoaderCircle size={17} /> : <Save size={17} />}{" "}
+            {busy
+              ? "Đang chấm bằng mô hình Python…"
+              : hour === 0
+                ? "Lưu dữ liệu T0"
+                : "Lưu dữ liệu và chấm điểm"}
+          </Button>
+          <p className="secondary-text">
+            Chỉ dùng dữ liệu đã có trên EMR đến giờ đang xem. Sửa mốc cũ sẽ tính
+            lại các giờ đã chấm; kết quả không đủ dữ liệu sẽ được loại bỏ.
           </p>
-        )}
-        {message && (
-          <p className="review-success" role="status">
-            {message}
-          </p>
-        )}
-        <Button type="submit" disabled={busy}>
-          {busy ? <LoaderCircle size={17} /> : <Save size={17} />}{" "}
-          {busy
-            ? "Đang chấm bằng mô hình Python…"
-            : hour === 0
-              ? "Lưu dữ liệu T0"
-              : "Lưu dữ liệu và chấm điểm"}
-        </Button>
-        <p className="secondary-text">
-          Chỉ dùng dữ liệu đã có trên EMR đến giờ đang xem. Sửa mốc cũ sẽ tính
-          lại các giờ đã chấm; kết quả không đủ dữ liệu sẽ được loại bỏ.
-        </p>
+        </div>
       </form>
-    </details>
+    </section>
   );
 }
 export function ManualCaseScreen({
@@ -490,21 +543,22 @@ export function ManualCaseScreen({
         onHourChange={setHour}
         navigationPending={navigationPending}
         returnTo={returnTo}
+        statusMessage={record.errors[String(hour)]}
         action={
           <Link href="/patients/new" className="link-button">
             <Plus size={16} />
             Tạo ca mới
           </Link>
         }
-        entryForm={
-          <ManualEntryForm key={`${id}:${hour}`} record={record} hour={hour} />
-        }
+        entryForm={(onScored) => (
+          <ManualEntryForm
+            key={`${id}:${hour}`}
+            record={record}
+            hour={hour}
+            onScored={onScored}
+          />
+        )}
       />
-      {record.errors[String(hour)] && (
-        <p role="status" className="research-notice">
-          {record.errors[String(hour)]}
-        </p>
-      )}
     </>
   );
 }
