@@ -4,17 +4,15 @@ import { existsSync } from "node:fs";
 const root=path.resolve("..");
 const localPython=path.join(root,".venv",process.platform==="win32"?"Scripts/python.exe":"bin/python");
 const python=process.env.SEPSIS_PYTHON??(existsSync(localPython)?localPython:process.platform==="win32"?"python":"python3");
-const mode = process.env.SEPSIS_E2E_DEV === "1" ? "development" : "production";
 export default defineConfig({
   testDir: "./tests/e2e",
   workers: 1,
   fullyParallel: false,
   retries: 0,
   failOnFlakyTests: !!process.env.CI,
-  // A diagnostic rerun must never clean the failed production run's evidence.
-  outputDir: `./test-results/${mode}`,
+  outputDir: "./test-results",
   reporter: process.env.CI
-    ? [["list"], ["html", { open: "never", outputFolder: `playwright-report/${mode}` }]]
+    ? [["list"], ["html", { open: "never", outputFolder: "playwright-report" }]]
     : "list",
   use: {
     baseURL: "http://127.0.0.1:3100",

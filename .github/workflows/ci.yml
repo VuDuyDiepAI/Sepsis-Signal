@@ -44,7 +44,6 @@ jobs:
             requirements.txt
             requirements-dev.txt
             requirements-api.txt
-            requirements-streamlit.txt
       - name: Install dependencies
         run: python -m pip install -r requirements-dev.txt
       - name: Compile application

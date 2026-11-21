@@ -64,7 +64,7 @@ src/            Lõi Python: dữ liệu, đặc trưng, suy luận, đánh giá
 scripts/        Huấn luyện, xuất ca mẫu, cầu nối Python, sao lưu
 data/           Workbook mẫu; SQLite cục bộ không đưa lên Git
 artifacts/      Mô hình đã huấn luyện, tiền xử lý và metadata
-tests/          Kiểm thử Python: unit, integration, streamlit
+tests/          Kiểm thử lõi Python và fixtures đối chiếu mô hình
 app/            Giao diện Streamlit chạy độc lập, dùng chung lõi Python
 docs/           Kiến trúc, dữ liệu, phát triển và vận hành
 .github/        CI cho Python và web

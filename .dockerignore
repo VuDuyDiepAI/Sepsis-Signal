@@ -7,6 +7,7 @@
 .pytest_cache
 **/test-results
 **/playwright-report
+backend/tests
 data/*.sqlite*
 data/*.db*
 backups
