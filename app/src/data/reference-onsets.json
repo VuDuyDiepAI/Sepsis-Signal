@@ -1,0 +1,29 @@
+{
+  "E0001": {
+    "sepsisOnset": null
+  },
+  "E0002": {
+    "sepsisOnset": null
+  },
+  "E0003": {
+    "sepsisOnset": null
+  },
+  "E0005": {
+    "sepsisOnset": "2026-02-08T21:00:00+07:00"
+  },
+  "E0006": {
+    "sepsisOnset": null
+  },
+  "E0007": {
+    "sepsisOnset": "2026-02-11T15:00:00+07:00"
+  },
+  "E0009": {
+    "sepsisOnset": "2026-02-15T05:00:00+07:00"
+  },
+  "E0015": {
+    "sepsisOnset": "2026-02-25T05:00:00+07:00"
+  },
+  "E0020": {
+    "sepsisOnset": "2026-03-05T09:00:00+07:00"
+  }
+}
