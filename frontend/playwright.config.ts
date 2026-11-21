@@ -28,6 +28,7 @@ export default defineConfig({
   },
   webServer: {
     env: { SEPSIS_DEMO_ACCOUNTS:"1", SEPSIS_TESTING:"1",
+      SEPSIS_EMR_KEY:"playwright-only-service-key-never-for-deployment",
       SEPSIS_DATABASE_URL: process.env.SEPSIS_E2E_DATABASE_URL??`sqlite:///${path.resolve("../data/frontend_e2e.sqlite3").replaceAll("\\","/")}` },
     command: `"${python}" "${path.join(root,"scripts/serve_api.py")}" --test --embedded-worker --port 3100`,
     url: "http://127.0.0.1:3100/login",

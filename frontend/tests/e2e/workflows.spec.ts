@@ -100,6 +100,37 @@ test("saved observations survive browser disconnection and durable scoring compl
   expect(saved.cases.find((c:{profile:{id:string}})=>c.profile.id===id).entries[0].vitals.heart_rate_bpm).toBe(90);
   await expect(page.getByTestId("risk-score")).not.toHaveText("—",{timeout:60000});
 });
+test("multiple EMR observations in one hour allow an audited manual update", async ({ page, request }) => {
+  const id = "HS-" + crypto.randomUUID().replaceAll("-", "").slice(0, 8).toUpperCase();
+  const local = (at: number) => new Date(at + 7 * 3600000).toISOString().slice(0, 16);
+  const baseline = Date.now() - 90 * 60000;
+  const profile = { id, t0: local(baseline), age: 55, sex: "F", height: null, weight: null, comorbidities: {} };
+  for (const minute of [20, 30]) {
+    const at = local(baseline + minute * 60000);
+    const response = await request.post("/api/emr/events", {
+      headers: { authorization: "Bearer playwright-only-service-key-never-for-deployment" },
+      data: { source: "e2e-mock-emr", eventId: `${id}-${minute}`, eventVersion: 1, encounterId: id, profile,
+        entry: { hour: 2, measuredAt: at, availableAt: at, collectedAt: at, labAvailableAt: at,
+          department: "ED", labs: {}, symptoms: null,
+          vitals: { heart_rate_bpm: 90, respiratory_rate_per_min: 18, sbp_mmhg: 120,
+            dbp_mmhg: 70, map_mmhg: null, spo2_pct: 98, temperature_c: 37, gcs: 15 } }, units: {} },
+    });
+    expect(response.status(), await response.text()).toBe(202);
+  }
+  await page.goto(`/patients/${id}?hour=3`);
+  await page.getByLabel("Nhịp tim (lần/phút)", { exact: true }).filter({ visible: true }).fill("96");
+  await page.getByLabel("Nhịp thở (lần/phút)", { exact: true }).filter({ visible: true }).fill("20");
+  await page.getByLabel("HA tâm thu (mmHg)", { exact: true }).filter({ visible: true }).fill("118");
+  await page.getByRole("button", { name: "Lưu dữ liệu và chấm điểm", exact: true }).click();
+  await expect(page.getByTestId("risk-score")).toBeVisible({ timeout: 60000 });
+  await expect(page.getByTestId("risk-score")).not.toHaveText("—");
+  const state = await (await request.get("/api/clinical-state")).json();
+  const record = state.cases.find((value: { profile: { id: string } }) => value.profile.id === id);
+  expect(record.entries).toHaveLength(3);
+  expect(record.entries.filter((entry: { hour: number }) => entry.hour === 2)).toHaveLength(2);
+  expect(record.predictions.some((prediction: { hour: number }) => prediction.hour === 3)).toBe(true);
+});
+
 test("one monitoring queue and a separate searchable patient registry", async ({
   page,
 }) => {

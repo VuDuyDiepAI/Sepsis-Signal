@@ -25,4 +25,4 @@ Terminal khác: `cd frontend`, `npm ci`, `npm run dev`. Chế độ embedded ch�
 
 Python và frontend chạy cho mọi PR, không lọc `paths`. Push main, feat/clinical-ui-refresh và codex/** chạy web. Cả hai job có PostgreSQL 17 riêng; E2E chạy build Vite được FastAPI phục vụ, zero retries, lưu trace/screenshot/report khi lỗi. Giữ tên required check `Python tests` và `Next.js checks` để không làm hỏng Branch Protection hiện có; tên thứ hai là tên tương thích, code không còn dùng Next.js.
 
-Các bài test Node backend cũ được thay bằng `backend/tests/test_contracts.py`: đăng nhập/session, rate limit, revision, lease, lỗi worker, history, idempotency, SQLite migration và golden scoring. Các test domain/monitoring TypeScript và 20 E2E vẫn giữ chức năng kiểm chứng.
+Các bài test Node backend cũ được thay bằng `backend/tests/test_contracts.py`: đăng nhập/session, rate limit, revision, lease, lỗi worker, history, idempotency, SQLite migration và golden scoring. Các test domain/monitoring TypeScript và E2E vẫn giữ chức năng kiểm chứng.

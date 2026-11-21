@@ -8,6 +8,8 @@
 - Backend local: **57 passed, 1 skipped** trên hai adapter trước hai ca kiểm tra receipt/JSON bổ sung; hai ca bổ sung chạy trên cả adapter đạt **4 passed**.
 - Cả 20 browser workflow chạy đạt trên PostgreSQL cục bộ; trước đó cũng đạt trên SQLite test riêng. Không dùng DB ứng dụng để reset test.
 
+Bổ sung sau kiểm chứng trên: thứ tự mobile được kiểm tra trạng thái nguy cơ đứng trước biểu đồ; form chỉ kiểm tra event đang nhập, không áp giới hạn/duy nhất giờ của bản nhập tay lên toàn bộ stream EMR. Đã chạy đạt ca E2E thực nhận hai event EMR cùng giờ rồi nhập/chấm giờ tiếp theo; tổng bộ browser là 21 workflow.
+
 Các kiểm tra CI trên đây gắn đúng commit được dẫn; sau mọi thay đổi tiếp theo vẫn phải xem check trên HEAD mới, không dùng kết quả của commit trước thay thế.
 
 ## Dữ liệu và vòng đời tiến trình
