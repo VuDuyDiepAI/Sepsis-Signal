@@ -2028,6 +2028,10 @@ textarea {
   gap: 12px;
   min-width: 0;
 }
+.review-identity {
+  display: grid;
+  gap: 2px;
+}
 .review-compact .panel-heading {
   padding: 4px 14px;
 }
@@ -2312,8 +2316,11 @@ textarea {
   .review-compact .review-form {
     grid-template-columns: 1fr;
   }
-  .clinical-board .timeline-panel {
+  .clinical-board .risk-panel {
     order: 0;
+  }
+  .clinical-board .timeline-panel {
+    order: 1;
   }
 }
 .storage-notice { position: fixed; z-index: 60; top: 64px; right: 20px; max-width: min(640px, calc(100vw - 32px)); padding: 10px 14px; background: #fff8e8; color: #573c11; border: 1px solid #d5b778; box-shadow: 0 3px 12px #15324b20; font-size: 14px; }

@@ -29,3 +29,5 @@ Backend tests kiểm tra từng trường SQLite->PostgreSQL, password/session N
 [snapshot-benchmark.json](snapshot-benchmark.json) là đo SQL + snapshot assembly + JSON trên PostgreSQL 17 Docker cục bộ, 10 mẫu/cỡ. Không phải tải lâm sàng. Kết quả ban đầu 4N+5 SQL (gồm lệnh đặt isolation) statements cho N ca cho thấy cần batching/phân trang trước mở rộng. Chưa đổi API snapshot trong migration để giữ hợp đồng; đã có số đo làm cơ sở tối ưu sau.
 
 Hai required check giữ tên `Python tests` / `Next.js checks` để tương thích Branch Protection; nội dung check thứ hai đã chuyển Vite/FastAPI. Không bỏ qua check do thay Python/model/data/docs. PR ở Draft, chỉ merge sau khi check xanh trên đúng SHA và được review.
+
+Kết quả kiểm chứng: [VERIFICATION.md](VERIFICATION.md).

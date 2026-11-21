@@ -487,6 +487,13 @@ for (const width of [1440, 1280, 1024, 768, 390])
               exact: true,
             }),
           ).toHaveCount(0);
+          if (width < 1024) {
+            const risk = await page.locator(".risk-panel").boundingBox();
+            const timeline = await page.locator(".timeline-panel").boundingBox();
+            expect(risk).not.toBeNull();
+            expect(timeline).not.toBeNull();
+            expect(risk!.y + risk!.height).toBeLessThanOrEqual(timeline!.y);
+          }
         }
         if (route.startsWith("/dashboard")) {
           await expect(page.locator(".stats-grid")).toHaveCount(0);

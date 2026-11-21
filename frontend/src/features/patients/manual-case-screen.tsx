@@ -233,14 +233,12 @@ function ManualEntryForm({
         ? Object.fromEntries(symptomFields.map(([k]) => [k, f.get(k) === "on"]))
         : null,
     };
-    const entries = [...record.entries.filter((e) => e.hour !== hour), entry];
-    const hours = [
-      ...new Set([...record.attemptedHours, ...(hour > 0 ? [hour] : [])]),
-    ];
+    // Validate the single manual event being submitted. EMR history can contain
+    // several observations per hour; the server owns the complete scoring input.
     const parsed = scoreRequestSchema.safeParse({
       profile: record.profile,
-      entries,
-      hours,
+      entries: [entry],
+      hours: [hour],
     });
     if (!parsed.success) {
       if (parsed.error.issues[0]?.message.startsWith("Giờ"))
