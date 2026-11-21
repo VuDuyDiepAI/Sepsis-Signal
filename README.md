@@ -18,19 +18,25 @@ Luồng chính: **nhận cảnh báo → mở hồ sơ → đánh giá dữ li�
 
 ## Chạy bản web
 
-Yêu cầu **Node.js ≥22.13**, npm và **Python 3.11**. Thực hiện tại thư mục gốc repository trong PowerShell:
+Bản web dùng **React + Vite → FastAPI → PostgreSQL**, với tiến trình worker chấm điểm riêng. Không cần chạy Streamlit. Yêu cầu Docker Desktop; Node.js 22.12+ nếu phát triển giao diện trên máy.
 
 ```powershell
-py -3.11 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+Copy-Item .env.example .env
+# Thay các secret mẫu trong .env bằng giá trị ngẫu nhiên riêng.
+docker compose up -d --build
+```
+
+Mở [Sepsis Signal](http://127.0.0.1:8000). Khi bật `SEPSIS_DEMO_ACCOUNTS=1` trong môi trường cục bộ, tài khoản trải nghiệm là `bacsi.demo1` hoặc `bacsi.demo2`, mật khẩu `SepsisDemo2026!`. Không có đăng ký. Dữ liệu nằm trong volume PostgreSQL, không mất khi đóng tab hoặc đăng xuất.
+
+Để phát triển UI trong terminal riêng:
+
+```powershell
 cd frontend
 npm ci
 npm run dev
 ```
 
-Mở [Sepsis Signal trên máy](http://127.0.0.1:3000). Bên dưới biểu mẫu đăng nhập có hai tài khoản trải nghiệm dùng chung: `bacsi.demo1`, `bacsi.demo2`, mật khẩu `SepsisDemo2026!`. Không có bước đăng ký. Launcher cục bộ chỉ mở trên `127.0.0.1`.
-
-Để chạy bản build, từ `frontend/` dùng `npm run build`, sau đó `npm run start`. Chấm ca nhập tay cần môi trường Python; nếu Python ở vị trí khác, đặt `SEPSIS_PYTHON` tới executable tương ứng trước khi chạy web. Không cần khởi chạy Streamlit.
+Mở [giao diện phát triển](http://127.0.0.1:3000); Vite chuyển tiếp `/api` đến FastAPI cổng 8000. Khi chỉ chạy API trên máy, xem [hướng dẫn phát triển](docs/development.md). Không đưa secret vào biến `VITE_*`.
 
 ## Đường đi của dữ liệu
 
@@ -45,12 +51,15 @@ Sinh hiệu / xét nghiệm / triệu chứng theo thời gian
 
 T0 là thời điểm hoàn tất phân loại: có thể nhập và lưu dữ liệu ngay tại T0; chấm từ T0+1 đến T0+36 giờ. **6 giờ dự báo tương lai khác với cửa sổ quan sát tăng dần từ T0.** Xét nghiệm chỉ được dùng từ thời điểm trả kết quả, không phải thời điểm lấy mẫu.
 
-Ca nhập tay, các bản dự báo và lịch sử xem xét được lưu trong **SQLite phía máy chủ** tại `data/frontend_clinical.sqlite3` (đổi bằng `SEPSIS_WEB_DB`). Lưu chỉ số tách khỏi chấm điểm: Python lỗi vẫn giữ dữ liệu để chấm lại. Phiên đăng nhập hết hạn sau 8 giờ; dữ liệu và ghi nhận xem xét không hết hạn cùng phiên.
+Ca nhập tay, dữ liệu EMR chuẩn hóa, dự báo, job và lịch sử xem xét được lưu trong **PostgreSQL**. Lưu chỉ số và tạo job nằm trong cùng transaction. Worker nạp mô hình Python, chấm ngoài HTTP request và chỉ ghi kết quả khi revision, mã lần chạy và chính sách mô hình còn khớp. Phiên đăng nhập hết hạn sau 8 giờ; dữ liệu và ghi nhận xem xét không hết hạn cùng phiên.
+
+Adapter EMR đã nhận được sự kiện mô phỏng qua API, chuẩn hóa đơn vị, chống trùng và giữ thời điểm dữ liệu đến. **Chưa kết nối EMR bệnh viện.** Bộ chuyển đổi SQLite cũ có đối chiếu từng trường và không ghi đè nguồn: [kế hoạch chuyển đổi](docs/migration/PLAN.md).
 
 ## Cấu trúc repository
 
 ```text
-frontend/       Web Next.js, API và kiểm thử giao diện
+frontend/       React + Vite: màn hình theo tính năng, API client, E2E
+backend/        FastAPI, PostgreSQL, xác thực, adapter EMR và worker
 src/            Lõi Python: dữ liệu, đặc trưng, suy luận, đánh giá
 scripts/        Huấn luyện, xuất ca mẫu, cầu nối Python, sao lưu
 data/           Workbook mẫu; SQLite cục bộ không đưa lên Git
@@ -69,6 +78,6 @@ Dữ liệu đi kèm là **EMR mô phỏng: 360 lượt khám / 12.960 mốc gi�
 - [Kiến trúc và ranh giới các thành phần](docs/architecture.md).
 - [Dữ liệu, đặc trưng và cách đánh giá](docs/data-and-model.md).
 - [Cài đặt, phát triển và kiểm thử](docs/development.md).
-- [Đăng nhập, SQLite, migrations và sao lưu](docs/operations.md).
+- [Đăng nhập, PostgreSQL, migrations và sao lưu](docs/operations.md).
 - [Huấn luyện và cập nhật dữ liệu](docs/model-development.md).
 - [Chạy giao diện Streamlit](docs/streamlit.md).

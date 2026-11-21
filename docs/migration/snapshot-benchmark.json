@@ -1,0 +1,37 @@
+{
+  "database": "PostgreSQL 17, local Docker Windows",
+  "includes": "SQL + snapshot assembly + JSON encoding",
+  "excludes": "HTTP, browser, authentication; not a clinical load test",
+  "results": [
+    {
+      "cases": 10,
+      "entries_per_case": 1,
+      "predictions_per_case": 1,
+      "samples": 10,
+      "p50_ms": 76.45,
+      "p95_ms": 96.76,
+      "sql_statements": 44,
+      "response_bytes": 76555
+    },
+    {
+      "cases": 100,
+      "entries_per_case": 1,
+      "predictions_per_case": 1,
+      "samples": 10,
+      "p50_ms": 586.37,
+      "p95_ms": 2308.54,
+      "sql_statements": 404,
+      "response_bytes": 179605
+    },
+    {
+      "cases": 300,
+      "entries_per_case": 1,
+      "predictions_per_case": 1,
+      "samples": 10,
+      "p50_ms": 1546.19,
+      "p95_ms": 1861.12,
+      "sql_statements": 1204,
+      "response_bytes": 408605
+    }
+  ]
+}

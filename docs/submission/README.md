@@ -11,8 +11,8 @@ Sinh hiệu, triệu chứng và kết quả xét nghiệm xuất hiện ở nhi
 ## Giải pháp
 
 - Mô hình **Logistic Regression điều chuẩn L2**, xây dựng bằng **Python/scikit-learn**, xử lý **36 đặc trưng**; thời hạn dự báo là **6 giờ tiếp theo**.
-- **Next.js / React / TypeScript**: màn hình Theo dõi & Cảnh báo, Hồ sơ, Chi tiết ca, Diễn tiến ca mẫu và Đánh giá mô hình.
-- **SQLite phía server** lưu ca nhập tay, sinh hiệu/xét nghiệm, phiên bản dự báo và sự kiện xem xét. Dữ liệu không mất chỉ vì đóng tab hoặc hết phiên đăng nhập.
+- **React / Vite / TypeScript + FastAPI**: màn hình Theo dõi & Cảnh báo, Hồ sơ, Chi tiết ca, Diễn tiến ca mẫu và Đánh giá mô hình.
+- **PostgreSQL phía server** lưu ca nhập tay, sinh hiệu/xét nghiệm, phiên bản dự báo và sự kiện xem xét. Dữ liệu không mất chỉ vì đóng tab hoặc hết phiên đăng nhập.
 - Khi sửa dữ liệu đầu vào, kết quả bị ảnh hưởng phải được vô hiệu hóa; chấm điểm mới chỉ được ghi nếu revision và lần chạy còn đúng. Ghi nhận “đã xem xét” **không đồng nghĩa đã chẩn đoán hay xử trí**.
 - Chỉ dùng dữ liệu đã sẵn có tại thời điểm dự báo; không lấy kết quả xét nghiệm trước thời điểm trả kết quả.
 
@@ -22,7 +22,7 @@ Sinh hiệu, triệu chứng và kết quả xét nghiệm xuất hiện ở nhi
 
 | Thành phần | Thư mục / công nghệ |
 | --- | --- |
-| Giao diện & API | `frontend/` — Next.js, TypeScript |
+| Giao diện & API | `frontend/` — React/Vite; `backend/` — FastAPI |
 | Lõi xử lý, huấn luyện, đánh giá | `src/`, `scripts/` — Python, scikit-learn |
 | Mô hình và metadata | `artifacts/` |
 | Dữ liệu mô phỏng | `data/` và fixtures trong `frontend/src/data/` |
@@ -35,7 +35,7 @@ Yêu cầu: **Node.js ≥ 22.13**, npm và **Python 3.11**. Chạy từ thư m�
 
 ```powershell
 py -3.11 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m pip install -r requirements-api.txt
 cd frontend
 npm ci
 npm run dev

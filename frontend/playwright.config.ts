@@ -1,5 +1,9 @@
 import { defineConfig } from "@playwright/test";
 import path from "node:path";
+import { existsSync } from "node:fs";
+const root=path.resolve("..");
+const localPython=path.join(root,".venv",process.platform==="win32"?"Scripts/python.exe":"bin/python");
+const python=process.env.SEPSIS_PYTHON??(existsSync(localPython)?localPython:process.platform==="win32"?"python":"python3");
 const mode = process.env.SEPSIS_E2E_DEV === "1" ? "development" : "production";
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -23,11 +27,9 @@ export default defineConfig({
       : {},
   },
   webServer: {
-    env: { SEPSIS_DEMO_ACCOUNTS:"1", SEPSIS_WEB_DB: path.resolve("../data/frontend_e2e.sqlite3") },
-    command:
-      process.env.SEPSIS_E2E_DEV === "1"
-        ? "node node_modules/next/dist/bin/next dev --hostname 127.0.0.1 --port 3100"
-        : "node node_modules/next/dist/bin/next start --hostname 127.0.0.1 --port 3100",
+    env: { SEPSIS_DEMO_ACCOUNTS:"1", SEPSIS_TESTING:"1",
+      SEPSIS_DATABASE_URL: process.env.SEPSIS_E2E_DATABASE_URL??`sqlite:///${path.resolve("../data/frontend_e2e.sqlite3").replaceAll("\\","/")}` },
+    command: `"${python}" "${path.join(root,"scripts/serve_api.py")}" --test --embedded-worker --port 3100`,
     url: "http://127.0.0.1:3100/login",
     reuseExistingServer: false,
     timeout: 90000,

@@ -26,3 +26,6 @@ deliverables/
 *.db
 *.db-wal
 *.db-shm
+
+frontend/dist/
+!.env.example

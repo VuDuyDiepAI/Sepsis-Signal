@@ -1,5 +1,5 @@
 "use client";
-import Link from "next/link";
+import { Link } from "react-router";
 import { useRef,useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -29,7 +29,7 @@ export function ReviewPanel({prediction,returnTo,compact=false,encounterId,hour}
         {review.provenance==="legacy-v1"&&<span className="secondary-text">Ghi nhận trước nâng cấp · tên nhập thủ công</span>}
         {review.note&&<p>{review.note}</p>}
         {user?.role!=="viewer"&&!adding&&<Button type="button" variant="outline" onClick={()=>setAdding(true)}>Bổ sung đánh giá</Button>}
-        {returnTo&&<Link className="link-button" href={returnTo}>Quay về danh sách</Link>}
+        {returnTo&&<Link className="link-button" to={returnTo}>Quay về danh sách</Link>}
       </div>}
       {prediction&&(!review||adding)&&user?.role!=="viewer"&&<form className="review-form" onSubmit={event=>{void handleSubmit(async v=>{
         if(!attempt.current||attempt.current.note!==v.note)attempt.current={id:crypto.randomUUID(),note:v.note};
