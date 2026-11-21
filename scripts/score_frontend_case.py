@@ -18,7 +18,7 @@ def local(value):
     return parsed
 
 
-def score(payload):
+def score(payload, bundle=None):
     profile = payload['profile']
     with TemporaryDirectory(prefix='sepsis-ui-') as directory:
         db = Path(directory) / 'case.sqlite3'
@@ -32,7 +32,7 @@ def score(payload):
                        labs=entry.get('labs'), symptom_recorded_at=local(entry['measuredAt']),
                        symptom_available_at=local(entry['availableAt']), symptoms=entry.get('symptoms'),
                        location_code=entry['department'], location_at=local(entry['measuredAt']), path=db)
-        bundle = load_bundle('sepsis')
+        bundle = bundle if bundle is not None else load_bundle('sepsis')
         predictions, errors = [], {}
         for hour in sorted(set(payload['hours'])):
             if hour == 0:

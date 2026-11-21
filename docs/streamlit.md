@@ -1,6 +1,8 @@
 # Ứng dụng Streamlit
 
-Bản web chính nằm trong `frontend/`. Thư mục `app/` giữ giao diện Streamlit chạy độc lập và dùng chung lõi Python `src/`; không cần chạy Streamlit để sử dụng web Next.js.
+Bản web chính nằm trong `frontend/`. Thư mục `app/` giữ giao diện Streamlit chạy độc lập và dùng chung lõi Python `src/`; không cần chạy Streamlit để sử dụng web React/FastAPI.
+
+Ứng dụng này được giữ để tham khảo. Bộ kiểm thử mặc định và CI tập trung vào web React/FastAPI; các test giao diện và đăng nhập Streamlit cũ đã được gỡ.
 
 ## Cài đặt và chạy trên Windows
 
@@ -8,7 +10,7 @@ Dùng **Python 3.11**, tải hoặc clone repo rồi mở PowerShell tại thư 
 
 ```powershell
 py -3.11 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m pip install -r requirements-streamlit.txt
 .\.venv\Scripts\python.exe -m streamlit run app\streamlit_app.py
 ```
 

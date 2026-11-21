@@ -8,7 +8,7 @@ export function safeReturnTo(raw?: string): string {
       ["/dashboard", "/patients"].includes(url.pathname)
     )
       return url.pathname + url.search;
-  } catch {}
+  } catch { /* Invalid return targets fall back to the patient list. */ }
   return "/patients";
 }
 export function patientHref(id: string, hour: number, returnTo?: string) {

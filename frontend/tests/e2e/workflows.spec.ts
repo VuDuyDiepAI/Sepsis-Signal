@@ -1,22 +1,20 @@
 import { test, expect, type Page } from "@playwright/test";
-import { DatabaseSync } from "node:sqlite";
+import { execFileSync } from "node:child_process";
 import path from "node:path";
 import { existsSync } from "node:fs";
 import { browserDiagnostics } from "./browser-diagnostics";
 const testDb = path.resolve("../data/frontend_e2e.sqlite3");
+const localPython=path.resolve("..", ".venv",process.platform==="win32"?"Scripts/python.exe":"bin/python");
+const python=process.env.SEPSIS_PYTHON??(existsSync(localPython)?localPython:process.platform==="win32"?"python":"python3");
 const loginData={username:"bacsi.demo1",password:"SepsisDemo2026!"};
 test.beforeEach(async ({request,context}) => {
   const login=await request.post("/api/auth/login",{data:loginData});
   expect(login.ok(),await login.text()).toBe(true);
   await context.addCookies((await request.storageState()).cookies);
   expect((await request.get("/api/clinical-state")).ok()).toBe(true);
-  if (!existsSync(testDb)) return;
-  const db = new DatabaseSync(testDb);
-  try {
-    db.exec(`PRAGMA busy_timeout=5000; BEGIN IMMEDIATE;
-      DELETE FROM review_events; DELETE FROM legacy_reviews; DELETE FROM manual_entries; DELETE FROM entry_history; DELETE FROM scoring_jobs;
-      DELETE FROM legacy_imports; DELETE FROM predictions WHERE source='manual'; DELETE FROM manual_cases; COMMIT;`);
-  } finally {db.close();}
+  execFileSync(python,["-m","backend.scripts.reset_test_db"],{cwd:path.resolve(".."),windowsHide:true,
+    env:{...process.env,SEPSIS_TESTING:"1",SEPSIS_DEMO_ACCOUNTS:"1",
+      SEPSIS_DATABASE_URL:process.env.SEPSIS_E2E_DATABASE_URL??`sqlite:///${testDb.replaceAll("\\","/")}`}});
 });
 import data from "@/data/clinical-demo.json" with { type: "json" };
 async function openAssessment(page: Page) {
@@ -83,24 +81,56 @@ test("switching accounts synchronizes tabs and stale displayed identities cannot
   } finally {await other.close();}
 });
 
-test("saved observations survive a scoring outage and can be rescored without re-entry",async({request,page})=>{
+test("saved observations survive browser disconnection and durable scoring completes without re-entry",async({request,page})=>{
   test.setTimeout(90000);
   const id="HS-CAFE1234",t0="2026-11-20T08:00";
   expect((await request.post("/api/cases",{data:{id,t0,age:55,sex:"F",height:null,weight:null,comorbidities:{}}})).ok()).toBe(true);
   const entry={hour:1,measuredAt:t0,availableAt:t0,collectedAt:t0,labAvailableAt:t0,department:"ED",labs:{},symptoms:null,
     vitals:{heart_rate_bpm:90,respiratory_rate_per_min:18,sbp_mmhg:120,dbp_mmhg:75,map_mmhg:null,spo2_pct:97,temperature_c:37,gcs:15}};
   expect((await request.put(`/api/cases/${id}/entries`,{data:{revision:0,entry}})).status()).toBe(202);
-  await page.route(`**/api/cases/${id}/rescore`,route=>route.fulfill({status:503,json:{error:"Bộ chấm tạm dừng"}}));
+  await page.context().setOffline(true);
+  await expect.poll(async()=>{
+    const state=await (await request.get('/api/clinical-state')).json();
+    return state.cases.find((c:{profile:{id:string}})=>c.profile.id===id).scoringStatus;
+  },{timeout:60000}).toBe('ready');
+  await page.context().setOffline(false);
   await page.goto(`/patients/${id}?hour=1`);
-  await page.getByRole("button",{name:"Chấm lại dữ liệu đã lưu",exact:true}).click();
-  await expect(page.getByRole("alert").filter({hasText:"Bộ chấm tạm dừng"})).toBeVisible();
   await page.reload();
   const saved=await (await request.get("/api/clinical-state")).json();
   expect(saved.cases.find((c:{profile:{id:string}})=>c.profile.id===id).entries[0].vitals.heart_rate_bpm).toBe(90);
-  await page.unroute(`**/api/cases/${id}/rescore`);
-  await page.getByRole("button",{name:"Chấm lại dữ liệu đã lưu",exact:true}).click();
   await expect(page.getByTestId("risk-score")).not.toHaveText("—",{timeout:60000});
 });
+test("multiple EMR observations in one hour allow an audited manual update", async ({ page, request }) => {
+  const id = "HS-" + crypto.randomUUID().replaceAll("-", "").slice(0, 8).toUpperCase();
+  const local = (at: number) => new Date(at + 7 * 3600000).toISOString().slice(0, 16);
+  const baseline = Date.now() - 90 * 60000;
+  const profile = { id, t0: local(baseline), age: 55, sex: "F", height: null, weight: null, comorbidities: {} };
+  for (const minute of [20, 30]) {
+    const at = local(baseline + minute * 60000);
+    const response = await request.post("/api/emr/events", {
+      headers: { authorization: "Bearer playwright-only-service-key-never-for-deployment" },
+      data: { source: "e2e-mock-emr", eventId: `${id}-${minute}`, eventVersion: 1, encounterId: id, profile,
+        entry: { hour: 2, measuredAt: at, availableAt: at, collectedAt: at, labAvailableAt: at,
+          department: "ED", labs: {}, symptoms: null,
+          vitals: { heart_rate_bpm: 90, respiratory_rate_per_min: 18, sbp_mmhg: 120,
+            dbp_mmhg: 70, map_mmhg: null, spo2_pct: 98, temperature_c: 37, gcs: 15 } }, units: {} },
+    });
+    expect(response.status(), await response.text()).toBe(202);
+  }
+  await page.goto(`/patients/${id}?hour=3`);
+  await page.getByLabel("Nhịp tim (lần/phút)", { exact: true }).filter({ visible: true }).fill("96");
+  await page.getByLabel("Nhịp thở (lần/phút)", { exact: true }).filter({ visible: true }).fill("20");
+  await page.getByLabel("HA tâm thu (mmHg)", { exact: true }).filter({ visible: true }).fill("118");
+  await page.getByRole("button", { name: "Lưu dữ liệu và chấm điểm", exact: true }).click();
+  await expect(page.getByTestId("risk-score")).toBeVisible({ timeout: 60000 });
+  await expect(page.getByTestId("risk-score")).not.toHaveText("—");
+  const state = await (await request.get("/api/clinical-state")).json();
+  const record = state.cases.find((value: { profile: { id: string } }) => value.profile.id === id);
+  expect(record.entries).toHaveLength(3);
+  expect(record.entries.filter((entry: { hour: number }) => entry.hour === 2)).toHaveLength(2);
+  expect(record.predictions.some((prediction: { hour: number }) => prediction.hour === 3)).toBe(true);
+});
+
 test("one monitoring queue and a separate searchable patient registry", async ({
   page,
 }) => {
@@ -429,7 +459,7 @@ test("a failed review save shows an error and does not claim success",async ({pa
   await expect(page.getByText("Đã ghi nhận xem xét",{exact:true})).toHaveCount(0);
 });
 
-test("old tab cases migrate to SQLite and reopen in a new browser context",async ({page,browser}) => {
+test("old tab cases migrate to server storage and reopen in a new browser context",async ({page,browser}) => {
   await page.goto("/dashboard");
   await page.evaluate(() => sessionStorage.setItem("sepsis-manual-cases-v1",JSON.stringify([{
     profile:{id:"HS-AABB0011",t0:"2026-11-20T08:00",age:60,sex:"M",height:null,weight:null,comorbidities:{}},
@@ -447,7 +477,7 @@ test("old tab cases migrate to SQLite and reopen in a new browser context",async
     await expect(other.getByRole("heading",{name:"HS-AABB0011",exact:true})).toBeVisible();
   } finally {await context.close();}
 });
-test("API refuses a foreign origin and malformed observations before spawning Python", async ({
+test("API refuses a foreign origin and malformed observations before Python scoring", async ({
   request,
 }) => {
   expect(
@@ -488,6 +518,13 @@ for (const width of [1440, 1280, 1024, 768, 390])
               exact: true,
             }),
           ).toHaveCount(0);
+          if (width < 1024) {
+            const risk = await page.locator(".risk-panel").boundingBox();
+            const timeline = await page.locator(".timeline-panel").boundingBox();
+            expect(risk).not.toBeNull();
+            expect(timeline).not.toBeNull();
+            expect(risk!.y + risk!.height).toBeLessThanOrEqual(timeline!.y);
+          }
         }
         if (route.startsWith("/dashboard")) {
           await expect(page.locator(".stats-grid")).toHaveCount(0);

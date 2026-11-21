@@ -1,9 +1,8 @@
-<!-- BEGIN:nextjs-agent-rules -->
+# Frontend development
 
-## This is NOT the Next.js you know
+This application uses React 19, Vite and React Router. Server code belongs in `backend/`; do not reintroduce Next.js API routes or Node-to-Python subprocess scoring.
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
-
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
-
-<!-- END:nextjs-agent-rules -->
+- `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`.
+- `npm run test:e2e` starts a separate FastAPI test server on port 3100. PostgreSQL tests must use a disposable database ending `_test`; never point tests to the application database.
+- Keep existing Vietnamese clinical copy, accessible labels, time/revision semantics and keyboard navigation.
+- Keep scoring changes covered by Python golden fixtures. Do not change model artifacts during UI refactors.

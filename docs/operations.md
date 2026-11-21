@@ -1,73 +1,54 @@
-# Vận hành bản web
+# Vận hành web React / FastAPI
 
-Các lệnh Node thực hiện tại `frontend/`; lệnh sao lưu Python thực hiện tại thư mục gốc repository.
+## Khởi động
 
-## Giới hạn thao tác trải nghiệm
+Sao chép `.env.example` sang `.env`, đặt password PostgreSQL và EMR key ngẫu nhiên riêng. Không commit `.env`, DB, dump, token hoặc log dữ liệu người bệnh. `docker compose up -d --build` chạy PostgreSQL, API tại 127.0.0.1:8000 và worker riêng. Volume `sepsis_pgdata` giữ dữ liệu khi container khởi động lại. Không dùng `docker compose down -v` trên dữ liệu cần giữ.
 
-**Đây là mô hình nghiên cứu trên dữ liệu EMR mô phỏng, chưa được xác thực lâm sàng trên người bệnh thực tế.** Điểm mô hình không phải xác suất lâm sàng đã được hiệu chỉnh hay chẩn đoán. Dưới ngưỡng không loại trừ sepsis.
+`GET /api/health` xác minh kết nối DB, không đồng nghĩa worker đang hoạt động. Theo dõi `work_jobs` pending lâu, failed, lease hết hạn và số retry; `docker compose logs --tail 50 worker` không in chỉ số người bệnh. Sau restart, worker tự lấy lại job pending hoặc running hết lease 120 giây. Tối đa 3 lần thử; nút chấm lại tái sử dụng dữ liệu đã lưu.
 
-Ghi nhận xem xét lưu trên máy chủ, không tự hết hạn sau 8 giờ, gắn với `predictionId` và `revision`. Mỗi lượt đánh giá có ID riêng. Xác nhận đầu tiên quyết định trạng thái hàng đợi; các lượt sau nằm trong **Các lượt đánh giá**, không ghi đè nhau. `requestId` giúp gửi lại cùng một thao tác mà không nhân đôi. API lấy danh tính từ session, từ chối trường `reviewer` do client gửi. Kết quả thay đổi không kế thừa xác nhận cũ; lịch sử vẫn được giữ.
+## Đăng nhập và phân quyền
 
-### Đăng nhập và quyền truy cập
+Session ngẫu nhiên 256 bit, chỉ lưu hash trong DB; cookie HttpOnly, SameSite Strict, 8 giờ. Đăng xuất thu hồi session. Password dùng scrypt tương thích bản Next.js cũ. Sau 5 lần sai, tài khoản khóa 5 phút. Viewer chỉ đọc; doctor/admin nhập và xem xét. Chưa có SSO hay phân quyền theo khoa. Ghi nhận xem xét bền vững và không hết hạn cùng session.
 
-Tất cả API đọc/ghi hồ sơ và chấm điểm đều kiểm tra session phía server. Token ngẫu nhiên 256 bit chỉ lưu bản băm trong SQLite; cookie `HttpOnly`, `SameSite=Strict`, hết hạn sau 8 giờ, có `Secure` khi cấu hình HTTPS. Đăng xuất thu hồi session trên server. Mật khẩu băm bằng scrypt với salt riêng. Sau 5 lần nhập sai, tài khoản tạm khóa 5 phút. Lịch sử xem xét không hết hạn cùng session.
+Tài khoản demo công khai chỉ bật với `SEPSIS_DEMO_ACCOUNTS=1` ở môi trường cục bộ. `SEPSIS_PUBLIC_ORIGIN` phải là HTTPS origin chính xác; khi có giá trị, mọi session/demo account bị từ chối. Không có đăng ký.
 
-Vai trò `viewer` chỉ đọc; `doctor` và `admin` được nhập/chấm/xem xét. Đây là tài khoản của ứng dụng, chưa kết nối SSO bệnh viện hay phân quyền theo khoa. Các tài khoản trải nghiệm là tài khoản dùng chung, không chứng minh danh tính cá nhân của bác sĩ.
-
-`npm run dev`/`npm run start` dùng launcher chỉ bind `127.0.0.1` và bật hai tài khoản trải nghiệm. Chạy Next trực tiếp không mặc định bật demo. Khi có `SEPSIS_PUBLIC_ORIGIN`, tài khoản demo cùng các session demo cũ bị từ chối dù `SEPSIS_DEMO_ACCOUNTS=1`.
-
-Kiểm tra Host/Origin chỉ phục vụ định tuyến và chống yêu cầu khác nguồn, không chứng minh danh tính. Bộ chấm vẫn giới hạn 2 yêu cầu đồng thời, 20 yêu cầu/phút trên một tiến trình. `SEPSIS_API_TOKEN` không còn là cơ chế truy cập API; không đưa thông tin bí mật vào `NEXT_PUBLIC_*`.
-
-### Cấp tài khoản và cấu hình truy cập qua mạng
-
-Sau khi khởi động bản mới một lần để tạo/nâng cấp schema, từ `frontend/` có thể cấp hoặc đặt lại tài khoản bằng công cụ phía máy chủ:
+Cấp tài khoản trên đúng DB đích, bằng biến môi trường bảo mật, không truyền mật khẩu trên command line:
 
 ```powershell
-# Cấp qua biến môi trường bảo mật; không ghi mật khẩu thật vào Git hoặc tham số dòng lệnh.
 $env:SEPSIS_USER_PASSWORD = '<mat-khau-rieng-tu-12-ky-tu>'
-node scripts/manage-user.mjs --username doctor.a --name 'Bác sĩ A' --role doctor
+# Đặt SEPSIS_DATABASE_URL tương ứng trước khi chạy công cụ.
+.\.venv\Scripts\python.exe -m backend.scripts.manage_user --username doctor.a --name 'Bác sĩ A' --role doctor
 Remove-Item Env:SEPSIS_USER_PASSWORD
-# Chỉ đọc: --role viewer. Vô hiệu hóa: --username doctor.a --disable.
 ```
 
-Cập nhật mật khẩu/quyền hoặc vô hiệu hóa sẽ thu hồi session cũ. Chọn đúng `SEPSIS_WEB_DB` khi thao tác nhiều bản cài đặt.
+Đặt lại quyền/password hay vô hiệu hóa sẽ thu hồi các session của tài khoản. Có thể chạy cùng công cụ trong container với secret được truyền từ hệ thống quản lý bí mật. Demo không chứng minh danh tính bác sĩ thật.
 
-Để truy cập qua mạng: dùng reverse proxy HTTPS tới server loopback và đặt `SEPSIS_PUBLIC_ORIGIN` bằng origin HTTPS chính xác (ví dụ `https://sepsis.example.org`, không có dấu `/` cuối). Proxy chuyển tiếp Host của tên miền đó. Khởi động lại ứng dụng sau khi cấu hình. Có thể cấp tài khoản quản trị đầu tiên bằng `SEPSIS_BOOTSTRAP_USERNAME`, `SEPSIS_BOOTSTRAP_PASSWORD`, `SEPSIS_BOOTSTRAP_NAME` từ nơi quản lý bí mật; chỉ tạo khi username chưa tồn tại, không tự đặt lại mật khẩu. Chưa triển khai truy cập mạng trong thay đổi này. Triển khai nhiều tiến trình/máy chủ cần giới hạn dùng chung và phương án cơ sở dữ liệu phù hợp.
+HTTP kiểm tra Host, Origin, Sec-Fetch-Site, actor đang hiển thị, dữ liệu tối đa 200 kB, thời gian và revision. Stateless score giới hạn 2 request đồng thời, 20 request/phút/IP; login 30/phút/IP, API chung 1200/phút/IP. Rate limit HTTP hiện trong từng tiến trình; triển khai nhiều replica cần gateway giới hạn dùng chung và cấu hình trusted proxy chính xác. Queue/revision/lease được phối hợp trên PostgreSQL giữa các worker.
 
-## Lưu trữ SQLite của bản web
+## Sao lưu và chuyển SQLite cũ
 
-- `GET /api/clinical-state`: lấy hồ sơ và lịch sử xem xét; `Cache-Control: no-store`.
-- `POST /api/cases`: tạo hồ sơ; `PUT /api/cases/[id]/entries`: kiểm tra revision, lưu chỉ số và vô hiệu hóa kết quả hiện hành trong cùng transaction; Python chạy riêng ở `POST /api/cases/[id]/rescore`.
-- `POST /api/reviews/import`: lưu bản gốc các ghi nhận cũ vào `legacy_reviews`; ghi nhận lỗi thời không tự áp dụng vào dự báo hiện tại.
-- `POST /api/reviews`: kiểm tra dự báo còn hiệu lực, lưu tài khoản từ session, ghi chú và giờ máy chủ. Nhiều bác sĩ được đánh giá cùng kết quả; gửi lại cùng `requestId` không tạo bản trùng.
-- `POST /api/cases/import`: lưu dữ liệu phiên tab cũ và bản gốc trong `legacy_imports` trước khi chấm lại. Ghi nhận cũ được lưu để truy vết, không mạo danh tài khoản đã xác thực.
-- `manual_entries` là dữ liệu hiện hành; `entry_history` và các phiên bản `predictions` cũ giữ lịch sử. `review_events` tham chiếu trực tiếp bản dự báo đã xem. `scoring_jobs` lưu revision/trạng thái mỗi lần chấm; kết quả chỉ commit khi revision và mã lần chạy còn khớp. Job hết lease sau 60 giây có thể chấm lại; worker cũ không được ghi đè worker mới. Không cung cấp nút xóa lịch sử từ giao diện.
-- Khi mở tab cũ, bấm **Chuyển dữ liệu lên máy chủ** ở thông báo đầu trang. Nếu chuyển thất bại, dữ liệu cũ vẫn được giữ. Sau khi thành công, tab giữ thêm bản sao `sepsis-legacy-backup`; các bản xem xét không khớp chỉ nằm trong bản gốc, không gắn vào dự báo mới.
-
-Đổi vị trí lưu trước khi khởi động Next.js (chọn một ổ lưu trữ bền vững trên cùng máy chủ):
+Dừng ghi vào bản web cũ trước thời điểm cutover. Giữ nguyên nhánh cũ và nguồn SQLite. Dùng `scripts/backup_web_db.py` để sao lưu nhất quán cả WAL; không chỉ chép file đang chạy.
 
 ```powershell
-$env:SEPSIS_WEB_DB = 'D:\SepsisStorage\frontend_clinical.sqlite3'
-npm run start
+.\.venv\Scripts\python.exe scripts/backup_web_db.py data/frontend_clinical.sqlite3 backups/pre-fastapi.sqlite3
+# Chọn DB PostgreSQL đích RỖNG và export SEPSIS_DATABASE_URL đến đích đó.
+.\.venv\Scripts\python.exe -m backend.scripts.migrate_sqlite backups/pre-fastapi.sqlite3
 ```
 
-SQLite dùng WAL, khóa ghi có thời gian chờ và transaction. Không đặt file trên thư mục public, ổ mạng hay filesystem tạm của serverless; không đưa file DB/WAL/SHM lên Git. Chạy nhiều máy chủ hoặc cần nhiều người ghi đồng thời thì chuyển adapter lưu trữ sang cơ sở dữ liệu máy chủ như PostgreSQL. API lưu trữ yêu cầu session và quyền phù hợp; đây chưa phải SSO hay tài khoản nhân viên bệnh viện.
+Công cụ mở nguồn read-only, chạy integrity_check, nhận schema v2/v3, giữ ID/user/session/prediction/review và so sánh từng trường sau copy. Đích có hồ sơ/tài khoản/review/job bị từ chối, không có chế độ ghi đè. Job cũ đang pending/running phải yêu cầu chấm lại ở bản mới; không giả định lease cũ là job queue mới.
 
-### Sao lưu và phục hồi
+Sao lưu PostgreSQL bằng `pg_dump --format=custom --file=<absolute-backup-file>` trên cùng major version 17, cung cấp kết nối qua secret môi trường. Trong PowerShell, không redirect binary dump bằng `>`: dùng `--file`, hoặc `docker compose exec -T db pg_dump -U sepsis -d sepsis -Fc -f /tmp/sepsis-backup.dump` rồi `docker compose cp db:/tmp/sepsis-backup.dump <backup-file>`.
 
-Từ thư mục gốc repository, sao lưu nhất quán cả dữ liệu đã commit trong WAL bằng SQLite backup API:
+Kiểm tra phục hồi bằng `pg_restore --exit-on-error --no-owner` vào DB mới, đối chiếu số hàng và lịch sử trước cutover. Để rollback, dừng API/worker mới rồi chạy nhánh cũ trên **bản sao làm việc** của SQLite backup. Dữ liệu phát sinh sau cutover không tự đồng bộ ngược; cần xuất/đối soát riêng trước rollback. Không đưa PostgreSQL schema mới vào SQLite cũ.
 
-```powershell
-python scripts/backup_web_db.py data/frontend_clinical.sqlite3 backups/frontend_clinical-2026-11-20.sqlite3
-```
+## EMR
 
-Script không ghi đè file sao lưu đã tồn tại. Giữ bản sao trên vị trí được kiểm soát truy cập; tự động hóa lịch sao lưu theo nhu cầu vận hành. Để phục hồi: dừng Next.js, đặt `SEPSIS_WEB_DB` tới **một bản sao làm việc** của file backup rồi khởi động lại. Giữ nguyên file gốc để có thể quay lại. Không chỉ chép file `.sqlite3` đang chạy vì có thể bỏ sót WAL.
+`POST /api/emr/events` dùng Bearer service key riêng >=32 ký tự, không dùng tài khoản bác sĩ. Có source/eventId/eventVersion, encounterId, entry, đơn vị; lưu payload gốc và normalized entry trong cùng transaction với revision/job. Duplicate cùng nội dung trả idempotent; cùng ID/version nhưng khác nội dung hoặc version cũ trả 409. Không xóa raw history khi correction.
 
-Kiểm thử Playwright dùng riêng `data/frontend_e2e.sqlite3`, luôn mở server riêng cổng 3100; không xóa dữ liệu web ở cổng 3000.
+`python -m backend.scripts.replay_mock_emr` gửi **một ca tổng hợp** tới API cục bộ, không truy cập hệ thống bệnh viện. Mapping, timezone, mã xét nghiệm, quyền truy cập, SLA và dữ liệu hợp lệ cần xác nhận cùng CNTT trước làm connector EMR thật. Không mở cổng này ra Internet chỉ dựa vào key khi chưa có gateway/TLS và kiểm soát truy cập.
 
+## Phiên bản mô hình và kiểm tra vận hành
 
-### Migrations và phiên bản ca mẫu
+API/worker dùng cùng image và model artifacts. Khởi động lại cả hai khi đổi artifacts; không thay nóng file joblib. Job pin model/metadata checksum, schema feature, threshold và model version. Mọi cập nhật cần xuất lại fixture, kiểm tra parity/golden và quản lý phiên bản mô hình rõ ràng. Kết quả mô phỏng không chứng minh hiệu năng trên bệnh nhân thật.
 
-`src/lib/server/migrations.ts` chứa migration có thứ tự. Bản hiện tại nâng SQLite v1 lên v2: giữ chỉ số/dự báo cũ, chuyển từng dòng `reviews` thành sự kiện `legacy-v1`, thêm job chấm, actor nhập liệu và bảng tài khoản/session. Toàn bộ nâng cấp chạy trong transaction; lỗi sẽ rollback cả schema và `user_version`. Database mới hơn ứng dụng hoặc file không nhận diện được sẽ bị từ chối. Sao lưu trước khi nâng cấp; khôi phục phải dùng bản sao làm việc của backup, không hạ `user_version` bằng tay.
-
-ID fixture phía server băm cả ID nguồn, nội dung dự báo và SHA-256 dữ liệu đầu vào. Cùng ID nguồn nhưng dữ liệu/điểm thay đổi sẽ tạo phiên bản bất biến mới; bản cũ giữ nguyên để tra lịch sử. Frontend dùng ID phiên bản do API trả về cho các màn hình lâm sàng. Exporter cũng đổi fingerprint khi workbook thay đổi. Sau lần nâng cấp này, các ca mẫu cũ cần được xem xét lại; lịch sử gốc vẫn còn.
+Theo dõi dung lượng ổ host Docker, backup, volume và queue; Docker Desktop dừng khi ổ host hết chỗ dù DB nằm trong volume. DB/backup/dump chỉ nằm ở vùng truy cập được kiểm soát. E2E/backend/benchmark chỉ reset DB riêng tên kết thúc `_test`, không dùng DB ứng dụng.

@@ -1,16 +1,18 @@
 import { defineConfig } from "@playwright/test";
 import path from "node:path";
-const mode = process.env.SEPSIS_E2E_DEV === "1" ? "development" : "production";
+import { existsSync } from "node:fs";
+const root=path.resolve("..");
+const localPython=path.join(root,".venv",process.platform==="win32"?"Scripts/python.exe":"bin/python");
+const python=process.env.SEPSIS_PYTHON??(existsSync(localPython)?localPython:process.platform==="win32"?"python":"python3");
 export default defineConfig({
   testDir: "./tests/e2e",
   workers: 1,
   fullyParallel: false,
   retries: 0,
   failOnFlakyTests: !!process.env.CI,
-  // A diagnostic rerun must never clean the failed production run's evidence.
-  outputDir: `./test-results/${mode}`,
+  outputDir: "./test-results",
   reporter: process.env.CI
-    ? [["list"], ["html", { open: "never", outputFolder: `playwright-report/${mode}` }]]
+    ? [["list"], ["html", { open: "never", outputFolder: "playwright-report" }]]
     : "list",
   use: {
     baseURL: "http://127.0.0.1:3100",
@@ -23,11 +25,10 @@ export default defineConfig({
       : {},
   },
   webServer: {
-    env: { SEPSIS_DEMO_ACCOUNTS:"1", SEPSIS_WEB_DB: path.resolve("../data/frontend_e2e.sqlite3") },
-    command:
-      process.env.SEPSIS_E2E_DEV === "1"
-        ? "node node_modules/next/dist/bin/next dev --hostname 127.0.0.1 --port 3100"
-        : "node node_modules/next/dist/bin/next start --hostname 127.0.0.1 --port 3100",
+    env: { SEPSIS_DEMO_ACCOUNTS:"1", SEPSIS_TESTING:"1",
+      SEPSIS_EMR_KEY:"playwright-only-service-key-never-for-deployment",
+      SEPSIS_DATABASE_URL: process.env.SEPSIS_E2E_DATABASE_URL??`sqlite:///${path.resolve("../data/frontend_e2e.sqlite3").replaceAll("\\","/")}` },
+    command: `"${python}" "${path.join(root,"scripts/serve_api.py")}" --test --embedded-worker --port 3100`,
     url: "http://127.0.0.1:3100/login",
     reuseExistingServer: false,
     timeout: 90000,

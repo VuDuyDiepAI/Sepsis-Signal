@@ -17,7 +17,7 @@ export function AuthProvider({children}:{children:ReactNode}) {
     if(previous?.id===next?.id&&previous?.role===next?.role&&previous?.displayName===next?.displayName)return;
     identity.current=next;setCurrentActor(next?.id??"");clearClinical();setUser(next);
   },[]);
-  function broadcast() {try {const channel=new BroadcastChannel("sepsis-auth");channel.postMessage("changed");channel.close();}catch{}}
+  function broadcast() {try {const channel=new BroadcastChannel("sepsis-auth");channel.postMessage("changed");channel.close();}catch{/* Cross-tab channels are optional in restricted browsers. */}}
   useEffect(()=>{
     let cancelled=false;
     async function refreshSession() {
@@ -34,7 +34,7 @@ export function AuthProvider({children}:{children:ReactNode}) {
     const expired=()=>{authEpoch.current++;applyUser(null);};
     const focus=()=>{void refreshSession();};
     let channel:BroadcastChannel|undefined;
-    try{channel=new BroadcastChannel("sepsis-auth");channel.onmessage=focus;}catch{}
+    try{channel=new BroadcastChannel("sepsis-auth");channel.onmessage=focus;}catch{/* Cross-tab channels are optional in restricted browsers. */}
     const timer=setInterval(()=>{if(!document.hidden)void refreshSession();},60000);
     window.addEventListener("focus",focus);
     window.addEventListener("sepsis-auth-expired",expired);

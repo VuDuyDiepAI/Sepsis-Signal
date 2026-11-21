@@ -1,6 +1,6 @@
 "use client";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link } from "react-router";
+import { useCurrentPath } from "@/app/navigation";
 import { useState, type ReactNode } from "react";
 import {
   Activity,
@@ -46,7 +46,7 @@ const links = [
   },
 ];
 export function AppShell({ children }: { children: ReactNode }) {
-  const path = usePathname();
+  const path = useCurrentPath();
   const [collapsed, setCollapsed] = useState(false);
   const [mobile, setMobile] = useState(false);
   const {user,logout}=useAuth();
@@ -57,7 +57,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div key={href}>
           {group && <div className="nav-section">{group}</div>}
           <Link
-            href={href}
+            to={href}
             className={`nav-link ${path === href || (href === "/patients" && path.startsWith("/patients/")) ? "active" : ""}`}
             aria-current={path === href ? "page" : undefined}
             title={collapsed ? label : undefined}
@@ -72,7 +72,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   );
   const brand = (
     <Link
-      href="/dashboard"
+      to="/dashboard"
       className="brand"
       aria-label="Sepsis Signal — Theo dõi và Cảnh báo"
     >

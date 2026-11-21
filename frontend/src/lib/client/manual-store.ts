@@ -5,7 +5,7 @@ import type { ClinicalDataset, VitalKey } from "@/lib/contracts/clinical";
 import type { ManualEntry, ManualProfile } from "@/lib/clinical/manual-schema";
 import type { ManualCase } from "@/lib/contracts/manual";
 export type { ManualCase, ManualPrediction, ScoreResponse } from "@/lib/contracts/manual";
-import { getClinicalSnapshot, getServerClinicalSnapshot, subscribeClinical, persistClinical } from "@/lib/client/clinical-storage";
+import { getClinicalSnapshot, getServerClinicalSnapshot, subscribeClinical, persistClinical, refreshClinical } from "@/lib/client/clinical-storage";
 export async function createManualCase(profile: ManualProfile) {
   await persistClinical("/api/cases", "POST", profile);
 }
@@ -18,7 +18,16 @@ export async function updateManualCase(id: string, revision: number, entry: Manu
 }
 export async function rescoreManualCase(id: string,revision: number) {
   const state=await persistClinical(`/api/cases/${id}/rescore`,"POST",{revision});
-  return state.cases.find(c=>c.profile.id===id)!;
+  let record=state.cases.find(c=>c.profile.id===id)!;
+  const deadline=Date.now()+60000;
+  while (["pending","running"].includes(record.scoringStatus??"") && Date.now()<deadline) {
+    await new Promise(resolve=>setTimeout(resolve,400));
+    await refreshClinical();
+    const fresh=getClinicalSnapshot().cases.find(c=>c.profile.id===id);
+    if (!fresh || fresh.revision!==record.revision) throw new Error("Hồ sơ đã thay đổi trong khi chấm. Tải lại dữ liệu.");
+    record=fresh;
+  }
+  return record;
 }
 const iso = (s: string) => (s.length === 16 ? s + ":00" : s) + "+07:00";
 const units: Record<string, string> = {
