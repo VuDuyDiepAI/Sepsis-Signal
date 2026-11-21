@@ -14,6 +14,7 @@ COPY backend/ backend/
 COPY scripts/ scripts/
 COPY src/ src/
 COPY artifacts/ artifacts/
+COPY data/mock_ed_hospital_emr_v3_hourly.xlsx data/
 COPY frontend/src/data/ frontend/src/data/
 COPY --from=web /build/frontend/dist/ frontend/dist/
 RUN python -c "from backend.app.scoring import bundle; bundle()"

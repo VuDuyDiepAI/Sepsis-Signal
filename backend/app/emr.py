@@ -53,6 +53,8 @@ def ingest(store, event: EMREvent, received_at=None):
     received_local = received.astimezone(timezone(timedelta(hours=7))).replace(tzinfo=None, microsecond=0)
     raw = event.model_dump()
     entry = normalize(event)
+    if any(local(entry[key]) > received_local for key in ('measuredAt','availableAt','collectedAt','labAvailableAt')):
+        raise ClinicalError('Sự kiện EMR chứa thời điểm trong tương lai so với lúc tiếp nhận.',422)
     with store.transaction() as c:
         if store.postgres:
             event_key=int.from_bytes(hashlib.sha256(('event:'+event.source+':'+event.eventId).encode()).digest()[:8],'big',signed=True)
@@ -87,7 +89,10 @@ def ingest(store, event: EMREvent, received_at=None):
             raise ClinicalError('Sự kiện ngoài khoảng theo dõi T0–T0+36 giờ.',422)
         entry |= {'availableAt':available.isoformat(timespec='seconds'),
                   'labAvailableAt':lab_available.isoformat(timespec='seconds'),'hour':hour}
-        validate_entry(record['profile'],entry)
+        try:
+            validate_entry(record['profile'],entry)
+        except ValueError as exc:
+            raise ClinicalError(str(exc),422) from exc
         if len(record['entries']) >= 2000:
             raise ClinicalError('Đã đạt giới hạn sự kiện của lượt khám.',413)
         c.execute(update(t.emr).where(t.emr.c.source == event.source,t.emr.c.event_id == event.eventId).values(active=0))

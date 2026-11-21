@@ -109,6 +109,7 @@ def test_temporal_validation_and_body_limits(store):
         assert client.post('/api/manual-score',json=bad).status_code==400
         assert client.post('/api/cases',content='x'*200001).status_code==413
         assert client.get('/api/does-not-exist').status_code==404
+        assert client.post('/api/reviews/import',content='{',headers={'content-type':'application/json'}).status_code==400
 
 
 def test_inputs_and_jobs_commit_together_and_survive_failed_worker(store):
@@ -383,3 +384,16 @@ def test_postgres_case_read_is_consistent_during_concurrent_save(store):
     assert fired[0] and snapshot['revision']==record['revision']
     assert snapshot['entries']==record['entries']
     assert store.get_case(record['profile']['id'])['revision']==record['revision']+1
+
+
+def test_emr_service_auth_and_future_timestamps_do_not_enqueue(store):
+    received=datetime(2026,1,1,2,30,tzinfo=timezone.utc)
+    raw={'source':'mock-emr','eventId':'future','eventVersion':1,'encounterId':BASE['profile']['id'],
+         'profile':BASE['profile'],'entry':BASE['entries'][0] | {'availableAt':'2026-01-01T10:00'},'units':UNITS}
+    with pytest.raises(ClinicalError) as error:
+        ingest(store,EMREvent.model_validate(raw),received)
+    assert error.value.status==422 and store.get_case(BASE['profile']['id']) is None
+    with TestClient(create_app(store.settings,store),base_url='http://127.0.0.1:3100') as client:
+        assert client.post('/api/emr/events',json=raw).status_code==401
+    with store.transaction() as c:
+        assert c.execute(select(func.count()).select_from(t.queue)).scalar_one()==0

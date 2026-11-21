@@ -167,7 +167,10 @@ def create_app(settings=None, store=None):
 
     @app.post('/api/reviews/import')
     async def import_reviews(request: Request, _user=Depends(user)):
-        values = validate_legacy(await request.json())
+        try:
+            values = validate_legacy(await request.json())
+        except (ValueError,TypeError) as exc:
+            raise ClinicalError('Dữ liệu chuyển đổi không hợp lệ.',400) from exc
         await run_in_threadpool(database.archive_reviews,values)
         return response(await run_in_threadpool(database.snapshot))
 
