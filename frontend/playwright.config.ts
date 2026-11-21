@@ -1,11 +1,17 @@
 import { defineConfig } from "@playwright/test";
 import path from "node:path";
+const mode = process.env.SEPSIS_E2E_DEV === "1" ? "development" : "production";
 export default defineConfig({
   testDir: "./tests/e2e",
   workers: 1,
   fullyParallel: false,
-  retries: process.env.CI ? 1 : 0,
-  reporter: process.env.CI ? [["list"], ["html", { open: "never" }]] : "list",
+  retries: 0,
+  failOnFlakyTests: !!process.env.CI,
+  // A diagnostic rerun must never clean the failed production run's evidence.
+  outputDir: `./test-results/${mode}`,
+  reporter: process.env.CI
+    ? [["list"], ["html", { open: "never", outputFolder: `playwright-report/${mode}` }]]
+    : "list",
   use: {
     baseURL: "http://127.0.0.1:3100",
     viewport: { width: 1440, height: 1000 },

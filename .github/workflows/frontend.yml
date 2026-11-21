@@ -1,26 +1,12 @@
 name: Frontend checks
 on:
   pull_request:
-    paths:
-      - 'frontend/**'
-      - 'src/**'
-      - 'scripts/**'
-      - 'requirements.txt'
-      - 'requirements-dev.txt'
-      - 'artifacts/**'
-      - 'data/**'
-      - '.github/workflows/frontend.yml'
   push:
     branches: ['main', 'feat/clinical-ui-refresh']
-    paths:
-      - 'frontend/**'
-      - 'src/**'
-      - 'scripts/**'
-      - 'requirements.txt'
-      - 'requirements-dev.txt'
-      - 'artifacts/**'
-      - 'data/**'
-      - '.github/workflows/frontend.yml'
+  merge_group:
+    types: [checks_requested]
+# Always create the same check, including documentation-only PRs. Workflow-level
+# path filters can leave a required check pending indefinitely.
 permissions:
   contents: read
 jobs:

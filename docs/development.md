@@ -62,3 +62,15 @@ Playwright dùng production build trên cổng 3100, độc lập với server p
 ## File sinh tự động
 
 `__pycache__`, `.pytest_cache`, `frontend/test-results`, `frontend/playwright-report`, `frontend/coverage` và `*.tsbuildinfo` có thể tạo lại và không đưa lên Git. Chỉ xóa DB `data/frontend_e2e.sqlite3` cùng WAL/SHM khi server kiểm thử đã dừng. Giữ các DB hồ sơ/tài khoản đang sử dụng. Giữ `node_modules` để chạy ứng dụng và `.next` để phục vụ bản build; không cần xóa chúng sau mỗi lần kiểm thử.
+
+## Hydration, bằng chứng CI và hồi quy dự báo
+
+`cacheComponents` và `partialPrefetching` đang tắt: CI production từng gặp React #418 khi bật, và đạt khi tắt. Đây là biện pháp đã kiểm chứng; chưa xác định được nguyên nhân nội bộ của mismatch. Không che lỗi bằng `suppressHydrationWarning`.
+
+Playwright không retry; trên CI, test flaky cũng làm job thất bại. Năm kiểm tra responsive lưu timeline có URL thực tế, route yêu cầu, viewport, stack và các mốc điều hướng/tải dữ liệu/render. Các mốc này giúp chẩn đoán, không khẳng định nguyên nhân hay theo dõi mọi thay đổi state nội bộ của React.
+
+Production và development dùng riêng `test-results/{production,development}` và `playwright-report/{production,development}`. Lượt chẩn đoán development không được xóa bằng chứng production. Workflow tải cả hai nhóm lên artifact khi thất bại; dữ liệu kiểm thử chỉ là dữ liệu mô phỏng.
+
+Workflow frontend chạy trên mọi PR, push vào `main`/`feat/clinical-ui-refresh` và merge queue; không lọc `paths` ở cấp workflow để tránh treo check bắt buộc. Check giữ tên **Next.js checks**. Việc workflow đạt không tự chứng minh branch protection đã bắt buộc check đó; xác minh cấu hình GitHub riêng nếu tài khoản có quyền đọc.
+
+`tests/fixtures/sepsis_scoring_golden.json` cố định đầu vào và kết quả của bộ chấm tại baseline `1171ba1`. Python và web kiểm tra điểm (sai số tuyệt đối ≤1e-12), ngưỡng, trạng thái vượt ngưỡng, phiên bản mô hình, feature hash và dữ liệu chưa có tại thời điểm dự báo. Kiểm thử SQLite còn xác nhận ID/review được giữ khi kết quả không đổi, mất hiệu lực khi thiếu dữ liệu và tách phiên bản khi có lại kết quả. Checksum model, metadata và workbook phải khớp; chỉ cập nhật golden sau khi đã review một thay đổi model/chính sách có chủ đích, không tự sinh lại trong CI.

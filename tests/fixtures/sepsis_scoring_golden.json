@@ -1,0 +1,401 @@
+{
+  "baselineCommit": "1171ba1e174b394e1f652bdffce3d2f12244d653",
+  "description": "Frozen bridge outputs before CI/diagnostic hardening; update only after reviewing an intentional model/policy change.",
+  "sourceSha256": {
+    "data/mock_ed_hospital_emr_v3_hourly.xlsx": "9d9731df827badd8be67eea2afcc0c05537b4cad81b95e1c55ed6b7ea05b492f",
+    "artifacts/mock_emr_hourly_lr/sepsis_model.joblib": "2c9abcf5a9c45d7ed1013d94273417a39714083cc001ff00fa98ef1420d9aab9",
+    "artifacts/mock_emr_hourly_lr/sepsis_metadata.json": "63925ea287fea2e10e0bd357d7e0665d072a6e1a9f787b6309627b954c08ba28"
+  },
+  "cases": [
+    {
+      "name": "stable",
+      "input": {
+        "profile": {
+          "id": "HS-A0000001",
+          "t0": "2026-01-01T08:00",
+          "age": 55,
+          "sex": "F",
+          "height": 165,
+          "weight": 60,
+          "comorbidities": {}
+        },
+        "entries": [
+          {
+            "hour": 0,
+            "measuredAt": "2026-01-01T08:00",
+            "availableAt": "2026-01-01T08:00",
+            "collectedAt": "2026-01-01T08:00",
+            "labAvailableAt": "2026-01-01T08:00",
+            "department": "ED",
+            "vitals": {
+              "heart_rate_bpm": 78,
+              "respiratory_rate_per_min": 16,
+              "sbp_mmhg": 128,
+              "dbp_mmhg": 80,
+              "map_mmhg": 96,
+              "spo2_pct": 98,
+              "temperature_c": 36.8,
+              "gcs": 15
+            },
+            "labs": {
+              "WBC": 6,
+              "platelets": 240,
+              "creatinine": 0.8,
+              "bilirubin_total": 0.5,
+              "CRP": 3,
+              "procalcitonin": 0.05
+            },
+            "symptoms": null
+          }
+        ],
+        "hours": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "expected": {
+        "predictions": [
+          {
+            "hour": 1,
+            "score": 3.867784624498062e-08,
+            "threshold": 0.4080361343070105,
+            "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
+            "availableFeatures": 31,
+            "department": "ED",
+            "featureHash": "eec31e8afb8c681038e76a8c551152d226ec6ddf9a31fb2a124c4773e94a05a4",
+            "alert": false
+          },
+          {
+            "hour": 2,
+            "score": 5.182552522959605e-08,
+            "threshold": 0.4080361343070105,
+            "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
+            "availableFeatures": 31,
+            "department": "ED",
+            "featureHash": "d32642031c1e116d7c798166cece655ad73d9632ad6a01a9ec1c799fb7f34855",
+            "alert": false
+          },
+          {
+            "hour": 3,
+            "score": 6.378365767125945e-08,
+            "threshold": 0.4080361343070105,
+            "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
+            "availableFeatures": 31,
+            "department": "ED",
+            "featureHash": "95d1f0ff1f48d443f2ecaf27d64f0aab4ae73668b521f402dcca38e4d533596c",
+            "alert": false
+          }
+        ],
+        "errorHours": []
+      }
+    },
+    {
+      "name": "high-risk",
+      "input": {
+        "profile": {
+          "id": "HS-A0000002",
+          "t0": "2026-01-01T08:00",
+          "age": 78,
+          "sex": "M",
+          "height": 165,
+          "weight": 60,
+          "comorbidities": {
+            "diabetes": true
+          }
+        },
+        "entries": [
+          {
+            "hour": 0,
+            "measuredAt": "2026-01-01T08:00",
+            "availableAt": "2026-01-01T08:00",
+            "collectedAt": "2026-01-01T08:00",
+            "labAvailableAt": "2026-01-01T08:00",
+            "department": "ED",
+            "vitals": {
+              "heart_rate_bpm": 128,
+              "respiratory_rate_per_min": 30,
+              "sbp_mmhg": 85,
+              "dbp_mmhg": 50,
+              "map_mmhg": 62,
+              "spo2_pct": 89,
+              "temperature_c": 39.2,
+              "gcs": 12
+            },
+            "labs": {
+              "WBC": 20,
+              "platelets": 85,
+              "creatinine": 2.3,
+              "bilirubin_total": 2.5,
+              "CRP": 180,
+              "procalcitonin": 8
+            },
+            "symptoms": {
+              "respiratory": true
+            }
+          }
+        ],
+        "hours": [
+          1,
+          2,
+          3
+        ]
+      },
+      "expected": {
+        "predictions": [
+          {
+            "hour": 1,
+            "score": 0.9999999999999969,
+            "threshold": 0.4080361343070105,
+            "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
+            "availableFeatures": 36,
+            "department": "ED",
+            "featureHash": "8687fdedb5d3d7c74de3cdf7bc971be453f48a736fb9aef76e8b24ab55c2d9e9",
+            "alert": true
+          },
+          {
+            "hour": 2,
+            "score": 0.9999999999999978,
+            "threshold": 0.4080361343070105,
+            "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
+            "availableFeatures": 36,
+            "department": "ED",
+            "featureHash": "12ccd2fa98b91df83f94d2fd3c95658f9665eee76b7c6241f1cea78a4836b7c8",
+            "alert": true
+          },
+          {
+            "hour": 3,
+            "score": 0.9999999999999982,
+            "threshold": 0.4080361343070105,
+            "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
+            "availableFeatures": 36,
+            "department": "ED",
+            "featureHash": "b386109a86dae11006d798674786afc5422c34d3b28e5e365379e5a18c4ae140",
+            "alert": true
+          }
+        ],
+        "errorHours": []
+      }
+    },
+    {
+      "name": "delayed-labs",
+      "input": {
+        "profile": {
+          "id": "HS-A0000003",
+          "t0": "2026-01-01T08:00",
+          "age": 55,
+          "sex": "F",
+          "height": 165,
+          "weight": 60,
+          "comorbidities": {}
+        },
+        "entries": [
+          {
+            "hour": 0,
+            "measuredAt": "2026-01-01T08:00",
+            "availableAt": "2026-01-01T08:00",
+            "collectedAt": "2026-01-01T08:00",
+            "labAvailableAt": "2026-01-01T08:00",
+            "department": "ED",
+            "vitals": {
+              "heart_rate_bpm": 78,
+              "respiratory_rate_per_min": 16,
+              "sbp_mmhg": 128,
+              "dbp_mmhg": 80,
+              "map_mmhg": 96,
+              "spo2_pct": 98,
+              "temperature_c": 36.8,
+              "gcs": 15
+            },
+            "labs": {},
+            "symptoms": null
+          },
+          {
+            "hour": 1,
+            "measuredAt": "2026-01-01T09:00",
+            "availableAt": "2026-01-01T09:00",
+            "collectedAt": "2026-01-01T08:30",
+            "labAvailableAt": "2026-01-01T10:30",
+            "department": "WARD",
+            "vitals": {
+              "heart_rate_bpm": 128,
+              "respiratory_rate_per_min": 30,
+              "sbp_mmhg": 85,
+              "dbp_mmhg": 50,
+              "map_mmhg": 62,
+              "spo2_pct": 89,
+              "temperature_c": 39.2,
+              "gcs": 12
+            },
+            "labs": {
+              "WBC": 20,
+              "platelets": 85,
+              "creatinine": 2.3,
+              "bilirubin_total": 2.5,
+              "CRP": 180,
+              "procalcitonin": 8
+            },
+            "symptoms": null
+          }
+        ],
+        "hours": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "expected": {
+        "predictions": [
+          {
+            "hour": 1,
+            "score": 0.9999509563683687,
+            "threshold": 0.4080361343070105,
+            "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
+            "availableFeatures": 24,
+            "department": "WARD",
+            "featureHash": "90d5c87c030c72a4c497b20f38bd41cde005d0c16b97a9ca0593370ef16ca7e8",
+            "alert": true
+          },
+          {
+            "hour": 2,
+            "score": 0.9999509563683687,
+            "threshold": 0.4080361343070105,
+            "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
+            "availableFeatures": 24,
+            "department": "WARD",
+            "featureHash": "90d5c87c030c72a4c497b20f38bd41cde005d0c16b97a9ca0593370ef16ca7e8",
+            "alert": true
+          },
+          {
+            "hour": 3,
+            "score": 0.9999999905281417,
+            "threshold": 0.4080361343070105,
+            "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
+            "availableFeatures": 31,
+            "department": "WARD",
+            "featureHash": "88be4367b935c0c7ad215f92ba1dc1465c060d8bc4e4c54a6ecedb7d937d5a3a",
+            "alert": true
+          }
+        ],
+        "errorHours": []
+      }
+    },
+    {
+      "name": "insufficient-vitals",
+      "input": {
+        "profile": {
+          "id": "HS-A0000004",
+          "t0": "2026-01-01T08:00",
+          "age": 55,
+          "sex": "F",
+          "height": 165,
+          "weight": 60,
+          "comorbidities": {}
+        },
+        "entries": [
+          {
+            "hour": 0,
+            "measuredAt": "2026-01-01T08:00",
+            "availableAt": "2026-01-01T08:00",
+            "collectedAt": "2026-01-01T08:00",
+            "labAvailableAt": "2026-01-01T08:00",
+            "department": "ED",
+            "vitals": null,
+            "labs": {
+              "WBC": 20,
+              "platelets": 85,
+              "creatinine": 2.3,
+              "bilirubin_total": 2.5,
+              "CRP": 180,
+              "procalcitonin": 8
+            },
+            "symptoms": null
+          }
+        ],
+        "hours": [
+          1,
+          2
+        ]
+      },
+      "expected": {
+        "predictions": [],
+        "errorHours": [
+          "1",
+          "2"
+        ]
+      }
+    },
+    {
+      "name": "future-availability",
+      "input": {
+        "profile": {
+          "id": "HS-A0000005",
+          "t0": "2026-01-01T08:00",
+          "age": 78,
+          "sex": "M",
+          "height": 165,
+          "weight": 60,
+          "comorbidities": {
+            "diabetes": true
+          }
+        },
+        "entries": [
+          {
+            "hour": 0,
+            "measuredAt": "2026-01-01T08:00",
+            "availableAt": "2026-01-01T10:30",
+            "collectedAt": "2026-01-01T08:00",
+            "labAvailableAt": "2026-01-01T10:30",
+            "department": "ED",
+            "vitals": {
+              "heart_rate_bpm": 128,
+              "respiratory_rate_per_min": 30,
+              "sbp_mmhg": 85,
+              "dbp_mmhg": 50,
+              "map_mmhg": 62,
+              "spo2_pct": 89,
+              "temperature_c": 39.2,
+              "gcs": 12
+            },
+            "labs": {
+              "WBC": 20,
+              "platelets": 85,
+              "creatinine": 2.3,
+              "bilirubin_total": 2.5,
+              "CRP": 180,
+              "procalcitonin": 8
+            },
+            "symptoms": {
+              "respiratory": true
+            }
+          }
+        ],
+        "hours": [
+          1,
+          2,
+          3
+        ]
+      },
+      "expected": {
+        "predictions": [
+          {
+            "hour": 3,
+            "score": 0.9999999999999962,
+            "threshold": 0.4080361343070105,
+            "modelVersion": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
+            "availableFeatures": 36,
+            "department": "ED",
+            "featureHash": "dde1b6777ece6103170269296f4f5486d8103961354af0aa3dfa1d8d5979a7ae",
+            "alert": true
+          }
+        ],
+        "errorHours": [
+          "1",
+          "2"
+        ]
+      }
+    }
+  ]
+}

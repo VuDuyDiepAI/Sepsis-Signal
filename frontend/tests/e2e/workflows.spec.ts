@@ -2,6 +2,7 @@ import { test, expect, type Page } from "@playwright/test";
 import { DatabaseSync } from "node:sqlite";
 import path from "node:path";
 import { existsSync } from "node:fs";
+import { browserDiagnostics } from "./browser-diagnostics";
 const testDb = path.resolve("../data/frontend_e2e.sqlite3");
 const loginData={username:"bacsi.demo1",password:"SepsisDemo2026!"};
 test.beforeEach(async ({request,context}) => {
@@ -468,73 +469,58 @@ test("API refuses a foreign origin and malformed observations before spawning Py
 for (const width of [1440, 1280, 1024, 768, 390])
   test(`responsive ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 1000 });
-    // Attribute hydration/runtime errors to each route, rather than only the viewport.
-    let activeRoute = "initial";
-    const errors: { route: string; message: string; stack: string }[] = [];
-    page.on("pageerror", (error) => {
-      errors.push({ route: activeRoute, message: error.message, stack: error.stack ?? "" });
-    });
-    for (const route of [
-      "/dashboard",
-      "/patients",
-      "/patients/E0009?hour=7",
-      "/dashboard?scope=history&review=all",
-      "/sample-cases",
-      "/model-monitoring",
-      "/patients/new",
-    ]) {
-      activeRoute = route;
-      await page.goto(route);
-      await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-      if (route.startsWith("/patients/E0009")) {
-        await expect(
-          page.getByRole("heading", {
-            name: "Mô hình đang sử dụng",
-            exact: true,
-          }),
-        ).toHaveCount(0);
-      }
-      if (route.startsWith("/dashboard")) {
-        await expect(page.locator(".stats-grid")).toHaveCount(0);
-      }
-      if (width === 1440) {
-        const mainData =
-          route === "/dashboard"
-            ? "table"
-            : route === "/patients" || route === "/alerts"
-              ? "table"
-              : route.startsWith("/patients/E0009")
-                ? ".risk-panel"
-                : null;
-        if (mainData) {
-          const content = page
-            .locator(mainData)
-            .filter({ visible: true })
-            .first();
-          await expect(content).toBeVisible();
-          expect((await content.boundingBox())!.y).toBeLessThan(400);
+    const diagnostics = browserDiagnostics(page, test.info());
+    try {
+      for (const route of [
+        "/dashboard",
+        "/patients",
+        "/patients/E0009?hour=7",
+        "/dashboard?scope=history&review=all",
+        "/sample-cases",
+        "/model-monitoring",
+        "/patients/new",
+      ]) {
+        await test.step(`Load ${route}`, () => diagnostics.goto(route));
+        if (route.startsWith("/patients/E0009")) {
+          await expect(
+            page.getByRole("heading", {
+              name: "Mô hình đang sử dụng",
+              exact: true,
+            }),
+          ).toHaveCount(0);
         }
+        if (route.startsWith("/dashboard")) {
+          await expect(page.locator(".stats-grid")).toHaveCount(0);
+        }
+        if (width === 1440) {
+          const mainData =
+            route === "/dashboard"
+              ? "table"
+              : route === "/patients" || route === "/alerts"
+                ? "table"
+                : route.startsWith("/patients/E0009")
+                  ? ".risk-panel"
+                  : null;
+          if (mainData) {
+            const content = page
+              .locator(mainData)
+              .filter({ visible: true })
+              .first();
+            await expect(content).toBeVisible();
+            expect((await content.boundingBox())!.y).toBeLessThan(400);
+          }
+        }
+        await expect
+          .poll(() =>
+            page.evaluate(
+              () => document.documentElement.scrollWidth <= innerWidth,
+            ),
+          )
+          .toBe(true);
+        diagnostics.assertClean();
       }
-      await expect
-        .poll(() =>
-          page.evaluate(
-            () => document.documentElement.scrollWidth <= innerWidth,
-          ),
-        )
-        .toBe(true);
-      const routeErrors = errors.filter((entry) => entry.route === route);
-      if (routeErrors.length) {
-        const slug = route.replace(/[^a-z0-9]+/gi, "-");
-        await test.info().attach(`browser-errors-${width}-${slug}`, {
-          body: JSON.stringify({ viewport: width, route, errors: routeErrors }, null, 2),
-          contentType: "application/json",
-        });
-        await test.info().attach(`browser-screenshot-${width}-${slug}`, {
-          body: await page.screenshot({ fullPage: true }),
-          contentType: "image/png",
-        });
-      }
-      expect(routeErrors, `Browser error at ${width}px on ${route}`).toEqual([]);
+    } finally {
+      await diagnostics.attach();
     }
   });
 
