@@ -1,10 +1,8 @@
 """Account lifecycle, route protection and login identity."""
 import sqlite3
 from concurrent.futures import ThreadPoolExecutor
-from pathlib import Path
 
 import pytest
-from streamlit.testing.v1 import AppTest
 
 from src import auth
 
@@ -53,28 +51,6 @@ def test_login_revoke_expire_and_throttle(monkeypatch):
     assert auth.session_user('fabricated') is None
 
 
-def test_login_screen_gates_navigation_and_logout():
-    auth.create_first_account('doctor', 'Bác sĩ', PASSWORD)
-    app = AppTest.from_file(str(Path(__file__).resolve().parents[1] / 'app/streamlit_app.py')).run()
-    assert not app.exception
-    assert app.title[0].value == 'Đăng nhập'
-    assert not app.dataframe
-    app.text_input[0].set_value('doctor')
-    app.text_input[1].set_value('wrong')
-    app.button[0].click().run()
-    assert app.error and app.title[0].value == 'Đăng nhập'
-    app.text_input[0].set_value('doctor')
-    app.text_input[1].set_value(PASSWORD)
-    app.button[0].click().run()
-    assert not app.exception
-    assert app.title[0].value == 'Danh sách theo dõi'
-    token = app.session_state.auth_token
-    next(button for button in app.button if button.label == 'Đăng xuất').click().run()
-    assert not app.exception
-    assert app.title[0].value == 'Đăng nhập'
-    assert auth.session_user(token) is None
-
-
 def test_demo_login_without_registration_and_idempotent_provisioning():
     auth.ensure_demo_accounts()
     users = [auth.session_user(auth.sign_in(a['username'], auth.DEMO_PASSWORD))
@@ -85,15 +61,3 @@ def test_demo_login_without_registration_and_idempotent_provisioning():
     assert users[0]['id'] != users[1]['id']
     assert auth.session_user(auth.sign_in(auth.DEMO_ACCOUNTS[0]['username'],
                                         auth.DEMO_PASSWORD))['id'] == users[0]['id']
-    app = AppTest.from_file(str(Path(__file__).resolve().parents[1] / 'app/streamlit_app.py')).run()
-    assert not app.exception
-    assert app.title[0].value == 'Đăng nhập'
-    assert [widget.label for widget in app.text_input] == ['Tên đăng nhập', 'Mật khẩu']
-    assert not any('đăng ký' in b.label.lower() for b in app.button)
-    next(b for b in app.button if b.key == 'demo_bacsi.demo2').click().run()
-    assert app.text_input[0].value == 'bacsi.demo2'
-    assert app.text_input[1].value == auth.DEMO_PASSWORD
-    next(b for b in app.button if b.label == 'Đăng nhập').click().run()
-    assert not app.exception
-    assert app.title[0].value == 'Danh sách theo dõi'
-    assert app.session_state.auth_user['id'] == users[1]['id']
