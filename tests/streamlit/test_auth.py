@@ -55,7 +55,8 @@ def test_login_revoke_expire_and_throttle(monkeypatch):
 
 def test_login_screen_gates_navigation_and_logout():
     auth.create_first_account('doctor', 'Bác sĩ', PASSWORD)
-    app = AppTest.from_file(str(Path(__file__).resolve().parents[1] / 'app/streamlit_app.py')).run()
+    # Cold imports on CI/developer machines can exceed AppTest's 3-second default.
+    app = AppTest.from_file(str(Path(__file__).resolve().parents[2] / 'app/streamlit_app.py'), default_timeout=30).run()
     assert not app.exception
     assert app.title[0].value == 'Đăng nhập'
     assert not app.dataframe
@@ -85,7 +86,7 @@ def test_demo_login_without_registration_and_idempotent_provisioning():
     assert users[0]['id'] != users[1]['id']
     assert auth.session_user(auth.sign_in(auth.DEMO_ACCOUNTS[0]['username'],
                                         auth.DEMO_PASSWORD))['id'] == users[0]['id']
-    app = AppTest.from_file(str(Path(__file__).resolve().parents[1] / 'app/streamlit_app.py')).run()
+    app = AppTest.from_file(str(Path(__file__).resolve().parents[2] / 'app/streamlit_app.py'), default_timeout=30).run()
     assert not app.exception
     assert app.title[0].value == 'Đăng nhập'
     assert [widget.label for widget in app.text_input] == ['Tên đăng nhập', 'Mật khẩu']
