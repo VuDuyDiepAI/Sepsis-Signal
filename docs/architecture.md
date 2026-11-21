@@ -48,4 +48,6 @@ React Router quản lý cả thay đổi query; không dùng `history.replaceSta
 
 ## Giới hạn
 
+Đọc snapshot dùng PostgreSQL REPEATABLE READ để không trộn revision và dữ liệu của hai transaction đồng thời.
+
 Snapshot vẫn tải toàn bộ dữ liệu hiện hành và lịch sử; xem [số đo](migration/snapshot-benchmark.json). Chưa có API phân trang phía server, phân quyền theo khoa hay SSO. Adapter hiện là hợp đồng mô phỏng; mapping item ID và hợp đồng EMR bệnh viện cần được xác nhận riêng. SQLite chỉ còn cho hồi quy, di chuyển dữ liệu cũ và tùy chọn chạy nhỏ.

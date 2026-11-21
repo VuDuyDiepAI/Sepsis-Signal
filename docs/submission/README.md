@@ -31,17 +31,15 @@ Sinh hiệu, triệu chứng và kết quả xét nghiệm xuất hiện ở nhi
 
 ## Cài đặt và chạy cục bộ
 
-Yêu cầu: **Node.js ≥ 22.13**, npm và **Python 3.11**. Chạy từ thư mục gốc trong PowerShell:
+Xem [README gốc](../../README.md) và [hướng dẫn phát triển](../development.md). Cách chạy đầy đủ dùng Docker Desktop:
 
 ```powershell
-py -3.11 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements-api.txt
-cd frontend
-npm ci
-npm run dev
+Copy-Item .env.example .env
+# Thay các secret mẫu, chỉ bật tài khoản trải nghiệm ở cục bộ.
+docker compose up -d --build
 ```
 
-Mở `http://127.0.0.1:3000`. Mọi tài khoản demo chỉ dùng trong môi trường kiểm thử được phép, **không đăng thông tin đăng nhập đang hoạt động vào bản nộp**.
+Mở `http://127.0.0.1:8000`. Không đăng thông tin đăng nhập đang hoạt động vào hồ sơ nộp bài.
 
 ## Kiểm thử
 

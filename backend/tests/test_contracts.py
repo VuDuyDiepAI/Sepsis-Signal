@@ -359,3 +359,27 @@ def test_policy_change_marks_old_queued_job_actionable(store):
     assert store.get_case(record['profile']['id'])['scoringStatus']=='error'
     store.request_rescore(record['profile']['id'],record['revision'])
     assert store.get_case(record['profile']['id'])['revision']==record['revision']+1
+
+
+def test_postgres_case_read_is_consistent_during_concurrent_save(store):
+    if not store.postgres:
+        pytest.skip('SQLite BEGIN IMMEDIATE serializes reads and writes')
+    import threading
+    from concurrent.futures import ThreadPoolExecutor
+    from sqlalchemy import event
+    record=prepared(store)
+    owner=threading.get_ident(); fired=[False]
+    def interleave(conn,cursor,statement,parameters,context,executemany):
+        if threading.get_ident()==owner and not fired[0] and 'FROM manual_cases' in statement:
+            fired[0]=True
+            with ThreadPoolExecutor(max_workers=1) as pool:
+                pool.submit(store.save_input,record['profile']['id'],record['revision'],
+                    record['entries'][0] | {'labs':{'CRP':200}}).result(timeout=10)
+    event.listen(store.engine,'after_cursor_execute',interleave)
+    try:
+        snapshot=store.get_case(record['profile']['id'])
+    finally:
+        event.remove(store.engine,'after_cursor_execute',interleave)
+    assert fired[0] and snapshot['revision']==record['revision']
+    assert snapshot['entries']==record['entries']
+    assert store.get_case(record['profile']['id'])['revision']==record['revision']+1

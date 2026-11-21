@@ -24,8 +24,8 @@ Nhánh nguồn: `feat/clinical-ui-refresh`, baseline `76bc675186d3905755d39264c6
 
 ## Bằng chứng và giới hạn
 
-Backend tests kiểm tra từng trường SQLite->PostgreSQL, password/session Node tương thích, fixture identities, five golden scenarios, temporal validation, nhiều bác sĩ, idempotent retries, parallel workers, bounded retry và EMR correction. E2E giữ 20 workflow, responsive 390..1440 px và desktop viewport.
+Backend tests kiểm tra từng trường SQLite->PostgreSQL, password/session Node tương thích, fixture identities, 5 golden scenarios, temporal validation, nhiều bác sĩ, idempotent retries, parallel workers, bounded retry và EMR correction. E2E giữ 20 workflow, responsive 390..1440 px và desktop viewport.
 
-[snapshot-benchmark.json](snapshot-benchmark.json) là đo SQL + snapshot assembly + JSON trên PostgreSQL 17 Docker cục bộ, 10 mẫu/cỡ. Không phải tải lâm sàng. Kết quả ban đầu 4N+4 SQL statements cho N ca cho thấy cần batching/phân trang trước mở rộng. Chưa đổi API snapshot trong migration để giữ hợp đồng; đã có số đo làm cơ sở tối ưu sau.
+[snapshot-benchmark.json](snapshot-benchmark.json) là đo SQL + snapshot assembly + JSON trên PostgreSQL 17 Docker cục bộ, 10 mẫu/cỡ. Không phải tải lâm sàng. Kết quả ban đầu 4N+5 SQL (gồm lệnh đặt isolation) statements cho N ca cho thấy cần batching/phân trang trước mở rộng. Chưa đổi API snapshot trong migration để giữ hợp đồng; đã có số đo làm cơ sở tối ưu sau.
 
 Hai required check giữ tên `Python tests` / `Next.js checks` để tương thích Branch Protection; nội dung check thứ hai đã chuyển Vite/FastAPI. Không bỏ qua check do thay Python/model/data/docs. PR ở Draft, chỉ merge sau khi check xanh trên đúng SHA và được review.

@@ -56,6 +56,9 @@ jobs:
       - name: Run production Playwright E2E
         id: e2e
         run: npm run test:e2e
+      - name: Build runtime image and validate Python model imports
+        working-directory: ${{ github.workspace }}
+        run: docker build --tag sepsis-signal-ci .
       - name: Upload Playwright diagnostics on failure
         if: failure()
         uses: actions/upload-artifact@v4

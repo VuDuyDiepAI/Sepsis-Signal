@@ -129,10 +129,14 @@ class Store:
 
     def get_case(self, case_id):
         with self.transaction() as c:
+            if self.postgres:
+                c.execute(text('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ, READ ONLY'))
             return self._case(c, case_id)
 
     def snapshot(self):
         with self.transaction() as c:
+            if self.postgres:
+                c.execute(text('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ, READ ONLY'))
             reviews, history = {}, []
             for row in c.execute(select(t.legacy_reviews)).mappings():
                 r = json.loads(row['data'])
