@@ -39,7 +39,7 @@ jobs:
         run: python -m pytest -q tests
 
   frontend:
-    name: Frontend tests
+    name: Next.js checks
     runs-on: ubuntu-latest
     timeout-minutes: 20
     defaults:
