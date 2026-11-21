@@ -13,7 +13,16 @@ GOLDEN = json.loads((ROOT / 'tests/fixtures/sepsis_scoring_golden.json').read_te
 
 def test_golden_model_and_workbook_identity():
     for name, expected in GOLDEN['sourceSha256'].items():
-        assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == expected, name
+        path = ROOT / name
+        if path.suffix == '.json':
+            # Git checkouts may use CRLF on Windows and LF on Linux. Pin the
+            # metadata values, not a platform's newline/indentation convention.
+            content = json.dumps(json.loads(path.read_text(encoding='utf-8-sig')),
+                                 sort_keys=True, separators=(',', ':'),
+                                 ensure_ascii=False, allow_nan=False).encode('utf-8')
+        else:
+            content = path.read_bytes()
+        assert hashlib.sha256(content).hexdigest() == expected, name
 
 
 @pytest.mark.parametrize('case', GOLDEN['cases'], ids=lambda case: case['name'])

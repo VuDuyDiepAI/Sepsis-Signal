@@ -4,7 +4,7 @@
   "sourceSha256": {
     "data/mock_ed_hospital_emr_v3_hourly.xlsx": "9d9731df827badd8be67eea2afcc0c05537b4cad81b95e1c55ed6b7ea05b492f",
     "artifacts/mock_emr_hourly_lr/sepsis_model.joblib": "2c9abcf5a9c45d7ed1013d94273417a39714083cc001ff00fa98ef1420d9aab9",
-    "artifacts/mock_emr_hourly_lr/sepsis_metadata.json": "63925ea287fea2e10e0bd357d7e0665d072a6e1a9f787b6309627b954c08ba28"
+    "artifacts/mock_emr_hourly_lr/sepsis_metadata.json": "83f9a4164e69430bb89973aba46ee8fe2596f8a3da5738ce59b344db32adadb9"
   },
   "cases": [
     {
@@ -397,5 +397,6 @@
         ]
       }
     }
-  ]
+  ],
+  "jsonFingerprint": "sha256 of UTF-8 JSON with sorted keys, compact separators and ensure_ascii=False"
 }

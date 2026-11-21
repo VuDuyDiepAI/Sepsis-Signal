@@ -74,3 +74,7 @@ Production và development dùng riêng `test-results/{production,development}` 
 Workflow frontend chạy trên mọi PR, push vào `main`/`feat/clinical-ui-refresh` và merge queue; không lọc `paths` ở cấp workflow để tránh treo check bắt buộc. Check giữ tên **Next.js checks**. Việc workflow đạt không tự chứng minh branch protection đã bắt buộc check đó; xác minh cấu hình GitHub riêng nếu tài khoản có quyền đọc.
 
 `tests/fixtures/sepsis_scoring_golden.json` cố định đầu vào và kết quả của bộ chấm tại baseline `1171ba1`. Python và web kiểm tra điểm (sai số tuyệt đối ≤1e-12), ngưỡng, trạng thái vượt ngưỡng, phiên bản mô hình, feature hash và dữ liệu chưa có tại thời điểm dự báo. Kiểm thử SQLite còn xác nhận ID/review được giữ khi kết quả không đổi, mất hiệu lực khi thiếu dữ liệu và tách phiên bản khi có lại kết quả. Checksum model, metadata và workbook phải khớp; chỉ cập nhật golden sau khi đã review một thay đổi model/chính sách có chủ đích, không tự sinh lại trong CI.
+
+Vitest hiện cần môi trường Python cùng `requirements.txt`; workflow cài Python trước `npm test`. Nếu tiến trình chấm thoát mà không trả JSON hợp lệ, API trả lỗi dịch vụ chưa sẵn sàng (503), không đưa lỗi phân tích JSON hay stderr của interpreter ra trình duyệt. Dữ liệu đã lưu vẫn được giữ theo cơ chế scoring job.
+
+Fingerprint model/workbook tính trên byte nhị phân. Với metadata JSON, fingerprint tính trên JSON chuẩn hóa (UTF-8, khóa sắp xếp, separators gọn), tránh khác biệt CRLF/LF giữa Windows và Linux mà vẫn khóa toàn bộ giá trị metadata.

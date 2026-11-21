@@ -71,7 +71,14 @@ export async function scoreCase(input: z.infer<typeof scoreRequestSchema>): Prom
         child.stdin.end(JSON.stringify(input));
       },
     );
-  const data = JSON.parse(result.output);
+  let data;
+  try {
+    data = JSON.parse(result.output);
+  } catch {
+    // Missing dependencies/process failures can exit before the Python bridge's
+    // JSON handler runs. Do not expose raw interpreter output to the browser.
+    throw new ClinicalError("Bộ chấm chưa trả về kết quả hợp lệ. Vui lòng thử lại hoặc liên hệ quản trị hệ thống.", 503);
+  }
   if (result.code !== 0) throw new ClinicalError(data.error ?? "Không chấm được dữ liệu. Kiểm tra bộ chấm Python.",422);
   return data;
 }

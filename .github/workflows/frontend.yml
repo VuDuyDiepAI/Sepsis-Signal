@@ -30,12 +30,15 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - run: npm run lint
-      - run: npm test
-      - run: npm run build
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
         with:
           python-version: '3.11'
+          cache: pip
+          cache-dependency-path: requirements.txt
       - run: python -m pip install -r ../requirements.txt
+      # Golden integration tests invoke the real Python bridge, not a mock.
+      - run: npm test
+      - run: npm run build
       - run: npx playwright install --with-deps chromium
       - name: Run production Playwright E2E
         id: e2e
