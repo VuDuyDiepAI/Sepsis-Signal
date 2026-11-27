@@ -38,8 +38,15 @@ export function VitalSignsPanel({ id, hour }: { id: string; hour: number }) {
             >
               <div className="vital-cell-top">
                 <div className="value-label">
-                  {label}{" "}
-                  <span className="ref-inline">({assessment.rangeLabel})</span>
+                  {label}
+                  {value != null && (
+                    <>
+                      {" "}
+                      <span className="ref-inline">
+                        ({assessment.rangeLabel})
+                      </span>
+                    </>
+                  )}
                 </div>
                 {assessment.badge && (
                   <span className={`value-flag is-${assessment.status}`}>
