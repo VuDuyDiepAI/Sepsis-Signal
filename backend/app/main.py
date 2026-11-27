@@ -62,7 +62,7 @@ def create_app(settings=None, store=None):
 
     @app.middleware('http')
     async def boundary(request, call_next):
-        if request.url.path.startswith('/api/'):
+        if request.url.path.startswith('/api/') and not (request.method in ('GET', 'HEAD') and request.url.path == '/api/health'):
             host = request.headers.get('host','')
             allowed_hosts = {origin.split('://',1)[1] for origin in settings.origins}
             origin = request.headers.get('origin')

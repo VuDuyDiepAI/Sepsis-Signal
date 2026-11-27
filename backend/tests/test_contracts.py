@@ -482,3 +482,20 @@ def test_health_latency_and_silent_mode_suppression(store,tmp_path):
             assert case['predictions']==[] and case['silentPredictionsCount']==1
     finally:
         silent_store.close()
+
+
+def test_public_origin_render_env_and_explicit_demo_preview_guard(monkeypatch):
+    from backend.app.config import Settings
+
+    monkeypatch.delenv('SEPSIS_PUBLIC_ORIGIN', raising=False)
+    monkeypatch.setenv('RENDER_EXTERNAL_URL', 'https://sepsis-signal-tc08.onrender.com/')
+    monkeypatch.setenv('SEPSIS_DEMO_ACCOUNTS', '1')
+    monkeypatch.delenv('SEPSIS_PUBLIC_DEMO_PREVIEW', raising=False)
+    strict = Settings.from_env()
+    assert strict.public_origin == 'https://sepsis-signal-tc08.onrender.com'
+    assert strict.demo_accounts is False
+
+    monkeypatch.setenv('SEPSIS_PUBLIC_DEMO_PREVIEW', '1')
+    preview = Settings.from_env()
+    assert preview.public_origin == 'https://sepsis-signal-tc08.onrender.com'
+    assert preview.demo_accounts is True
