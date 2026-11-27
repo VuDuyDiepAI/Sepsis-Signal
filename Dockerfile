@@ -21,4 +21,4 @@ RUN python -c "from backend.app.scoring import bundle; bundle()"
 RUN useradd --create-home --uid 10001 sepsis && mkdir -p data && chown sepsis:sepsis data
 USER sepsis
 EXPOSE 8000
-CMD ["python", "-m", "uvicorn", "backend.app.main:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["sh", "-c", "exec python -m uvicorn backend.app.main:create_app --factory --host 0.0.0.0 --port ${PORT:-8000}"]

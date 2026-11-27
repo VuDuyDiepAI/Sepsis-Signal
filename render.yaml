@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: sepsis-signal-tc08
+    runtime: docker
+    plan: free
+    region: singapore
+    healthCheckPath: /api/health
+    envVars:
+      - key: SEPSIS_EMBEDDED_WORKER
+        value: "1"
+      - key: SEPSIS_DEMO_ACCOUNTS
+        value: "1"
+      - key: SEPSIS_PUBLIC_DEMO_PREVIEW
+        value: "1"
+      - key: SEPSIS_DATABASE_URL
+        value: "sqlite:///data/fastapi_clinical.sqlite3"
