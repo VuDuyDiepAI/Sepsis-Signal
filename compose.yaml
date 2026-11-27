@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: sepsis
+      POSTGRES_USER: sepsis
+      POSTGRES_PASSWORD: ${SEPSIS_DB_PASSWORD:?Set SEPSIS_DB_PASSWORD in .env}
+    ports:
+      - "127.0.0.1:55432:5432"
+    volumes:
+      - sepsis_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sepsis -d sepsis"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+  api:
+    build: .
+    environment:
+      SEPSIS_DATABASE_URL: postgresql+psycopg://sepsis:${SEPSIS_DB_PASSWORD}@db:5432/sepsis
+      SEPSIS_DEMO_ACCOUNTS: ${SEPSIS_DEMO_ACCOUNTS:-0}
+      SEPSIS_PUBLIC_ORIGIN: ${SEPSIS_PUBLIC_ORIGIN:-}
+      SEPSIS_EMR_KEY: ${SEPSIS_EMR_KEY:-}
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      db: {condition: service_healthy}
+    command: ["python", "-m", "uvicorn", "backend.app.main:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000"]
+    restart: unless-stopped
+  worker:
+    build: .
+    environment:
+      SEPSIS_DATABASE_URL: postgresql+psycopg://sepsis:${SEPSIS_DB_PASSWORD}@db:5432/sepsis
+    depends_on:
+      db: {condition: service_healthy}
+    command: ["python", "-m", "backend.worker"]
+    restart: unless-stopped
+volumes:
+  sepsis_pgdata:

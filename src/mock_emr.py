@@ -18,10 +18,19 @@ from src.observation_features import FEATURE_SCHEMA_VERSION, OBSERVATION_WINDOW
 ROOT = Path(__file__).resolve().parents[1]
 DATA_PATH = ROOT / 'data' / 'mock_ed_hospital_emr_v3_hourly.xlsx'
 ARTIFACT_DIR = ROOT / 'artifacts' / 'mock_emr_hourly_lr'
+MANIFEST_PATH = ARTIFACT_DIR / 'manifest.json'
 TARGETS = {
     'sepsis': ('eligible_sepsis', 'sepsis_next_6h'),
     'shock': ('eligible_shock', 'shock_next_6h'),
 }
+
+
+def _canonical_json_sha256(path: Path) -> str:
+    content = json.dumps(
+        json.loads(path.read_text(encoding='utf-8-sig')),
+        sort_keys=True, separators=(',', ':'), ensure_ascii=False, allow_nan=False,
+    ).encode('utf-8')
+    return hashlib.sha256(content).hexdigest()
 
 
 def bundle_paths(target: str) -> tuple[Path, Path]:
@@ -227,19 +236,30 @@ def training_frame(tables: dict[str, pd.DataFrame], target: str = 'sepsis') -> p
     return frame
 
 
-def load_bundle(target: str = 'sepsis') -> tuple[object, dict]:
+def load_bundle(target: str = 'sepsis', *, require_source: bool = True) -> tuple[object, dict]:
     bundle_path, meta_path = bundle_paths(target)
     if not bundle_path.exists() or not meta_path.exists():
         raise FileNotFoundError(f'Chưa có mô hình {target}. Chạy scripts/train_mock_emr.py.')
-    meta = json.loads(meta_path.read_text(encoding='utf-8'))
+    meta = json.loads(meta_path.read_text(encoding='utf-8-sig'))
     if (meta.get('data_kind') != 'SYNTHETIC_MOCK_EMR'
             or meta.get('features') != FEATURES
             or meta.get('target') != TARGETS[target][1]
             or meta.get('feature_schema_version') != FEATURE_SCHEMA_VERSION
             or meta.get('observation_window') != OBSERVATION_WINDOW):
         raise ValueError('Cấu hình mô hình không khớp với bộ hồ sơ mẫu.')
-    if not DATA_PATH.exists() or hashlib.sha256(DATA_PATH.read_bytes()).hexdigest() != meta.get('source_sha256'):
-        raise ValueError('Bộ hồ sơ mẫu đã thay đổi. Cần huấn luyện lại mô hình trước khi chấm điểm.')
+    if MANIFEST_PATH.exists():
+        manifest = json.loads(MANIFEST_PATH.read_text(encoding='utf-8-sig'))
+        entry = manifest.get('targets', {}).get(target)
+        if not entry:
+            raise ValueError(f'Thiếu khai báo toàn vẹn artifact cho {target} trong manifest.json.')
+        if (hashlib.sha256(bundle_path.read_bytes()).hexdigest() != entry.get('model_sha256')
+                or _canonical_json_sha256(meta_path) != entry.get('metadata_canonical_sha256')):
+            raise ValueError('Artifact mô hình không khớp mã băm toàn vẹn trong manifest.json.')
+    if DATA_PATH.exists():
+        if hashlib.sha256(DATA_PATH.read_bytes()).hexdigest() != meta.get('source_sha256'):
+            raise ValueError('Bộ hồ sơ mẫu đã thay đổi. Cần huấn luyện lại mô hình trước khi chấm điểm.')
+    elif require_source:
+        raise ValueError('Thiếu bộ hồ sơ mẫu nguồn khi yêu cầu đối chiếu huấn luyện.')
     return joblib.load(bundle_path), meta
 
 
@@ -265,6 +285,28 @@ def explain_log_odds(model: object, snapshot: pd.DataFrame) -> tuple[float, pd.D
     contributions['absolute'] = contributions.log_odds_contribution.abs()
     contributions = contributions.sort_values('absolute', ascending=False).drop(columns='absolute')
     return float(model.named_steps['lr'].intercept_[0]), contributions
+
+
+def top_risk_contributors(
+    model: object,
+    snapshot: pd.DataFrame,
+    *,
+    limit: int = 4,
+    min_log_odds: float = 0.05,
+) -> list[dict]:
+    """Return top positive log-odds contributors with Vietnamese labels."""
+    _, pieces = explain_log_odds(model, snapshot)
+    positive = pieces.loc[pieces['log_odds_contribution'] >= min_log_odds].sort_values(
+        'log_odds_contribution', ascending=False,
+    ).head(limit)
+    return [
+        {
+            'feature': str(row.feature).split('__', 1)[-1],
+            'labelVi': str(row.label_vi),
+            'contribution': round(float(row.log_odds_contribution), 3),
+        }
+        for row in positive.itertuples(index=False)
+    ]
 
 
 def latest_available(tables: dict[str, pd.DataFrame], encounter_id: str, at: pd.Timestamp):

@@ -1,0 +1,3918 @@
+{
+  "E0001:1": [
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.716
+    },
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 1.313
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    }
+  ],
+  "E0001:2": [
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.716
+    },
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 1.313
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    }
+  ],
+  "E0001:3": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 4.323
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.997
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    }
+  ],
+  "E0001:4": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 4.323
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.997
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    }
+  ],
+  "E0001:5": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 5.058
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 3.115
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    }
+  ],
+  "E0001:6": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 5.058
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 3.115
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    }
+  ],
+  "E0001:7": [
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 3.394
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 1.38
+    }
+  ],
+  "E0001:8": [
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 3.394
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 1.38
+    }
+  ],
+  "E0001:9": [
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 2.835
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "respiratory_rate_last_per_min",
+      "labelVi": "Nhịp thở gần nhất (lần/phút)",
+      "contribution": 1.427
+    }
+  ],
+  "E0001:10": [
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 2.835
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "respiratory_rate_last_per_min",
+      "labelVi": "Nhịp thở gần nhất (lần/phút)",
+      "contribution": 1.427
+    }
+  ],
+  "E0001:11": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 3.587
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 2.835
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    }
+  ],
+  "E0001:12": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 3.587
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 2.835
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    }
+  ],
+  "E0001:13": [
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 1.38
+    },
+    {
+      "feature": "map_last_mmhg",
+      "labelVi": "HA trung bình MAP gần nhất (mmHg)",
+      "contribution": 1.296
+    }
+  ],
+  "E0001:14": [
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 1.38
+    },
+    {
+      "feature": "map_last_mmhg",
+      "labelVi": "HA trung bình MAP gần nhất (mmHg)",
+      "contribution": 1.296
+    }
+  ],
+  "E0001:15": [
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 2.116
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    }
+  ],
+  "E0001:16": [
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 2.116
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    }
+  ],
+  "E0001:17": [
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 2.116
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "respiratory_rate_last_per_min",
+      "labelVi": "Nhịp thở gần nhất (lần/phút)",
+      "contribution": 1.427
+    }
+  ],
+  "E0001:18": [
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 2.116
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "respiratory_rate_last_per_min",
+      "labelVi": "Nhịp thở gần nhất (lần/phút)",
+      "contribution": 1.427
+    }
+  ],
+  "E0001:19": [
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 2.116
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.438
+    }
+  ],
+  "E0001:20": [
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 2.116
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.438
+    }
+  ],
+  "E0001:21": [
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 3.394
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "respiratory_rate_last_per_min",
+      "labelVi": "Nhịp thở gần nhất (lần/phút)",
+      "contribution": 1.427
+    }
+  ],
+  "E0001:22": [
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 3.394
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "respiratory_rate_last_per_min",
+      "labelVi": "Nhịp thở gần nhất (lần/phút)",
+      "contribution": 1.427
+    }
+  ],
+  "E0001:23": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 4.323
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 3.394
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    }
+  ],
+  "E0001:24": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 4.323
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 3.394
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    }
+  ],
+  "E0001:25": [
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.997
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 1.38
+    }
+  ],
+  "E0001:26": [
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.997
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 1.38
+    }
+  ],
+  "E0001:27": [
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 2.116
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.997
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    }
+  ],
+  "E0001:28": [
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 2.116
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.997
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    }
+  ],
+  "E0001:29": [
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.718
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "respiratory_rate_last_per_min",
+      "labelVi": "Nhịp thở gần nhất (lần/phút)",
+      "contribution": 1.427
+    }
+  ],
+  "E0001:30": [
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.972
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.718
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "respiratory_rate_last_per_min",
+      "labelVi": "Nhịp thở gần nhất (lần/phút)",
+      "contribution": 1.427
+    }
+  ],
+  "E0002:1": [
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.716
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    },
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 1.313
+    },
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 1.264
+    }
+  ],
+  "E0002:2": [
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.716
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    },
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 1.313
+    },
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 1.264
+    }
+  ],
+  "E0002:3": [
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 2.276
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.46
+    }
+  ],
+  "E0002:4": [
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 2.276
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.46
+    }
+  ],
+  "E0002:5": [
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    },
+    {
+      "feature": "map_last_mmhg",
+      "labelVi": "HA trung bình MAP gần nhất (mmHg)",
+      "contribution": 1.296
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.205
+    }
+  ],
+  "E0002:6": [
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    },
+    {
+      "feature": "map_last_mmhg",
+      "labelVi": "HA trung bình MAP gần nhất (mmHg)",
+      "contribution": 1.296
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.205
+    }
+  ],
+  "E0002:7": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 3.587
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.438
+    }
+  ],
+  "E0002:8": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 3.587
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.438
+    }
+  ],
+  "E0002:9": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 2.116
+    },
+    {
+      "feature": "map_last_mmhg",
+      "labelVi": "HA trung bình MAP gần nhất (mmHg)",
+      "contribution": 1.963
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    }
+  ],
+  "E0002:10": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 2.116
+    },
+    {
+      "feature": "map_last_mmhg",
+      "labelVi": "HA trung bình MAP gần nhất (mmHg)",
+      "contribution": 1.963
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    }
+  ],
+  "E0002:11": [
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.438
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 1.38
+    }
+  ],
+  "E0002:12": [
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.438
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 1.38
+    }
+  ],
+  "E0002:13": [
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.997
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    },
+    {
+      "feature": "respiratory_rate_last_per_min",
+      "labelVi": "Nhịp thở gần nhất (lần/phút)",
+      "contribution": 1.427
+    }
+  ],
+  "E0002:14": [
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.997
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    },
+    {
+      "feature": "respiratory_rate_last_per_min",
+      "labelVi": "Nhịp thở gần nhất (lần/phút)",
+      "contribution": 1.427
+    }
+  ],
+  "E0002:15": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 2.116
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.718
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    }
+  ],
+  "E0002:16": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 2.116
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.718
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    }
+  ],
+  "E0002:17": [
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    },
+    {
+      "feature": "map_last_mmhg",
+      "labelVi": "HA trung bình MAP gần nhất (mmHg)",
+      "contribution": 1.518
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 1.38
+    }
+  ],
+  "E0002:18": [
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    },
+    {
+      "feature": "map_last_mmhg",
+      "labelVi": "HA trung bình MAP gần nhất (mmHg)",
+      "contribution": 1.518
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 1.38
+    }
+  ],
+  "E0002:19": [
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 3.673
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 2.851
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    }
+  ],
+  "E0002:20": [
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 3.673
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 2.851
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    }
+  ],
+  "E0002:21": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 2.116
+    },
+    {
+      "feature": "respiratory_rate_last_per_min",
+      "labelVi": "Nhịp thở gần nhất (lần/phút)",
+      "contribution": 1.892
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    }
+  ],
+  "E0002:22": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 2.116
+    },
+    {
+      "feature": "respiratory_rate_last_per_min",
+      "labelVi": "Nhịp thở gần nhất (lần/phút)",
+      "contribution": 1.892
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    }
+  ],
+  "E0002:23": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 2.116
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.438
+    }
+  ],
+  "E0002:24": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 2.116
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.438
+    }
+  ],
+  "E0002:25": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 2.851
+    },
+    {
+      "feature": "map_last_mmhg",
+      "labelVi": "HA trung bình MAP gần nhất (mmHg)",
+      "contribution": 1.963
+    },
+    {
+      "feature": "respiratory_rate_last_per_min",
+      "labelVi": "Nhịp thở gần nhất (lần/phút)",
+      "contribution": 1.892
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    }
+  ],
+  "E0002:26": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 2.851
+    },
+    {
+      "feature": "map_last_mmhg",
+      "labelVi": "HA trung bình MAP gần nhất (mmHg)",
+      "contribution": 1.963
+    },
+    {
+      "feature": "respiratory_rate_last_per_min",
+      "labelVi": "Nhịp thở gần nhất (lần/phút)",
+      "contribution": 1.892
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    }
+  ],
+  "E0002:27": [
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 1.38
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.159
+    }
+  ],
+  "E0002:28": [
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 1.38
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.159
+    }
+  ],
+  "E0002:29": [
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 2.276
+    },
+    {
+      "feature": "map_last_mmhg",
+      "labelVi": "HA trung bình MAP gần nhất (mmHg)",
+      "contribution": 1.741
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    }
+  ],
+  "E0002:30": [
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 2.276
+    },
+    {
+      "feature": "map_last_mmhg",
+      "labelVi": "HA trung bình MAP gần nhất (mmHg)",
+      "contribution": 1.741
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    }
+  ],
+  "E0003:1": [
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.716
+    },
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 1.313
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    }
+  ],
+  "E0003:2": [
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.716
+    },
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 1.313
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    }
+  ],
+  "E0003:3": [
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 2.052
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.46
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    }
+  ],
+  "E0003:4": [
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 2.052
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.46
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    }
+  ],
+  "E0003:5": [
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 2.545
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.205
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    }
+  ],
+  "E0003:6": [
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 2.545
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.205
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    }
+  ],
+  "E0003:7": [
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 3.037
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 1.203
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    }
+  ],
+  "E0003:8": [
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 3.037
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 1.203
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    }
+  ],
+  "E0003:9": [
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 2.791
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 1.325
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    }
+  ],
+  "E0003:10": [
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 2.791
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 1.325
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    }
+  ],
+  "E0003:11": [
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 2.052
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 1.264
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    }
+  ],
+  "E0003:12": [
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 2.052
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 1.264
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    }
+  ],
+  "E0003:13": [
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 2.545
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 1.295
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    }
+  ],
+  "E0003:14": [
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 2.545
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 1.295
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    }
+  ],
+  "E0003:15": [
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    },
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 1.021
+    },
+    {
+      "feature": "creatinine_last_mg_dL",
+      "labelVi": "Creatinine gần nhất (log1p · mg/dL)",
+      "contribution": 0.832
+    }
+  ],
+  "E0003:16": [
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    },
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 1.021
+    },
+    {
+      "feature": "creatinine_last_mg_dL",
+      "labelVi": "Creatinine gần nhất (log1p · mg/dL)",
+      "contribution": 0.832
+    }
+  ],
+  "E0003:17": [
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    },
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 0.839
+    },
+    {
+      "feature": "creatinine_last_mg_dL",
+      "labelVi": "Creatinine gần nhất (log1p · mg/dL)",
+      "contribution": 0.832
+    }
+  ],
+  "E0003:18": [
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    },
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 0.839
+    },
+    {
+      "feature": "creatinine_last_mg_dL",
+      "labelVi": "Creatinine gần nhất (log1p · mg/dL)",
+      "contribution": 0.832
+    }
+  ],
+  "E0003:19": [
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 2.298
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    },
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 0.869
+    }
+  ],
+  "E0003:20": [
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 2.298
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    },
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 0.869
+    }
+  ],
+  "E0003:21": [
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 1.806
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    },
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 0.839
+    }
+  ],
+  "E0003:22": [
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 1.806
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    },
+    {
+      "feature": "hours_since_creatinine_result",
+      "labelVi": "Số giờ từ KQ Creatinine gần nhất (log1p)",
+      "contribution": 0.856
+    }
+  ],
+  "E0003:23": [
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 1.806
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    },
+    {
+      "feature": "hours_since_creatinine_result",
+      "labelVi": "Số giờ từ KQ Creatinine gần nhất (log1p)",
+      "contribution": 0.888
+    }
+  ],
+  "E0003:24": [
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 1.806
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    },
+    {
+      "feature": "hours_since_creatinine_result",
+      "labelVi": "Số giờ từ KQ Creatinine gần nhất (log1p)",
+      "contribution": 0.918
+    }
+  ],
+  "E0003:25": [
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 3.037
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    },
+    {
+      "feature": "hours_since_creatinine_result",
+      "labelVi": "Số giờ từ KQ Creatinine gần nhất (log1p)",
+      "contribution": 0.947
+    }
+  ],
+  "E0003:26": [
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 3.037
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    },
+    {
+      "feature": "hours_since_creatinine_result",
+      "labelVi": "Số giờ từ KQ Creatinine gần nhất (log1p)",
+      "contribution": 0.975
+    }
+  ],
+  "E0003:27": [
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 2.298
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    },
+    {
+      "feature": "hours_since_creatinine_result",
+      "labelVi": "Số giờ từ KQ Creatinine gần nhất (log1p)",
+      "contribution": 1.002
+    }
+  ],
+  "E0003:28": [
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 2.298
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    },
+    {
+      "feature": "hours_since_creatinine_result",
+      "labelVi": "Số giờ từ KQ Creatinine gần nhất (log1p)",
+      "contribution": 1.028
+    }
+  ],
+  "E0003:29": [
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 2.791
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    },
+    {
+      "feature": "hours_since_creatinine_result",
+      "labelVi": "Số giờ từ KQ Creatinine gần nhất (log1p)",
+      "contribution": 1.053
+    }
+  ],
+  "E0003:30": [
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 2.791
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.729
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    },
+    {
+      "feature": "hours_since_creatinine_result",
+      "labelVi": "Số giờ từ KQ Creatinine gần nhất (log1p)",
+      "contribution": 1.077
+    }
+  ],
+  "E0005:1": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 3.089
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.716
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 1.415
+    },
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 1.313
+    }
+  ],
+  "E0005:2": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 3.089
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.716
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 1.415
+    },
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 1.313
+    }
+  ],
+  "E0005:3": [
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.718
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.46
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 1.415
+    }
+  ],
+  "E0005:4": [
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.718
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.46
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 1.415
+    }
+  ],
+  "E0005:5": [
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 1.415
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.205
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    }
+  ],
+  "E0005:6": [
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 1.415
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.205
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    }
+  ],
+  "E0005:7": [
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 1.415
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.159
+    }
+  ],
+  "E0005:8": [
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 1.415
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.159
+    }
+  ],
+  "E0005:9": [
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.718
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 1.415
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    }
+  ],
+  "E0005:10": [
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.718
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 1.415
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    }
+  ],
+  "E0005:11": [
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.438
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 1.415
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    }
+  ],
+  "E0005:12": [
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.438
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 1.415
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    }
+  ],
+  "E0005:13": [
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.438
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 1.415
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    }
+  ],
+  "E0005:14": [
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 1.438
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 1.415
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    }
+  ],
+  "E0005:15": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 5.058
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 2.556
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 1.415
+    }
+  ],
+  "E0005:16": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 5.058
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 2.556
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    }
+  ],
+  "E0005:17": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 4.323
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 2.835
+    },
+    {
+      "feature": "respiratory_rate_last_per_min",
+      "labelVi": "Nhịp thở gần nhất (lần/phút)",
+      "contribution": 1.892
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    }
+  ],
+  "E0005:18": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 4.323
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 2.835
+    },
+    {
+      "feature": "respiratory_rate_last_per_min",
+      "labelVi": "Nhịp thở gần nhất (lần/phút)",
+      "contribution": 1.892
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    }
+  ],
+  "E0005:19": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 7.265
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 2.556
+    },
+    {
+      "feature": "respiratory_rate_last_per_min",
+      "labelVi": "Nhịp thở gần nhất (lần/phút)",
+      "contribution": 2.356
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    }
+  ],
+  "E0005:20": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 7.265
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 2.556
+    },
+    {
+      "feature": "respiratory_rate_last_per_min",
+      "labelVi": "Nhịp thở gần nhất (lần/phút)",
+      "contribution": 2.356
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    }
+  ],
+  "E0006:1": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 4.001
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.716
+    },
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 1.313
+    },
+    {
+      "feature": "sbp_delta_since_t0_mmhg",
+      "labelVi": "Thay đổi HA tâm thu từ T0 (mmHg)",
+      "contribution": 0.468
+    }
+  ],
+  "E0006:2": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 4.001
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.716
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 1.313
+    }
+  ],
+  "E0006:3": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 2.785
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.46
+    },
+    {
+      "feature": "creatinine_last_mg_dL",
+      "labelVi": "Creatinine gần nhất (log1p · mg/dL)",
+      "contribution": 0.402
+    }
+  ],
+  "E0006:4": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 2.785
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.46
+    },
+    {
+      "feature": "creatinine_last_mg_dL",
+      "labelVi": "Creatinine gần nhất (log1p · mg/dL)",
+      "contribution": 0.402
+    }
+  ],
+  "E0006:5": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 2.693
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.205
+    },
+    {
+      "feature": "creatinine_last_mg_dL",
+      "labelVi": "Creatinine gần nhất (log1p · mg/dL)",
+      "contribution": 0.402
+    }
+  ],
+  "E0006:6": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 2.693
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.205
+    },
+    {
+      "feature": "location_code_WARD",
+      "labelVi": "Khu vực: Nội trú (WARD)",
+      "contribution": 0.542
+    }
+  ],
+  "E0006:7": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 2.785
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 0.949
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 0.645
+    }
+  ],
+  "E0006:8": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 2.785
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 0.949
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 0.645
+    }
+  ],
+  "E0006:9": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 2.481
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 0.694
+    },
+    {
+      "feature": "location_code_WARD",
+      "labelVi": "Khu vực: Nội trú (WARD)",
+      "contribution": 0.542
+    }
+  ],
+  "E0006:10": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 2.481
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 0.694
+    },
+    {
+      "feature": "location_code_WARD",
+      "labelVi": "Khu vực: Nội trú (WARD)",
+      "contribution": 0.542
+    }
+  ],
+  "E0006:11": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 2.633
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 0.821
+    },
+    {
+      "feature": "location_code_WARD",
+      "labelVi": "Khu vực: Nội trú (WARD)",
+      "contribution": 0.542
+    }
+  ],
+  "E0006:12": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 2.633
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 0.821
+    },
+    {
+      "feature": "location_code_WARD",
+      "labelVi": "Khu vực: Nội trú (WARD)",
+      "contribution": 0.542
+    }
+  ],
+  "E0006:13": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 2.785
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.17
+    },
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 1.067
+    }
+  ],
+  "E0006:14": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 2.785
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.17
+    },
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 1.067
+    }
+  ],
+  "E0006:15": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 2.815
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.17
+    },
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 0.574
+    }
+  ],
+  "E0006:16": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 2.815
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.17
+    },
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 0.574
+    }
+  ],
+  "E0006:17": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 2.785
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.17
+    },
+    {
+      "feature": "creatinine_last_mg_dL",
+      "labelVi": "Creatinine gần nhất (log1p · mg/dL)",
+      "contribution": 0.543
+    }
+  ],
+  "E0006:18": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 2.785
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.17
+    },
+    {
+      "feature": "creatinine_last_mg_dL",
+      "labelVi": "Creatinine gần nhất (log1p · mg/dL)",
+      "contribution": 0.543
+    }
+  ],
+  "E0006:19": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 2.724
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.17
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 0.645
+    }
+  ],
+  "E0006:20": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 2.724
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.17
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 0.645
+    }
+  ],
+  "E0006:21": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 2.663
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.17
+    },
+    {
+      "feature": "creatinine_last_mg_dL",
+      "labelVi": "Creatinine gần nhất (log1p · mg/dL)",
+      "contribution": 0.543
+    }
+  ],
+  "E0006:22": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 2.663
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.17
+    },
+    {
+      "feature": "creatinine_last_mg_dL",
+      "labelVi": "Creatinine gần nhất (log1p · mg/dL)",
+      "contribution": 0.543
+    }
+  ],
+  "E0006:23": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 2.693
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.17
+    },
+    {
+      "feature": "sbp_delta_since_t0_mmhg",
+      "labelVi": "Thay đổi HA tâm thu từ T0 (mmHg)",
+      "contribution": 0.619
+    }
+  ],
+  "E0006:24": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 2.693
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.17
+    },
+    {
+      "feature": "sbp_delta_since_t0_mmhg",
+      "labelVi": "Thay đổi HA tâm thu từ T0 (mmHg)",
+      "contribution": 0.619
+    }
+  ],
+  "E0006:25": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 2.663
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.17
+    },
+    {
+      "feature": "creatinine_last_mg_dL",
+      "labelVi": "Creatinine gần nhất (log1p · mg/dL)",
+      "contribution": 0.543
+    }
+  ],
+  "E0006:26": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 2.663
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.17
+    },
+    {
+      "feature": "creatinine_last_mg_dL",
+      "labelVi": "Creatinine gần nhất (log1p · mg/dL)",
+      "contribution": 0.543
+    }
+  ],
+  "E0006:27": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 2.754
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 1.313
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.17
+    }
+  ],
+  "E0006:28": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 2.754
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "heart_rate_delta_since_t0_bpm",
+      "labelVi": "Thay đổi mạch từ T0 (lần/phút)",
+      "contribution": 1.313
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.17
+    }
+  ],
+  "E0006:29": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 2.633
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.17
+    },
+    {
+      "feature": "sbp_delta_since_t0_mmhg",
+      "labelVi": "Thay đổi HA tâm thu từ T0 (mmHg)",
+      "contribution": 0.77
+    }
+  ],
+  "E0006:30": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 2.633
+    },
+    {
+      "feature": "symptom_respiratory",
+      "labelVi": "Triệu chứng nghi nhiễm: Hô hấp",
+      "contribution": 1.632
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 1.17
+    },
+    {
+      "feature": "sbp_delta_since_t0_mmhg",
+      "labelVi": "Thay đổi HA tâm thu từ T0 (mmHg)",
+      "contribution": 0.77
+    }
+  ],
+  "E0007:1": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 6.529
+    },
+    {
+      "feature": "symptom_urinary",
+      "labelVi": "Triệu chứng nghi nhiễm: Tiết niệu",
+      "contribution": 3.396
+    },
+    {
+      "feature": "respiratory_rate_last_per_min",
+      "labelVi": "Nhịp thở gần nhất (lần/phút)",
+      "contribution": 3.285
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 2.439
+    }
+  ],
+  "E0007:2": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 6.529
+    },
+    {
+      "feature": "platelets_last_10e9_L",
+      "labelVi": "Tiểu cầu gần nhất (log1p · 10⁹/L)",
+      "contribution": 3.585
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 3.464
+    },
+    {
+      "feature": "symptom_urinary",
+      "labelVi": "Triệu chứng nghi nhiễm: Tiết niệu",
+      "contribution": 3.396
+    }
+  ],
+  "E0007:3": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 6.529
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 4.791
+    },
+    {
+      "feature": "platelets_last_10e9_L",
+      "labelVi": "Tiểu cầu gần nhất (log1p · 10⁹/L)",
+      "contribution": 3.585
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 3.464
+    }
+  ],
+  "E0007:4": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 6.529
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 4.791
+    },
+    {
+      "feature": "platelets_last_10e9_L",
+      "labelVi": "Tiểu cầu gần nhất (log1p · 10⁹/L)",
+      "contribution": 3.585
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 3.464
+    }
+  ],
+  "E0007:5": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 9.471
+    },
+    {
+      "feature": "respiratory_rate_last_per_min",
+      "labelVi": "Nhịp thở gần nhất (lần/phút)",
+      "contribution": 4.213
+    },
+    {
+      "feature": "platelets_last_10e9_L",
+      "labelVi": "Tiểu cầu gần nhất (log1p · 10⁹/L)",
+      "contribution": 3.585
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 3.464
+    }
+  ],
+  "E0007:6": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 9.471
+    },
+    {
+      "feature": "respiratory_rate_last_per_min",
+      "labelVi": "Nhịp thở gần nhất (lần/phút)",
+      "contribution": 4.213
+    },
+    {
+      "feature": "platelets_last_10e9_L",
+      "labelVi": "Tiểu cầu gần nhất (log1p · 10⁹/L)",
+      "contribution": 3.585
+    },
+    {
+      "feature": "WBC_last_10e9_L",
+      "labelVi": "Bạch cầu WBC gần nhất (log1p · 10⁹/L)",
+      "contribution": 3.464
+    }
+  ],
+  "E0009:1": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 3.697
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 2.116
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.716
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    }
+  ],
+  "E0009:2": [
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 3.697
+    },
+    {
+      "feature": "symptom_urinary",
+      "labelVi": "Triệu chứng nghi nhiễm: Tiết niệu",
+      "contribution": 3.396
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 2.116
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.716
+    }
+  ],
+  "E0009:3": [
+    {
+      "feature": "symptom_urinary",
+      "labelVi": "Triệu chứng nghi nhiễm: Tiết niệu",
+      "contribution": 3.396
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 2.116
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.46
+    }
+  ],
+  "E0009:4": [
+    {
+      "feature": "symptom_urinary",
+      "labelVi": "Triệu chứng nghi nhiễm: Tiết niệu",
+      "contribution": 3.396
+    },
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 2.116
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.46
+    }
+  ],
+  "E0009:5": [
+    {
+      "feature": "symptom_urinary",
+      "labelVi": "Triệu chứng nghi nhiễm: Tiết niệu",
+      "contribution": 3.396
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.205
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    }
+  ],
+  "E0009:6": [
+    {
+      "feature": "symptom_urinary",
+      "labelVi": "Triệu chứng nghi nhiễm: Tiết niệu",
+      "contribution": 3.396
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.205
+    },
+    {
+      "feature": "sex_F",
+      "labelVi": "Giới tính: Nữ",
+      "contribution": 1.191
+    }
+  ],
+  "E0009:7": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 5.058
+    },
+    {
+      "feature": "symptom_urinary",
+      "labelVi": "Triệu chứng nghi nhiễm: Tiết niệu",
+      "contribution": 3.396
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    },
+    {
+      "feature": "map_last_mmhg",
+      "labelVi": "HA trung bình MAP gần nhất (mmHg)",
+      "contribution": 1.296
+    }
+  ],
+  "E0009:8": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 5.058
+    },
+    {
+      "feature": "symptom_urinary",
+      "labelVi": "Triệu chứng nghi nhiễm: Tiết niệu",
+      "contribution": 3.396
+    },
+    {
+      "feature": "platelets_last_10e9_L",
+      "labelVi": "Tiểu cầu gần nhất (log1p · 10⁹/L)",
+      "contribution": 2.172
+    },
+    {
+      "feature": "procalcitonin_measured_since_t0",
+      "labelVi": "Đã có KQ Procalcitonin (từ T0)",
+      "contribution": 1.541
+    }
+  ],
+  "E0009:9": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 5.058
+    },
+    {
+      "feature": "symptom_urinary",
+      "labelVi": "Triệu chứng nghi nhiễm: Tiết niệu",
+      "contribution": 3.396
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 3.115
+    },
+    {
+      "feature": "platelets_last_10e9_L",
+      "labelVi": "Tiểu cầu gần nhất (log1p · 10⁹/L)",
+      "contribution": 2.172
+    }
+  ],
+  "E0009:10": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 5.058
+    },
+    {
+      "feature": "symptom_urinary",
+      "labelVi": "Triệu chứng nghi nhiễm: Tiết niệu",
+      "contribution": 3.396
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 3.115
+    },
+    {
+      "feature": "platelets_last_10e9_L",
+      "labelVi": "Tiểu cầu gần nhất (log1p · 10⁹/L)",
+      "contribution": 2.172
+    }
+  ],
+  "E0009:11": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 9.471
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 4.791
+    },
+    {
+      "feature": "symptom_urinary",
+      "labelVi": "Triệu chứng nghi nhiễm: Tiết niệu",
+      "contribution": 3.396
+    },
+    {
+      "feature": "map_last_mmhg",
+      "labelVi": "HA trung bình MAP gần nhất (mmHg)",
+      "contribution": 2.407
+    }
+  ],
+  "E0009:12": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 9.471
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 4.791
+    },
+    {
+      "feature": "symptom_urinary",
+      "labelVi": "Triệu chứng nghi nhiễm: Tiết niệu",
+      "contribution": 3.396
+    },
+    {
+      "feature": "map_last_mmhg",
+      "labelVi": "HA trung bình MAP gần nhất (mmHg)",
+      "contribution": 2.407
+    }
+  ],
+  "E0015:1": [
+    {
+      "feature": "chronic_kidney_disease",
+      "labelVi": "Bệnh nền: Thận mạn",
+      "contribution": 3.626
+    },
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 3.393
+    },
+    {
+      "feature": "cardiovascular_disease",
+      "labelVi": "Bệnh nền: Tim mạch",
+      "contribution": 2.604
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.374
+    }
+  ],
+  "E0015:2": [
+    {
+      "feature": "chronic_kidney_disease",
+      "labelVi": "Bệnh nền: Thận mạn",
+      "contribution": 3.626
+    },
+    {
+      "feature": "heart_rate_mean_since_t0_bpm",
+      "labelVi": "Mạch trung bình từ T0 (lần/phút)",
+      "contribution": 3.393
+    },
+    {
+      "feature": "cardiovascular_disease",
+      "labelVi": "Bệnh nền: Tim mạch",
+      "contribution": 2.604
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.374
+    }
+  ],
+  "E0015:3": [
+    {
+      "feature": "chronic_kidney_disease",
+      "labelVi": "Bệnh nền: Thận mạn",
+      "contribution": 3.626
+    },
+    {
+      "feature": "cardiovascular_disease",
+      "labelVi": "Bệnh nền: Tim mạch",
+      "contribution": 2.604
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.374
+    },
+    {
+      "feature": "symptom_abdominal",
+      "labelVi": "Triệu chứng nghi nhiễm: Ổ bụng",
+      "contribution": 2.277
+    }
+  ],
+  "E0015:4": [
+    {
+      "feature": "chronic_kidney_disease",
+      "labelVi": "Bệnh nền: Thận mạn",
+      "contribution": 3.626
+    },
+    {
+      "feature": "cardiovascular_disease",
+      "labelVi": "Bệnh nền: Tim mạch",
+      "contribution": 2.604
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.374
+    },
+    {
+      "feature": "symptom_abdominal",
+      "labelVi": "Triệu chứng nghi nhiễm: Ổ bụng",
+      "contribution": 2.277
+    }
+  ],
+  "E0015:5": [
+    {
+      "feature": "chronic_kidney_disease",
+      "labelVi": "Bệnh nền: Thận mạn",
+      "contribution": 3.626
+    },
+    {
+      "feature": "cardiovascular_disease",
+      "labelVi": "Bệnh nền: Tim mạch",
+      "contribution": 2.604
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.374
+    },
+    {
+      "feature": "symptom_abdominal",
+      "labelVi": "Triệu chứng nghi nhiễm: Ổ bụng",
+      "contribution": 2.277
+    }
+  ],
+  "E0015:6": [
+    {
+      "feature": "chronic_kidney_disease",
+      "labelVi": "Bệnh nền: Thận mạn",
+      "contribution": 3.626
+    },
+    {
+      "feature": "cardiovascular_disease",
+      "labelVi": "Bệnh nền: Tim mạch",
+      "contribution": 2.604
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.374
+    },
+    {
+      "feature": "symptom_abdominal",
+      "labelVi": "Triệu chứng nghi nhiễm: Ổ bụng",
+      "contribution": 2.277
+    }
+  ],
+  "E0015:7": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 4.323
+    },
+    {
+      "feature": "chronic_kidney_disease",
+      "labelVi": "Bệnh nền: Thận mạn",
+      "contribution": 3.626
+    },
+    {
+      "feature": "cardiovascular_disease",
+      "labelVi": "Bệnh nền: Tim mạch",
+      "contribution": 2.604
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.374
+    }
+  ],
+  "E0015:8": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 4.323
+    },
+    {
+      "feature": "chronic_kidney_disease",
+      "labelVi": "Bệnh nền: Thận mạn",
+      "contribution": 3.626
+    },
+    {
+      "feature": "platelets_last_10e9_L",
+      "labelVi": "Tiểu cầu gần nhất (log1p · 10⁹/L)",
+      "contribution": 2.654
+    },
+    {
+      "feature": "cardiovascular_disease",
+      "labelVi": "Bệnh nền: Tim mạch",
+      "contribution": 2.604
+    }
+  ],
+  "E0015:9": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 8.0
+    },
+    {
+      "feature": "chronic_kidney_disease",
+      "labelVi": "Bệnh nền: Thận mạn",
+      "contribution": 3.626
+    },
+    {
+      "feature": "platelets_last_10e9_L",
+      "labelVi": "Tiểu cầu gần nhất (log1p · 10⁹/L)",
+      "contribution": 2.654
+    },
+    {
+      "feature": "cardiovascular_disease",
+      "labelVi": "Bệnh nền: Tim mạch",
+      "contribution": 2.604
+    }
+  ],
+  "E0015:10": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 8.0
+    },
+    {
+      "feature": "chronic_kidney_disease",
+      "labelVi": "Bệnh nền: Thận mạn",
+      "contribution": 3.626
+    },
+    {
+      "feature": "platelets_last_10e9_L",
+      "labelVi": "Tiểu cầu gần nhất (log1p · 10⁹/L)",
+      "contribution": 2.654
+    },
+    {
+      "feature": "cardiovascular_disease",
+      "labelVi": "Bệnh nền: Tim mạch",
+      "contribution": 2.604
+    }
+  ],
+  "E0015:11": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 10.207
+    },
+    {
+      "feature": "chronic_kidney_disease",
+      "labelVi": "Bệnh nền: Thận mạn",
+      "contribution": 3.626
+    },
+    {
+      "feature": "platelets_last_10e9_L",
+      "labelVi": "Tiểu cầu gần nhất (log1p · 10⁹/L)",
+      "contribution": 2.654
+    },
+    {
+      "feature": "cardiovascular_disease",
+      "labelVi": "Bệnh nền: Tim mạch",
+      "contribution": 2.604
+    }
+  ],
+  "E0015:12": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 10.207
+    },
+    {
+      "feature": "chronic_kidney_disease",
+      "labelVi": "Bệnh nền: Thận mạn",
+      "contribution": 3.626
+    },
+    {
+      "feature": "platelets_last_10e9_L",
+      "labelVi": "Tiểu cầu gần nhất (log1p · 10⁹/L)",
+      "contribution": 2.654
+    },
+    {
+      "feature": "cardiovascular_disease",
+      "labelVi": "Bệnh nền: Tim mạch",
+      "contribution": 2.604
+    }
+  ],
+  "E0020:1": [
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.853
+    },
+    {
+      "feature": "cardiovascular_disease",
+      "labelVi": "Bệnh nền: Tim mạch",
+      "contribution": 2.604
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 2.276
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.716
+    }
+  ],
+  "E0020:2": [
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.853
+    },
+    {
+      "feature": "cardiovascular_disease",
+      "labelVi": "Bệnh nền: Tim mạch",
+      "contribution": 2.604
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 2.276
+    },
+    {
+      "feature": "vital_observation_count_since_t0",
+      "labelVi": "Số lần đo sinh hiệu từ T0",
+      "contribution": 1.716
+    }
+  ],
+  "E0020:3": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 3.587
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 3.115
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.853
+    },
+    {
+      "feature": "cardiovascular_disease",
+      "labelVi": "Bệnh nền: Tim mạch",
+      "contribution": 2.604
+    }
+  ],
+  "E0020:4": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 3.587
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 3.115
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.853
+    },
+    {
+      "feature": "cardiovascular_disease",
+      "labelVi": "Bệnh nền: Tim mạch",
+      "contribution": 2.604
+    }
+  ],
+  "E0020:5": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 5.058
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 3.115
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.853
+    },
+    {
+      "feature": "cardiovascular_disease",
+      "labelVi": "Bệnh nền: Tim mạch",
+      "contribution": 2.604
+    }
+  ],
+  "E0020:6": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 5.058
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 3.115
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.853
+    },
+    {
+      "feature": "cardiovascular_disease",
+      "labelVi": "Bệnh nền: Tim mạch",
+      "contribution": 2.604
+    }
+  ],
+  "E0020:7": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 8.736
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 5.629
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.853
+    },
+    {
+      "feature": "cardiovascular_disease",
+      "labelVi": "Bệnh nền: Tim mạch",
+      "contribution": 2.604
+    }
+  ],
+  "E0020:8": [
+    {
+      "feature": "temperature_last_c",
+      "labelVi": "Nhiệt độ gần nhất (°C)",
+      "contribution": 8.736
+    },
+    {
+      "feature": "heart_rate_last_bpm",
+      "labelVi": "Mạch gần nhất (lần/phút)",
+      "contribution": 5.629
+    },
+    {
+      "feature": "age_years",
+      "labelVi": "Tuổi (năm)",
+      "contribution": 2.853
+    },
+    {
+      "feature": "cardiovascular_disease",
+      "labelVi": "Bệnh nền: Tim mạch",
+      "contribution": 2.604
+    }
+  ]
+}
