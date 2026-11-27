@@ -1,0 +1,19 @@
+{
+  "schema_version": "artifact-manifest-v1",
+  "targets": {
+    "sepsis": {
+      "model_file": "sepsis_model.joblib",
+      "metadata_file": "sepsis_metadata.json",
+      "model_version": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
+      "model_sha256": "2c9abcf5a9c45d7ed1013d94273417a39714083cc001ff00fa98ef1420d9aab9",
+      "metadata_canonical_sha256": "83f9a4164e69430bb89973aba46ee8fe2596f8a3da5738ce59b344db32adadb9"
+    },
+    "shock": {
+      "model_file": "shock_model.joblib",
+      "metadata_file": "shock_metadata.json",
+      "model_version": "mock-emr-hourly-shock-lr-v3-expanding-t0-episodes-v2",
+      "model_sha256": "b9576cfe1738e7d9832834cde68284d9b6460df1890bcaf85b8940f89a37f837",
+      "metadata_canonical_sha256": "2e7839c408055eb0aae183470c6e7ce5ddcddd20a59f7df935fa8516fdbc1796"
+    }
+  }
+}

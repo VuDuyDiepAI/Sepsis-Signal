@@ -17,7 +17,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from src.mock_emr import FEATURES, ROOT, load_bundle
+from src.mock_emr import FEATURES, ROOT, load_bundle, top_risk_contributors
 
 VITAL_RANGES = {
     'heart_rate_bpm': (20, 250), 'respiratory_rate_per_min': (4, 70),
@@ -452,7 +452,8 @@ def score_hour(encounter_id: str, hour: int, *, path: Path | None = None,
                      meta['model_version'], signature, feature_json, revision, _stamp(datetime.now())))
         result[target] = {'score': score, 'threshold': threshold,
                           'alert': score >= threshold, 'model_version': meta['model_version'],
-                          'revision': revision}
+                          'revision': revision,
+                          'contributors': top_risk_contributors(model, frame)}
     return result
 
 

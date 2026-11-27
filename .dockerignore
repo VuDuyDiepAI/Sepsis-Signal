@@ -1,0 +1,14 @@
+.git
+.venv
+**/node_modules
+**/.next
+**/dist
+**/__pycache__
+.pytest_cache
+**/test-results
+**/playwright-report
+backend/tests
+data/*.sqlite*
+data/*.db*
+backups
+.env*

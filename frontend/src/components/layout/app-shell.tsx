@@ -1,0 +1,200 @@
+"use client";
+import { Link } from "react-router";
+import { useCurrentPath } from "@/app/navigation";
+import { useState, type ReactNode } from "react";
+import {
+  Activity,
+  LayoutDashboard,
+  UsersRound,
+  FlaskConical,
+  ChartNoAxesCombined,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Menu,
+  CircleHelp,
+  LogOut,
+  Database,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { StorageNotice } from "@/components/shared/storage-notice";
+import { useAuth } from "@/components/providers/auth-provider";
+const links = [
+  {
+    href: "/dashboard",
+    label: "Theo dõi & Cảnh báo",
+    icon: LayoutDashboard,
+    group: "KHÔNG GIAN LÂM SÀNG",
+  },
+  { href: "/patients", label: "Hồ sơ theo dõi", icon: UsersRound },
+  {
+    href: "/sample-cases",
+    label: "Diễn tiến ca mẫu",
+    icon: FlaskConical,
+    group: "DỮ LIỆU & MÔ HÌNH",
+  },
+  {
+    href: "/model-monitoring",
+    label: "Đánh giá mô hình",
+    icon: ChartNoAxesCombined,
+  },
+];
+export function AppShell({ children }: { children: ReactNode }) {
+  const path = useCurrentPath();
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobile, setMobile] = useState(false);
+  const {user,logout}=useAuth();
+  const [logoutError,setLogoutError]=useState("");
+  const nav = (
+    <nav aria-label="Điều hướng chính">
+      {links.map(({ href, label, icon: Icon, group }) => (
+        <div key={href}>
+          {group && <div className="nav-section">{group}</div>}
+          <Link
+            to={href}
+            className={`nav-link ${path === href || (href === "/patients" && path.startsWith("/patients/")) ? "active" : ""}`}
+            aria-current={path === href ? "page" : undefined}
+            title={collapsed ? label : undefined}
+            onClick={() => setMobile(false)}
+          >
+            <Icon />
+            <span className="nav-text">{label}</span>
+          </Link>
+        </div>
+      ))}
+    </nav>
+  );
+  const brand = (
+    <Link
+      to="/dashboard"
+      className="brand"
+      aria-label="Sepsis Signal — Theo dõi và Cảnh báo"
+    >
+      <span className="brand-mark">
+        <Activity size={25} />
+      </span>
+      <span className="brand-text">
+        <strong>SEPSIS SIGNAL</strong>
+        <small>Clinical Intelligence</small>
+      </span>
+    </Link>
+  );
+  return (
+    <div className={`app-shell ${collapsed ? "is-collapsed" : ""}`}>
+      <a className="skip-link" href="#main-content">
+        Đến nội dung chính
+      </a>
+      <aside className="sidebar">
+        {brand}
+        {nav}
+        <div className="sidebar-foot">
+          Khoa Cấp cứu · Vinmec
+          <br />
+          Không gian trải nghiệm nghiên cứu
+        </div>
+        <button
+          className="collapse-control"
+          onClick={() => setCollapsed(!collapsed)}
+          aria-label={
+            collapsed ? "Mở rộng thanh điều hướng" : "Thu gọn thanh điều hướng"
+          }
+        >
+          {collapsed ? (
+            <PanelLeftOpen size={19} />
+          ) : (
+            <PanelLeftClose size={19} />
+          )}
+          <span className="nav-text">Thu gọn điều hướng</span>
+        </button>
+      </aside>
+      <div className="main-shell">
+        <header className="topbar">
+          <div className="flex items-center gap-3">
+            <Dialog open={mobile} onOpenChange={setMobile}>
+              <DialogTrigger
+                render={
+                  <Button
+                    variant="ghost"
+                    className="mobile-menu"
+                    aria-label="Mở điều hướng"
+                  />
+                }
+              >
+                <Menu size={21} />
+              </DialogTrigger>
+              <DialogContent className="mobile-nav-content">
+                <DialogTitle className="sr-only">
+                  Điều hướng Sepsis Signal
+                </DialogTitle>
+                <DialogDescription className="sr-only">
+                  Chọn khu vực làm việc
+                </DialogDescription>
+                {brand}
+                {nav}
+              </DialogContent>
+            </Dialog>
+            <div className="topbar-brand">
+              <strong>Khoa Cấp cứu · Vinmec</strong>
+            </div>
+          </div>
+          <div className="topbar-actions">
+            <span className="demo-chip">
+              <Database size={14} />
+              EMR mô phỏng
+            </span>
+            <Dialog>
+              <DialogTrigger
+                render={
+                  <Button
+                    variant="ghost"
+                    aria-label="Hướng dẫn trải nghiệm"
+                    size="icon"
+                  />
+                }
+              >
+                <CircleHelp size={20} />
+              </DialogTrigger>
+              <DialogContent>
+                <DialogTitle>Trải nghiệm Sepsis Signal</DialogTitle>
+                <DialogDescription>
+                  Hồ sơ và điểm dự báo lấy từ dữ liệu mô phỏng trong repository.
+                </DialogDescription>
+                <p>
+                  T0 là lúc hoàn tất phân loại. Mô hình chấm từ T0+1h, dự báo 6
+                  giờ tiếp theo, dùng dữ liệu đã có trên EMR từ T0 và khóa lặp
+                  cảnh báo theo đợt 6 giờ.
+                </p>
+                <p>
+                  <strong>Quy trình tiếp nhận cảnh báo:</strong> Hệ thống báo
+                  trực quan trên hàng đợi theo khoa (ED / Nội trú / ICU), không
+                  phát còi ồn tại giường. Điều dưỡng lọc nhiễu sinh hiệu (≤
+                  5–10p) → Bác sĩ trực khám đánh giá &amp; ghi nhận xem xét (≤
+                  15p) → Leo thang Bác sĩ trực chính nếu quá hạn. Ở pha kiểm
+                  định tiền cứu im lặng (<code>SEPSIS_SILENT_MODE=1</code>),
+                  cảnh báo được ẩn hoàn toàn khỏi giao diện lâm sàng.
+                </p>
+                <p className="secondary-text">
+                  Hồ sơ và ghi nhận xem xét được lưu trên máy chủ, tách bạch với
+                  y lệnh điều trị. Chưa kết nối hệ thống bệnh viện.
+                </p>
+              </DialogContent>
+            </Dialog>
+            <span className="header-user"><strong>{user?.displayName}</strong><small>{user?.username}</small></span>
+            <Button variant="ghost" aria-label="Đăng xuất" onClick={async()=>{try{await logout();}catch(e){setLogoutError(e instanceof Error?e.message:"Không đăng xuất được.");}}}><LogOut size={18}/></Button>
+            {logoutError&&<span role="alert">{logoutError}</span>}
+          </div>
+        </header>
+        <main id="main-content" className="page">
+          <StorageNotice />
+          {children}
+        </main>
+      </div>
+    </div>
+  );
+}

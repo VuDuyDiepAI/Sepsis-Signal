@@ -1,6 +1,6 @@
 {
   "model_name": "Logistic regression",
-  "model_version": "mock-emr-hourly-sepsis-lr-v3-expanding-t0",
+  "model_version": "mock-emr-hourly-sepsis-lr-v3-expanding-t0-episodes-v2",
   "data_kind": "SYNTHETIC_MOCK_EMR",
   "target": "sepsis_next_6h",
   "horizon_hours": 6,
@@ -113,66 +113,596 @@
   "validation_positive_encounters": 12,
   "temporal_holdout_encounters": 71,
   "temporal_holdout_positive_encounters": 11,
-  "evaluation_version": "timely-alert-v1",
-  "evaluated_at_utc": "2026-11-19T04:18:58.679630+00:00",
-  "threshold": 0.02757396730151618,
-  "threshold_rule": "Highest validation threshold within the demo ceiling meeting both recall targets; fallbacks are recorded under threshold_selection.",
+  "evaluation_version": "alert-episodes-6h-v2",
+  "evaluated_at_utc": "2026-11-20T11:33:33.012338+00:00",
+  "threshold": 0.4080361343070105,
+  "threshold_rule": "Highest validation threshold achieving patient-level sensitivity >= 80% under fixed six-hour alert episodes; no hourly sensitivity constraint, ceiling or silent fallback.",
   "threshold_selection": {
-    "branch": "both_recall_targets",
+    "branch": "patient_episode_recall",
     "minimum_recall": 0.8,
-    "demo_ceiling": 0.28,
-    "validation_encounter_recall": 0.9166666666666666,
-    "validation_snapshot_recall": 0.8
+    "recall_unit": "encounter_with_true_alert_episode",
+    "validation_encounter_recall": 0.8333333333333334,
+    "validation_snapshot_recall": 0.6428571428571429,
+    "validation_true_alert_episodes": 10,
+    "validation_false_alert_episodes": 4,
+    "selection_data": "independent_validation",
+    "probability_calibration": "not_applied",
+    "cooldown_hours": 6,
+    "hourly_recall_constraint": false,
+    "arbitrary_threshold_ceiling": false
   },
   "validation_synthetic_metrics": {
-    "snapshots": 1942,
-    "positive_snapshots": 70,
+    "snapshots": 1942.0,
+    "positive_snapshots": 70.0,
+    "encounters": 72.0,
+    "positive_encounters": 12.0,
     "auroc": 0.9799068986568986,
     "auprc": 0.8045906986741992,
     "brier": 0.013844179140126435,
     "observed_prevalence": 0.03604531410916581,
     "mean_predicted_probability": 0.030687219854960122,
-    "recall": 0.8,
-    "precision": 0.4409448818897638,
-    "alert_fraction": 0.06539649845520082,
-    "encounter_early_recall": 0.9166666666666666,
-    "timely_alert_encounters": 11,
-    "too_early_alert_encounters": 1,
-    "too_early_only_encounters": 0,
-    "encounter_precision": 0.6111111111111112,
-    "nne_encounters": 1.64,
-    "false_alert_encounters_per_100": 9.72,
-    "alert_episodes_per_100": 38.89,
-    "median_lead_hours": 5.0,
+    "calibration_intercept": 0.6819492837790292,
+    "calibration_slope": 0.5175038062800248,
+    "recall": 0.6428571428571429,
+    "precision": 0.7894736842105263,
+    "specificity": 0.9935897435897436,
+    "npv": 0.986737400530504,
+    "f1": 0.7086614173228346,
+    "alert_fraction": 0.029351184346035016,
+    "encounter_early_recall": 0.8333333333333334,
+    "timely_alert_encounters": 10.0,
+    "too_early_alert_encounters": 0.0,
+    "too_early_only_encounters": 0.0,
+    "raw_timely_alert_encounters": 10.0,
+    "encounter_precision": 0.8333333333333334,
+    "nne_encounters": 1.2,
+    "false_alert_encounters_per_100": 2.7777777777777777,
+    "alert_episodes": 14.0,
+    "true_alert_episodes": 10.0,
+    "false_alert_episodes": 4.0,
+    "episode_ppv": 0.7142857142857143,
+    "alert_episodes_per_100": 19.444444444444443,
+    "false_alert_episodes_per_100": 5.555555555555555,
+    "false_episodes_per_true_episode": 0.4,
+    "repeated_alert_fraction": 0.7543859649122807,
+    "median_lead_hours": 5.5,
+    "lead_q1_hours": 4.25,
+    "lead_q3_hours": 6.0,
     "iqr_lead_hours": [
-      5.0,
+      4.25,
       6.0
-    ]
+    ],
+    "calibration_curve": [
+      {
+        "mean_probability": 4.218740020513815e-10,
+        "observed_fraction": 0.0,
+        "snapshots": 195
+      },
+      {
+        "mean_probability": 4.720689914971987e-09,
+        "observed_fraction": 0.0,
+        "snapshots": 194
+      },
+      {
+        "mean_probability": 2.035726774997448e-08,
+        "observed_fraction": 0.0,
+        "snapshots": 194
+      },
+      {
+        "mean_probability": 9.466776663163429e-08,
+        "observed_fraction": 0.0,
+        "snapshots": 194
+      },
+      {
+        "mean_probability": 5.408289396169441e-07,
+        "observed_fraction": 0.0,
+        "snapshots": 194
+      },
+      {
+        "mean_probability": 3.820387621657102e-06,
+        "observed_fraction": 0.0,
+        "snapshots": 194
+      },
+      {
+        "mean_probability": 1.7668934649827386e-05,
+        "observed_fraction": 0.0,
+        "snapshots": 194
+      },
+      {
+        "mean_probability": 8.110345570295035e-05,
+        "observed_fraction": 0.005154639175257732,
+        "snapshots": 194
+      },
+      {
+        "mean_probability": 0.0009764705600015319,
+        "observed_fraction": 0.020618556701030927,
+        "snapshots": 194
+      },
+      {
+        "mean_probability": 0.30453904839494866,
+        "observed_fraction": 0.3333333333333333,
+        "snapshots": 195
+      }
+    ],
+    "confidence_intervals": {
+      "snapshots": {
+        "lower": 1818.0,
+        "upper": 2050.0,
+        "valid_resamples": 1000
+      },
+      "positive_snapshots": {
+        "lower": 36.0,
+        "upper": 108.0,
+        "valid_resamples": 1000
+      },
+      "encounters": {
+        "lower": 72.0,
+        "upper": 72.0,
+        "valid_resamples": 1000
+      },
+      "positive_encounters": {
+        "lower": 6.0,
+        "upper": 18.0,
+        "valid_resamples": 1000
+      },
+      "auroc": {
+        "lower": 0.9518791213064556,
+        "upper": 0.9966861327400816,
+        "valid_resamples": 1000
+      },
+      "auprc": {
+        "lower": 0.5815515872692086,
+        "upper": 0.9582443553705652,
+        "valid_resamples": 1000
+      },
+      "brier": {
+        "lower": 0.004587690736286487,
+        "upper": 0.025609112914373816,
+        "valid_resamples": 1000
+      },
+      "observed_prevalence": {
+        "lower": 0.017611235740537443,
+        "upper": 0.059153254229323306,
+        "valid_resamples": 1000
+      },
+      "mean_predicted_probability": {
+        "lower": 0.014713728434003774,
+        "upper": 0.05143461832978807,
+        "valid_resamples": 1000
+      },
+      "calibration_intercept": {
+        "lower": -1.092449747684811,
+        "upper": 2.9266112351368974,
+        "valid_resamples": 1000
+      },
+      "calibration_slope": {
+        "lower": 0.3835700437981953,
+        "upper": 1.0701244344127023,
+        "valid_resamples": 1000
+      },
+      "recall": {
+        "lower": 0.39359802431610946,
+        "upper": 0.8788419913419913,
+        "valid_resamples": 1000
+      },
+      "precision": {
+        "lower": 0.48132969034608375,
+        "upper": 1.0,
+        "valid_resamples": 1000
+      },
+      "specificity": {
+        "lower": 0.9824913726127884,
+        "upper": 1.0,
+        "valid_resamples": 1000
+      },
+      "npv": {
+        "lower": 0.9737969455273466,
+        "upper": 0.9966667670376852,
+        "valid_resamples": 1000
+      },
+      "f1": {
+        "lower": 0.4726482213438735,
+        "upper": 0.8888888888888888,
+        "valid_resamples": 1000
+      },
+      "alert_fraction": {
+        "lower": 0.012767957257175715,
+        "upper": 0.05044458748925659,
+        "valid_resamples": 1000
+      },
+      "encounter_early_recall": {
+        "lower": 0.5833333333333334,
+        "upper": 1.0,
+        "valid_resamples": 1000
+      },
+      "timely_alert_encounters": {
+        "lower": 5.0,
+        "upper": 16.0,
+        "valid_resamples": 1000
+      },
+      "too_early_alert_encounters": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "valid_resamples": 1000
+      },
+      "too_early_only_encounters": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "valid_resamples": 1000
+      },
+      "raw_timely_alert_encounters": {
+        "lower": 5.0,
+        "upper": 16.0,
+        "valid_resamples": 1000
+      },
+      "encounter_precision": {
+        "lower": 0.5833333333333334,
+        "upper": 1.0,
+        "valid_resamples": 1000
+      },
+      "nne_encounters": {
+        "lower": 1.0,
+        "upper": 1.7142857142857142,
+        "valid_resamples": 1000
+      },
+      "false_alert_encounters_per_100": {
+        "lower": 0.0,
+        "upper": 6.944444444444445,
+        "valid_resamples": 1000
+      },
+      "alert_episodes": {
+        "lower": 7.0,
+        "upper": 22.0,
+        "valid_resamples": 1000
+      },
+      "true_alert_episodes": {
+        "lower": 5.0,
+        "upper": 16.0,
+        "valid_resamples": 1000
+      },
+      "false_alert_episodes": {
+        "lower": 0.0,
+        "upper": 10.024999999999977,
+        "valid_resamples": 1000
+      },
+      "episode_ppv": {
+        "lower": 0.4,
+        "upper": 1.0,
+        "valid_resamples": 1000
+      },
+      "alert_episodes_per_100": {
+        "lower": 9.722222222222221,
+        "upper": 30.555555555555557,
+        "valid_resamples": 1000
+      },
+      "false_alert_episodes_per_100": {
+        "lower": 0.0,
+        "upper": 13.92361111111108,
+        "valid_resamples": 1000
+      },
+      "false_episodes_per_true_episode": {
+        "lower": 0.0,
+        "upper": 1.5,
+        "valid_resamples": 1000
+      },
+      "repeated_alert_fraction": {
+        "lower": 0.6875,
+        "upper": 0.8032860070257611,
+        "valid_resamples": 1000
+      },
+      "median_lead_hours": {
+        "lower": 4.0,
+        "upper": 6.0,
+        "valid_resamples": 1000
+      },
+      "lead_q1_hours": {
+        "lower": 1.25,
+        "upper": 6.0,
+        "valid_resamples": 1000
+      },
+      "lead_q3_hours": {
+        "lower": 5.0,
+        "upper": 6.0,
+        "valid_resamples": 1000
+      }
+    },
+    "bootstrap": {
+      "unit": "encounter",
+      "resamples": 1000,
+      "seed": 42,
+      "level": 0.95,
+      "fixed_model_and_threshold": true
+    }
   },
   "temporal_holdout_synthetic_metrics": {
-    "snapshots": 1926,
-    "positive_snapshots": 66,
+    "snapshots": 1926.0,
+    "positive_snapshots": 66.0,
+    "encounters": 71.0,
+    "positive_encounters": 11.0,
     "auroc": 0.9936705767350928,
     "auprc": 0.9013549562195304,
     "brier": 0.009505733578968988,
     "observed_prevalence": 0.03426791277258567,
     "mean_predicted_probability": 0.030805818154884586,
-    "recall": 0.9696969696969697,
-    "precision": 0.512,
-    "alert_fraction": 0.06490134994807892,
-    "encounter_early_recall": 1.0,
-    "timely_alert_encounters": 11,
-    "too_early_alert_encounters": 4,
-    "too_early_only_encounters": 0,
-    "encounter_precision": 0.6470588235294118,
-    "nne_encounters": 1.55,
-    "false_alert_encounters_per_100": 8.45,
-    "alert_episodes_per_100": 36.62,
+    "calibration_intercept": 0.46741299810999,
+    "calibration_slope": 0.8415115735441825,
+    "recall": 0.7424242424242424,
+    "precision": 0.8596491228070176,
+    "specificity": 0.9956989247311828,
+    "npv": 0.990904226859283,
+    "f1": 0.7967479674796748,
+    "alert_fraction": 0.029595015576323987,
+    "encounter_early_recall": 0.9090909090909091,
+    "timely_alert_encounters": 10.0,
+    "too_early_alert_encounters": 1.0,
+    "too_early_only_encounters": 0.0,
+    "raw_timely_alert_encounters": 10.0,
+    "encounter_precision": 0.9090909090909091,
+    "nne_encounters": 1.1,
+    "false_alert_encounters_per_100": 2.816901408450704,
+    "alert_episodes": 13.0,
+    "true_alert_episodes": 10.0,
+    "false_alert_episodes": 3.0,
+    "episode_ppv": 0.7692307692307693,
+    "alert_episodes_per_100": 18.309859154929576,
+    "false_alert_episodes_per_100": 4.225352112676056,
+    "false_episodes_per_true_episode": 0.3,
+    "repeated_alert_fraction": 0.7719298245614035,
     "median_lead_hours": 6.0,
+    "lead_q1_hours": 4.25,
+    "lead_q3_hours": 6.0,
     "iqr_lead_hours": [
-      6.0,
+      4.25,
       6.0
-    ]
+    ],
+    "calibration_curve": [
+      {
+        "mean_probability": 1.6106665911333745e-10,
+        "observed_fraction": 0.0,
+        "snapshots": 193
+      },
+      {
+        "mean_probability": 1.8449290160960365e-09,
+        "observed_fraction": 0.0,
+        "snapshots": 193
+      },
+      {
+        "mean_probability": 9.868845581740889e-09,
+        "observed_fraction": 0.0,
+        "snapshots": 192
+      },
+      {
+        "mean_probability": 4.513339797418722e-08,
+        "observed_fraction": 0.0,
+        "snapshots": 193
+      },
+      {
+        "mean_probability": 2.106226456288411e-07,
+        "observed_fraction": 0.0,
+        "snapshots": 192
+      },
+      {
+        "mean_probability": 8.7266041658828e-07,
+        "observed_fraction": 0.0,
+        "snapshots": 193
+      },
+      {
+        "mean_probability": 4.335459312222067e-06,
+        "observed_fraction": 0.0,
+        "snapshots": 192
+      },
+      {
+        "mean_probability": 4.714664895743672e-05,
+        "observed_fraction": 0.0,
+        "snapshots": 193
+      },
+      {
+        "mean_probability": 0.0010473176612690704,
+        "observed_fraction": 0.005208333333333333,
+        "snapshots": 192
+      },
+      {
+        "mean_probability": 0.3063252290579152,
+        "observed_fraction": 0.33678756476683935,
+        "snapshots": 193
+      }
+    ],
+    "confidence_intervals": {
+      "snapshots": {
+        "lower": 1804.0,
+        "upper": 2028.0,
+        "valid_resamples": 1000
+      },
+      "positive_snapshots": {
+        "lower": 36.0,
+        "upper": 108.0,
+        "valid_resamples": 1000
+      },
+      "encounters": {
+        "lower": 71.0,
+        "upper": 71.0,
+        "valid_resamples": 1000
+      },
+      "positive_encounters": {
+        "lower": 6.0,
+        "upper": 18.0,
+        "valid_resamples": 1000
+      },
+      "auroc": {
+        "lower": 0.9841582618079591,
+        "upper": 0.9996354373805489,
+        "valid_resamples": 1000
+      },
+      "auprc": {
+        "lower": 0.7449760819137988,
+        "upper": 0.990048583662714,
+        "valid_resamples": 1000
+      },
+      "brier": {
+        "lower": 0.003009572084087905,
+        "upper": 0.017528885998808818,
+        "valid_resamples": 1000
+      },
+      "observed_prevalence": {
+        "lower": 0.017716535433070866,
+        "upper": 0.059217047298863894,
+        "valid_resamples": 1000
+      },
+      "mean_predicted_probability": {
+        "lower": 0.014761516450034075,
+        "upper": 0.051175264959488584,
+        "valid_resamples": 1000
+      },
+      "calibration_intercept": {
+        "lower": -1.045152766258117,
+        "upper": 2.057863476974405,
+        "valid_resamples": 1000
+      },
+      "calibration_slope": {
+        "lower": 0.6179555156339351,
+        "upper": 2.2353911371170407,
+        "valid_resamples": 996
+      },
+      "recall": {
+        "lower": 0.520775462962963,
+        "upper": 0.9446428571428569,
+        "valid_resamples": 1000
+      },
+      "precision": {
+        "lower": 0.6363082039911309,
+        "upper": 1.0,
+        "valid_resamples": 1000
+      },
+      "specificity": {
+        "lower": 0.9881675235948725,
+        "upper": 1.0,
+        "valid_resamples": 1000
+      },
+      "npv": {
+        "lower": 0.9802800181530108,
+        "upper": 0.9989237177965301,
+        "valid_resamples": 1000
+      },
+      "f1": {
+        "lower": 0.599957264957265,
+        "upper": 0.9333870967741935,
+        "valid_resamples": 1000
+      },
+      "alert_fraction": {
+        "lower": 0.013648931577811354,
+        "upper": 0.05112546204499278,
+        "valid_resamples": 1000
+      },
+      "encounter_early_recall": {
+        "lower": 0.7,
+        "upper": 1.0,
+        "valid_resamples": 1000
+      },
+      "timely_alert_encounters": {
+        "lower": 5.0,
+        "upper": 16.0,
+        "valid_resamples": 1000
+      },
+      "too_early_alert_encounters": {
+        "lower": 0.0,
+        "upper": 3.0,
+        "valid_resamples": 1000
+      },
+      "too_early_only_encounters": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "valid_resamples": 1000
+      },
+      "raw_timely_alert_encounters": {
+        "lower": 5.0,
+        "upper": 16.0,
+        "valid_resamples": 1000
+      },
+      "encounter_precision": {
+        "lower": 0.7142857142857143,
+        "upper": 1.0,
+        "valid_resamples": 1000
+      },
+      "nne_encounters": {
+        "lower": 1.0,
+        "upper": 1.4,
+        "valid_resamples": 1000
+      },
+      "false_alert_encounters_per_100": {
+        "lower": 0.0,
+        "upper": 7.042253521126761,
+        "valid_resamples": 1000
+      },
+      "alert_episodes": {
+        "lower": 6.0,
+        "upper": 20.0,
+        "valid_resamples": 1000
+      },
+      "true_alert_episodes": {
+        "lower": 5.0,
+        "upper": 16.0,
+        "valid_resamples": 1000
+      },
+      "false_alert_episodes": {
+        "lower": 0.0,
+        "upper": 8.0,
+        "valid_resamples": 1000
+      },
+      "episode_ppv": {
+        "lower": 0.5,
+        "upper": 1.0,
+        "valid_resamples": 1000
+      },
+      "alert_episodes_per_100": {
+        "lower": 8.450704225352112,
+        "upper": 28.169014084507044,
+        "valid_resamples": 1000
+      },
+      "false_alert_episodes_per_100": {
+        "lower": 0.0,
+        "upper": 11.267605633802816,
+        "valid_resamples": 1000
+      },
+      "false_episodes_per_true_episode": {
+        "lower": 0.0,
+        "upper": 1.0,
+        "valid_resamples": 1000
+      },
+      "repeated_alert_fraction": {
+        "lower": 0.7187299679487179,
+        "upper": 0.8148391812865496,
+        "valid_resamples": 1000
+      },
+      "median_lead_hours": {
+        "lower": 4.0,
+        "upper": 6.0,
+        "valid_resamples": 1000
+      },
+      "lead_q1_hours": {
+        "lower": 2.0,
+        "upper": 6.0,
+        "valid_resamples": 1000
+      },
+      "lead_q3_hours": {
+        "lower": 5.5,
+        "upper": 6.0,
+        "valid_resamples": 1000
+      }
+    },
+    "bootstrap": {
+      "unit": "encounter",
+      "resamples": 1000,
+      "seed": 42,
+      "level": 0.95,
+      "fixed_model_and_threshold": true
+    }
   },
-  "warning": "Synthetic, event-enriched and rule-generated data. Not a clinical probability or clinical validation."
+  "warning": "Synthetic, event-enriched and rule-generated data. Not a clinical probability or clinical validation.",
+  "decision_policy_version": "patient-episodes-6h-v2",
+  "evaluation_limitations": [
+    "Synthetic data only.",
+    "Threshold uses independent validation, not nested out-of-fold predictions.",
+    "Probabilities have not been recalibrated; calibration fits are diagnostic only.",
+    "Bootstrap intervals hold the model and threshold fixed; they do not include model-selection uncertainty."
+  ]
 }
